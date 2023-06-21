@@ -91,4 +91,16 @@
 
 body{
     font-family: 'Poppins', sans-serif;
+    background-color: #f4fafa;
+}
+
+.mesh-home{
+  
+  background-color: rgb(255, 255, 255);
+  background-image: radial-gradient(at 62% 63%, rgb(186, 230, 253) 0, transparent 83%), radial-gradient(at 50% 52%, rgb(167, 139, 250) 0, transparent 23%), radial-gradient(at 67% 43%, rgb(59, 130, 246) 0, transparent 21%), radial-gradient(at 40% 52%, rgb(255, 255, 255) 0, transparent 100%);
+
+}
+
+.bg-primary{
+  background-color: #f4fafa;
 }

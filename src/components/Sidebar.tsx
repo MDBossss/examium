@@ -1,20 +1,25 @@
 import { DocumentIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
 import {DocumentChartBarIcon} from "@heroicons/react/20/solid";
-import { Button } from "../ui/button";
-import { useNavigate,Link } from "react-router-dom";
+import { Button } from "./ui/button";
+import { useNavigate,useLocation,Link } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  if(location.pathname === "/"){
+    return null;
+  }
 
   return (
     <div className="p-3 flex flex-col gap-10 w-60 bg-gray-200 h-screen">
       <div
-        className="flex gap-3 items-center text-xl cursor-pointer"
+        className="flex gap-1 items-center text-xl cursor-pointer"
         onClick={() => navigate("/")}
       >
         <DocumentIcon className="h-7 w-7 text-blue-500" />
-        <h1 className=" font-normal text-2xl text-gray-700 font-sans tracking-tight">
-          examium
+        <h1 className=" font-medium text-2xl text-zinc-800 font-sans tracking-tight">
+          Examium
         </h1>
       </div>
       <Button
