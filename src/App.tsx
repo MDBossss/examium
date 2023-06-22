@@ -1,7 +1,7 @@
 import {Routes, Route} from "react-router-dom";
 import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar";
-import NewTest from "./pages/NewTest";
+import Create from "./pages/Create";
 
 function App() {
 
@@ -10,7 +10,7 @@ function App() {
     <Sidebar/>
     <Routes>
       <Route path="/" element={<Home/>}/>
-      <Route path="/create" element={<NewTest/>}/>
+      <Route path="/create" element={<Create/>}/>
     </Routes>
     </div>
   )

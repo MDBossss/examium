@@ -12,7 +12,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className="p-3 flex flex-col gap-10 w-60 bg-gray-200 h-screen">
+    <div className="p-3 flex flex-col gap-10 w-60 bg-slate-200 h-auto">
       <div
         className="flex gap-1 items-center text-xl cursor-pointer"
         onClick={() => navigate("/")}
