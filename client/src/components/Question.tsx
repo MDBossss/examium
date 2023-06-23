@@ -1,48 +1,32 @@
 import { XMarkIcon, Bars4Icon } from "@heroicons/react/24/solid";
 import { Textarea } from "./ui/textarea";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import Answer from "./Answer";
-import { Button } from s"./ui/button";
-import { AnswerType } from "../types/models";
+import { Button } from "./ui/button";
+import { QuestionType } from "../types/models";
 
-interface Props{
-	onAnswerChange: (text:string,index:number) => void,
-    onAnswerDelete: (index:number, answer:string) => void,
-    toggleAnswerCorrect: (index:number) => void,
+interface Props {
+	question: QuestionType;
+	questionIndex: number;
+	onQuestionChange: (text: string, questionIndex: number) => void;
+	onQuestionDelete: (questionIndex: number) => void;
+	onAnswerAdd: (questionIndex: number) => void;
+	onAnswerChange: (text: string, answerIndex: number, questionIndex: number) => void;
+	onAnswerDelete: (answerIndex: number, questionIndex: number) => void;
+	toggleAnswerCorrect: (answerIndex: number, questionIndex: number) => void;
 }
 
-const Question = ({onAnswerChange,onAnswerDelete,toggleAnswerCorrect}:Props) => {
+const Question = ({
+	question,
+	questionIndex,
+	onQuestionChange,
+	onQuestionDelete,
+	onAnswerChange,
+	onAnswerDelete,
+	onAnswerAdd,
+	toggleAnswerCorrect,
+}: Props) => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const [answers, setAnswers] = useState<AnswerType[]>([{ answer: "", isCorrect: false }]);
-
-	const handleAnswerChange = (text: string, index: number) => {
-		if (index === answers.length - 1) {
-			setAnswers((prevArray) => [...prevArray, { answer: "", isCorrect: false }]);
-		}
-
-		setAnswers((prevArray) => {
-			return prevArray.map((tempAnswer, i) =>
-				i === index ? { ...tempAnswer, answer: text } : tempAnswer
-			);
-		});
-	};
-
-	const handleAnswerDelete = (index: number) => {
-		setAnswers((prevArray) => prevArray.filter((_, i) => i !== index));
-	};
-
-	const handleAddAnswer = () => {
-		setAnswers((prevArray) => [...prevArray, { answer: "", isCorrect: false }]);
-	};
-
-	const handleToggleCorrectAnswer = (index: number) => {
-		setAnswers((prevArray) => {
-			return prevArray.map((tempAnswer, i) =>
-				i === index ? { ...tempAnswer, isCorrect: !tempAnswer.isCorrect } : tempAnswer
-			);
-		});
-	};
-
 
 	useEffect(() => {
 		const textarea = textareaRef.current;
@@ -65,27 +49,33 @@ const Question = ({onAnswerChange,onAnswerDelete,toggleAnswerCorrect}:Props) => 
 			<div className="flex flex-col gap-5 max-w-4xl mx-auto pt-10 pb-10">
 				<div className="flex justify-between">
 					<h1 className="flex gap-3 items-center text-2xl font-bold">
-						<Bars4Icon className="text-slate-400 h-7 w-7" /> Question 1
+						<Bars4Icon className="text-slate-400 h-7 w-7" /> Question {questionIndex + 1}
 					</h1>
-					<XMarkIcon className="text-slate-400 h-7 w-7 cursor-pointer hover:text-red-600" />
+					<XMarkIcon
+						className="text-slate-400 h-7 w-7 cursor-pointer hover:text-red-600"
+						onClick={() => onQuestionDelete(questionIndex)}
+					/>
 				</div>
 				<Textarea
 					ref={textareaRef}
-					className="bg-primary text-lg p-5 overflow-hidden resize-none min-h-[50px]"
+					className="bg-primary text-lg p-5 overflow-hidden resize-none"
+					onChange={(e) => onQuestionChange(e.target.value, questionIndex)}
 					placeholder="Insert question..."
+					value={question.question}
 				/>
 				<div className="flex flex-col gap-2">
-					{answers.map((answer, index) => {
-						let label = String.fromCharCode(65 + index);
+					{question.answers.map((answer, answerIndex) => {
+						let label = String.fromCharCode(65 + answerIndex);
 						return (
 							<Answer
-								key={index}
-								index={index}
+								key={answerIndex}
+								answerIndex={answerIndex}
+								questionIndex={questionIndex}
 								label={label}
 								answer={answer}
-								onChange={handleAnswerChange}
-								onDelete={handleAnswerDelete}
-								toggleCorrect={handleToggleCorrectAnswer}
+								onAnswerChange={onAnswerChange}
+								onAnswerDelete={onAnswerDelete}
+								toggleAnswerCorrect={toggleAnswerCorrect}
 							/>
 						);
 					})}
@@ -94,7 +84,7 @@ const Question = ({onAnswerChange,onAnswerDelete,toggleAnswerCorrect}:Props) => 
 					<Button
 						variant="ghost"
 						className="text-blue-500 font-bold text-lg hover:bg-slate-100 hover:text-blue-500"
-						onClick={handleAddAnswer}
+						onClick={() => onAnswerAdd(questionIndex)}
 					>
 						Add answer +
 					</Button>
