@@ -2,10 +2,16 @@ import { XMarkIcon, Bars4Icon } from "@heroicons/react/24/solid";
 import { Textarea } from "./ui/textarea";
 import { useRef, useEffect, useState } from "react";
 import Answer from "./Answer";
-import { Button } from "./ui/button";
+import { Button } from s"./ui/button";
 import { AnswerType } from "../types/models";
 
-const Question = () => {
+interface Props{
+	onAnswerChange: (text:string,index:number) => void,
+    onAnswerDelete: (index:number, answer:string) => void,
+    toggleAnswerCorrect: (index:number) => void,
+}
+
+const Question = ({onAnswerChange,onAnswerDelete,toggleAnswerCorrect}:Props) => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const [answers, setAnswers] = useState<AnswerType[]>([{ answer: "", isCorrect: false }]);
 
