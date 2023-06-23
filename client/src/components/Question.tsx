@@ -3,45 +3,41 @@ import { Textarea } from "./ui/textarea";
 import { useRef, useEffect, useState } from "react";
 import Answer from "./Answer";
 import { Button } from "./ui/button";
+import { AnswerType } from "../types/models";
 
 const Question = () => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const [answers, setAnswers] = useState<string[]>([""]);
-    const [correctAnswers,setCorrectAnswers] = useState<string[]>([]);
+	const [answers, setAnswers] = useState<AnswerType[]>([{ answer: "", isCorrect: false }]);
 
 	const handleAnswerChange = (text: string, index: number) => {
 		if (index === answers.length - 1) {
-			setAnswers((prevArray) => [...prevArray, ""]);
+			setAnswers((prevArray) => [...prevArray, { answer: "", isCorrect: false }]);
 		}
 
 		setAnswers((prevArray) => {
-			return prevArray.map((element, i) => (i === index ? text : element));
+			return prevArray.map((tempAnswer, i) =>
+				i === index ? { ...tempAnswer, answer: text } : tempAnswer
+			);
 		});
 	};
 
-	const handleAnswerDelete = (index: number, answer: string) => {
+	const handleAnswerDelete = (index: number) => {
 		setAnswers((prevArray) => prevArray.filter((_, i) => i !== index));
-        setCorrectAnswers((prevArray) => prevArray.filter((a) => a !== answer));
 	};
 
-    const handleAddAnswer = () => {
-        setAnswers((prevArray) => [...prevArray,""]);
-    }
+	const handleAddAnswer = () => {
+		setAnswers((prevArray) => [...prevArray, { answer: "", isCorrect: false }]);
+	};
 
-    const handleToggleCorrectAnswer = (answer:string) => {
-        let found = false;
-        correctAnswers.map((a) => {
-            if(a === answer){
-                found = true;
-                return setCorrectAnswers((prevArray) => prevArray.filter((a) => a !== answer))
-            }
-        })
-        if(!found){
-            setCorrectAnswers((prevArray) => [...prevArray,answer])
-        }
-    }
+	const handleToggleCorrectAnswer = (index: number) => {
+		setAnswers((prevArray) => {
+			return prevArray.map((tempAnswer, i) =>
+				i === index ? { ...tempAnswer, isCorrect: !tempAnswer.isCorrect } : tempAnswer
+			);
+		});
+	};
 
-    console.log(correctAnswers)
+	console.log(answers);
 
 	useEffect(() => {
 		const textarea = textareaRef.current;
@@ -84,7 +80,7 @@ const Question = () => {
 								answer={answer}
 								onChange={handleAnswerChange}
 								onDelete={handleAnswerDelete}
-                                toggleCorrect={handleToggleCorrectAnswer}
+								toggleCorrect={handleToggleCorrectAnswer}
 							/>
 						);
 					})}

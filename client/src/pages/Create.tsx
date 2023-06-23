@@ -7,6 +7,10 @@ import { Button } from "../components/ui/button";
 const Create = () => {
 	const [testTitle, setTestTitle] = useState<string>("");
 
+	const handleSaveTest = () => {
+		//trigger a confirmation modal and push test to db
+	}
+
 	return (
 		<div className="flex flex-col gap-10 p-10 w-full">
 			<SearchBar />
@@ -22,7 +26,9 @@ const Create = () => {
 						onChange={(e) => setTestTitle(e.target.value)}
 						className="bg-slate-200"
 					/>
-					<Button className="bg-green-500 hover:bg-green-600">Save</Button>
+					<Button className="bg-green-500 hover:bg-green-600" onClick={handleSaveTest}>
+						Save
+					</Button>
 				</div>
 			</div>
 			<Question />

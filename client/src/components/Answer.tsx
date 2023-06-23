@@ -1,22 +1,20 @@
-import { useState } from "react";
 import { Textarea } from "./ui/textarea";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { AnswerType } from "../types/models";
 
 interface Props{
     onChange: (text:string,index:number) => void,
     onDelete: (index:number, answer:string) => void,
-    toggleCorrect: (index:string) => void,
+    toggleCorrect: (index:number) => void,
     label: string,
     index:number,
-    answer: string
+    answer: AnswerType
 }
 
 const Answer = ({onChange,onDelete,toggleCorrect,label,index,answer}:Props) => {
-    const [correct,setCorrect] = useState<boolean>(false);
 
 	const handleCorrect = () => {
-        setCorrect(!correct);
-        toggleCorrect(answer);
+        toggleCorrect(index);
     };
 
 	return (
@@ -27,15 +25,15 @@ const Answer = ({onChange,onDelete,toggleCorrect,label,index,answer}:Props) => {
 					className="bg-primary text-lg p-5 pr-14 overflow-hidden resize-none"
 					onChange={(e) => onChange(e.target.value,index)}
                     placeholder="Answer..."
-                    value={answer}
+                    value={answer.answer}
 				/>
 				<CheckIcon
-					className={`${correct ? "bg-green-500 text-white" : "text-green-600 bg-green-100"} absolute right-2 top-2 z-10 h-8 w-8 p-2 rounded-sm  hover:bg-green-500 hover:text-white cursor-pointer`}
+					className={`${answer.isCorrect ? "bg-green-500 text-white" : "text-green-600 bg-green-100"} absolute right-2 top-2 z-10 h-8 w-8 p-2 rounded-sm  hover:bg-green-500 hover:text-white cursor-pointer`}
 					onClick={handleCorrect}
 				/>
 				<XMarkIcon
 					className="absolute right-2 top-12 z-10 h-8 w-8 p-2 rounded-sm text-zinc-400 bg-transparent hover:bg-red-500 hover:text-white cursor-pointer"
-					onClick={() => onDelete(index,answer)}
+					onClick={() => onDelete(index,answer.answer)}
 				/>
 			</div>
 		</div>
