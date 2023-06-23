@@ -7,7 +7,6 @@ import { Button } from "../components/ui/button";
 const Create = () => {
 	const [testTitle, setTestTitle] = useState<string>("");
 
-
 	return (
 		<div className="flex flex-col gap-10 p-10 w-full">
 			<SearchBar />
@@ -18,8 +17,12 @@ const Create = () => {
 					have at least one correct answer.
 				</p>
 				<div className="flex gap-5 mb-2 p-2">
-					<Input placeholder="Insert test name..." onChange={(e) => setTestTitle(e.target.value)} className="bg-slate-200" />
-          <Button className="bg-green-500 hover:bg-green-600">Save</Button>
+					<Input
+						placeholder="Insert test name..."
+						onChange={(e) => setTestTitle(e.target.value)}
+						className="bg-slate-200"
+					/>
+					<Button className="bg-green-500 hover:bg-green-600">Save</Button>
 				</div>
 			</div>
 			<Question />
