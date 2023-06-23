@@ -37,7 +37,6 @@ const Question = () => {
 		});
 	};
 
-	console.log(answers);
 
 	useEffect(() => {
 		const textarea = textareaRef.current;

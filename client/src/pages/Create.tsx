@@ -3,11 +3,13 @@ import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
+import { QuestionType } from "../types/models";
 
 const Create = () => {
 	const [testTitle, setTestTitle] = useState<string>("");
+	const [questions, setQuestions] = useState<QuestionType[]>([{question:"",answers:[{answer:"",isCorrect:false}]}])
 
-	const handleSaveTest = () => {
+	const handleDeleteTest = () => {
 		//trigger a confirmation modal and push test to db
 	}
 
@@ -26,12 +28,14 @@ const Create = () => {
 						onChange={(e) => setTestTitle(e.target.value)}
 						className="bg-slate-200"
 					/>
-					<Button className="bg-green-500 hover:bg-green-600" onClick={handleSaveTest}>
-						Save
+					<Button className="bg-red-500 hover:bg-red-600 truncate" onClick={handleDeleteTest}>
+						Reset
 					</Button>
 				</div>
 			</div>
-			<Question />
+			{questions.map((question) => {
+				return <Question/>
+			})}
 		</div>
 	);
 };
