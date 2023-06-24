@@ -28,7 +28,7 @@ const ImageUpload = ({ onSetQuestionImage, imageUrl,questionIndex }: Props) => {
   return (
     <div
       {...getRootProps()}
-      className="w-full h-[200px] p-3 border-2 border-dashed border-slate-400 flex items-center justify-center rounded-sm relative cursor-grab"
+      className={`${isDragActive ? "border-blue-500" : "border-slate-400"} w-full h-[200px] p-3 border-2 border-dashed  flex items-center justify-center rounded-sm relative cursor-grab`}
     >
       {imageUrl ? (
         <>
@@ -44,7 +44,7 @@ const ImageUpload = ({ onSetQuestionImage, imageUrl,questionIndex }: Props) => {
         <>
           <input {...getInputProps()} />
           {isDragActive ? (
-            <p>Drop the files here ...</p>
+            <p className="text-blue-500">Drop the files here ...</p>
           ) : (
             <p>Drag 'n' drop some files here, or click to select files</p>
           )}
