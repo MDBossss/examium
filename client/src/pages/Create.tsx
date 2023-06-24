@@ -2,7 +2,6 @@ import { useState } from "react";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/input";
-import { Button } from "../components/ui/button";
 import { QuestionType } from "../types/models";
 import {
   AlertDialog,
@@ -133,10 +132,8 @@ const Create = () => {
             value={testTitle}
           />
           <AlertDialog>
-            <AlertDialogTrigger>
-              <Button className="bg-red-500 hover:bg-red-600 truncate">
-                Reset
-              </Button>
+            <AlertDialogTrigger className="bg-red-500 hover:bg-red-600 text-white inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4">
+              Reset
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

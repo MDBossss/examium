@@ -2,6 +2,7 @@ import { useDropzone } from "react-dropzone";
 import { useCallback } from "react";
 import { Button } from "./ui/button";
 import { TrashIcon } from "@heroicons/react/24/solid";
+import { removeImageFromBucket, uploadImageToBucket } from "../utils/supabaseUtils";
 
 interface Props {
   onSetQuestionImage: (imageUrl: string | undefined, questionIndex:number) => void;
@@ -10,26 +11,28 @@ interface Props {
 }
 
 const ImageUpload = ({ onSetQuestionImage, imageUrl,questionIndex }: Props) => {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    //upload image to supabase and get url
-    const newImageUrl = "url from supabase";
-    onSetQuestionImage(newImageUrl,questionIndex);
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    const path = await uploadImageToBucket("questionImages",acceptedFiles[0]);
+    onSetQuestionImage(path,questionIndex);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  const handleDeleteImage = () => {
+  const handleDeleteImage = async () => {
     //delete image in supabase storage and set imageUrl to null
-    onSetQuestionImage(undefined,questionIndex);
+    if(imageUrl){
+      await removeImageFromBucket("questionImages",imageUrl)
+      onSetQuestionImage(undefined,questionIndex);
+    }
   };
 
   return (
     <div
       {...getRootProps()}
-      className="w-full h-[200px] p-3 border-2 border-dashed border-slate-400 flex items-center justify-center rounded-sm relative"
+      className="w-full h-[200px] p-3 border-2 border-dashed border-slate-400 flex items-center justify-center rounded-sm relative cursor-grab"
     >
       {imageUrl ? (
         <>
-          <img src={imageUrl} alt="image" className=" h-full object-cover" />
+          <img src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${imageUrl}`} alt="image" className=" h-full object-cover" />
           <Button
             className="bg-red-500 hover:bg-red-600 p-3 text-white absolute right-1 top-1"
             onClick={handleDeleteImage}
