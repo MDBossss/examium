@@ -17,8 +17,7 @@ export interface QuestionType{
     id?:number
     question: string,
     answers: AnswerType[],
-    imageUrl?: string
-    
+    imageUrl?: string,
 }
 
 export interface AnswerType{

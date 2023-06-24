@@ -23,7 +23,7 @@ const Answer = ({
 }: Props) => {
 	return (
 		<div className="flex items-center">
-			<h2 className="text-xl text-zinc-400 p-5">{label}</h2>
+			<h2 className="text-xl text-zinc-400 p-5 max-w-[50px]">{label}</h2>
 			<div className="relative flex w-full">
 				<Textarea
 					className="bg-primary text-lg p-5 pr-14 overflow-hidden resize-none"
