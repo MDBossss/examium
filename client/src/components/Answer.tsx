@@ -1,5 +1,5 @@
 import { Textarea } from "./ui/textarea";
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { CheckIcon, XIcon } from "lucide-react";
 import { AnswerType } from "../types/models";
 
 interface Props {
@@ -37,7 +37,7 @@ const Answer = ({
 					} absolute right-2 top-2 z-10 h-8 w-8 p-2 rounded-sm  hover:bg-green-500 hover:text-white cursor-pointer`}
 					onClick={() => toggleAnswerCorrect(answerIndex, questionIndex)}
 				/>
-				<XMarkIcon
+				<XIcon
 					className="absolute right-2 top-12 z-10 h-8 w-8 p-2 rounded-sm text-zinc-400 bg-transparent hover:bg-red-500 hover:text-white cursor-pointer"
 					onClick={() => onAnswerDelete(answerIndex, questionIndex)}
 				/>

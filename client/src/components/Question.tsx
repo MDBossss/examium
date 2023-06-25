@@ -1,4 +1,4 @@
-import { XMarkIcon, CameraIcon } from "@heroicons/react/24/solid";
+import { XIcon, ImageIcon } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 import { useRef, useEffect } from "react";
 import Answer from "./Answer";
@@ -71,7 +71,7 @@ const Question = ({
 											className="w-[40px] h-full"
 										/>
 									) : (
-										<CameraIcon className="text-slate-400 h-7 w-7 hover:text-blue-500" />
+										<ImageIcon className="text-slate-400 h-7 w-7 hover:text-blue-500" />
 									)}
 								</div>
 							</AlertDialogTrigger>
@@ -97,7 +97,7 @@ const Question = ({
 						</AlertDialog>
 						Question {questionIndex + 1}
 					</h1>
-					<XMarkIcon
+					<XIcon
 						className="text-slate-400 h-7 w-7 cursor-pointer hover:text-red-600"
 						onClick={() => onQuestionDelete(questionIndex)}
 					/>

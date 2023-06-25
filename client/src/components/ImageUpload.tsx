@@ -1,7 +1,7 @@
 import { useDropzone } from "react-dropzone";
 import { useCallback } from "react";
 import { Button } from "./ui/button";
-import { TrashIcon } from "@heroicons/react/24/solid";
+import { Trash2Icon } from "lucide-react";
 import { removeImageFromBucket, uploadImageToBucket } from "../utils/supabaseUtils";
 
 interface Props {
@@ -18,7 +18,6 @@ const ImageUpload = ({ onSetQuestionImage, imageUrl,questionIndex }: Props) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleDeleteImage = async () => {
-    //delete image in supabase storage and set imageUrl to null
     if(imageUrl){
       await removeImageFromBucket("questionImages",imageUrl)
       onSetQuestionImage(undefined,questionIndex);
@@ -37,7 +36,7 @@ const ImageUpload = ({ onSetQuestionImage, imageUrl,questionIndex }: Props) => {
             className="bg-red-500 hover:bg-red-600 p-3 text-white absolute right-1 top-1"
             onClick={handleDeleteImage}
           >
-            <TrashIcon className="h-4 w-4" />
+            <Trash2Icon className="h-4 w-4" />
           </Button>
         </>
       ) : (
