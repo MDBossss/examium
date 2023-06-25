@@ -1,17 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useSession } from "@clerk/clerk-react";
+import LoginButton from "./ui/LoginButton";
 
 const SearchBar = () => {
-	let user = {
-		fullName: "John Doe",
-	};
+	const { session } = useSession();
 
 	return (
-		<div className="flex flex-row gap-5 items-center justify-end">
-			<p>{user ? user.fullName : "Log In"}</p>
-			<Avatar>
-				<AvatarImage src="https://github.com/shadcn.png" />
-				<AvatarFallback>CN</AvatarFallback>
-			</Avatar>
+		<div className="flex flex-row gap-3 items-center justify-end">
+			{session && <p>Welcome,  <span className=" text-blue-500">{session.user.firstName}</span></p>}
+			<LoginButton />
 		</div>
 	);
 };

@@ -1,6 +1,7 @@
-import { DocumentIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
+import LoginButton from "./ui/LoginButton";
+import Logo from "./ui/logo";
 
 const Navbar = () => {
 	const navigate = useNavigate();
@@ -12,13 +13,14 @@ const Navbar = () => {
 					className="flex gap-1 items-center text-xl cursor-pointer"
 					onClick={() => navigate("/")}
 				>
-					<DocumentIcon className="h-7 w-7 mb-2 text-blue-500" />
-					<h1 className=" font-medium text-2xl text-zinc-800 font-sans tracking-tight mb-1">Examium</h1>
+					<Logo/>
 				</div>
-				<div className="flex gap-3">
-          <Button variant="ghost">Login</Button>
-          <Button variant="outline" onClick={() => navigate("/create")}>Get started</Button>
-        </div>
+				<div className="flex flex-row-reverse gap-3">
+					<LoginButton/>
+					<Button className="bg-blue-500 hover:bg-blue-600" onClick={() => navigate("/create")}>
+						Get started
+					</Button>
+				</div>
 			</div>
 		</div>
 	);
