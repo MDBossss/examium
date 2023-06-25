@@ -66,20 +66,23 @@ const Question = ({
 							<AlertDialogTrigger>
 								<div className="bg-transparent border border-dashed border-slate-400 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4">
 									{question.imageUrl ? (
-										<img src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${question.imageUrl}`} className="w-[40px] h-full" />
+										<img
+											src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${question.imageUrl}`}
+											className="w-[40px] h-full"
+										/>
 									) : (
-										<CameraIcon className="text-slate-400 h-7 w-7" />
+										<CameraIcon className="text-slate-400 h-7 w-7 hover:text-blue-500" />
 									)}
 								</div>
 							</AlertDialogTrigger>
 							<AlertDialogContent>
 								<AlertDialogHeader>
 									<AlertDialogTitle>Upload an image</AlertDialogTitle>
-                  <ImageUpload
-                    onSetQuestionImage={onSetQuestionImage}
-                    imageUrl={question.imageUrl}
-                    questionIndex={questionIndex}
-                  />
+									<ImageUpload
+										onSetQuestionImage={onSetQuestionImage}
+										imageUrl={question.imageUrl}
+										questionIndex={questionIndex}
+									/>
 								</AlertDialogHeader>
 								<AlertDialogFooter>
 									<AlertDialogCancel>Close</AlertDialogCancel>
@@ -126,7 +129,7 @@ const Question = ({
 				<div className="flex justify-end">
 					<Button
 						variant="ghost"
-						className="text-blue-500 font-bold text-lg hover:bg-slate-100 hover:text-blue-500"
+						className="text-blue-500 font-bold text-lg hover:bg-transparent hover:text-blue-600"
 						onClick={() => onAnswerAdd(questionIndex)}
 					>
 						Add answer +
