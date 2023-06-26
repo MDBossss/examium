@@ -2,7 +2,7 @@ import { useState } from "react";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/input";
-import { QuestionType, TestType } from "../types/models";
+import { TestType } from "../types/models";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,67 +18,69 @@ import {
 const initialValue: TestType = {
   title: "",
   createdAt: Date.now(),
-  questions: [
-    { question: "", answers: [{ answer: "", isCorrect: false }] },
-  ]
-
-}
+  questions: [{ question: "", answers: [{ answer: "", isCorrect: false }] }],
+};
 
 const Create = () => {
-  const [test,setTest] = useState<TestType>(initialValue);
-  const [testTitle, setTestTitle] = useState<string>("");
-  const [questions, setQuestions] = useState<QuestionType[]>([
-    { question: "", answers: [{ answer: "", isCorrect: false }] },
-  ]);
+  const [test, setTest] = useState<TestType>(initialValue);
+  // const [testTitle, setTestTitle] = useState<string>("");
+  // const [questions, setQuestions] = useState<QuestionType[]>([
+  //   { question: "", answers: [{ answer: "", isCorrect: false }] },
+  // ]);
 
   const handlePreviewTest = () => {
     //check if title is set, at least 2 questions, and if user is logged in
     //ir user not logged in display login modal first
     //navigate to /preview and pass test object with react router
-  }
-
-  const handleDeleteTest = () => {
-    setTestTitle("");
-    setQuestions([
-      { question: "", answers: [{ answer: "", isCorrect: false }] },
-    ]);
   };
 
-  const handleSetQuestionImage = (imageUrl:string | undefined, questionIndex: number) => {
-    setTest((prevTest) => {
-      prevTest.questions[questionIndex].imageUrl = imageUrl;
-      return prevTest
-    })
+  const handleDeleteTest = () => {
+    setTest(initialValue);
+  };
 
-	setQuestions((prevQuestions) => {
-		const updatedQuestions = [...prevQuestions];
-		updatedQuestions[questionIndex].imageUrl = imageUrl;
-		return updatedQuestions;
-	  });
-  }
+  const handleSetTestTitle = (title: string) => {
+    setTest((prevTest) => ({
+      ...prevTest,
+      title:title
+    }))
+  };
+
+
+  const handleSetQuestionImage = (
+    imageUrl: string | undefined,
+    questionIndex: number
+  ) => {
+    setTest((prevTest) => {
+      let updatedTest = {...prevTest}
+      updatedTest.questions[questionIndex].imageUrl = imageUrl;
+      return updatedTest;
+    });
+  };
 
   const handleQuestionChange = (text: string, questionIndex: number) => {
-    setQuestions((prevQuestions) => {
-      const updatedQuestions = [...prevQuestions];
-      updatedQuestions[questionIndex].question = text;
-      return updatedQuestions;
+    setTest((prevTest) => {
+      let updatedTest = {...prevTest}
+      updatedTest.questions[questionIndex].question = text;
+      return updatedTest;
     });
   };
 
   const handleAddQuestion = () => {
-    setQuestions((prevQuestions) => {
-      return [
-        ...prevQuestions,
-        { question: "", answers: [{ answer: "", isCorrect: false }] },
-      ];
+    setTest((prevTest) => {
+      let updatedTest = {...prevTest}
+      updatedTest.questions.push({
+        question: "",
+        answers: [{ answer: "", isCorrect: false }],
+      });
+      return updatedTest;
     });
   };
 
   const handleQuestionDelete = (questionIndex: number) => {
-    setQuestions((prevQuestions) => {
-      const updatedQuestions = [...prevQuestions];
-      updatedQuestions.splice(questionIndex, 1);
-      return updatedQuestions;
+    setTest((prevTest) => {
+      let updatedTest = {...prevTest}
+      updatedTest.questions.splice(questionIndex, 1);
+      return updatedTest;
     });
   };
 
@@ -87,40 +89,40 @@ const Create = () => {
     answerIndex: number,
     questionIndex: number
   ) => {
-    if (answerIndex === questions[questionIndex].answers.length - 1) {
-      setQuestions((prevQuestions) => {
-        const updatedQuestions = [...prevQuestions];
-        updatedQuestions[questionIndex].answers.push({
+    if (answerIndex === test.questions[questionIndex].answers.length - 1) {
+      setTest((prevTest) => {
+        let updatedTest = {...prevTest}
+        updatedTest.questions[questionIndex].answers.push({
           answer: "",
           isCorrect: false,
         });
-        return updatedQuestions;
+        return updatedTest;
       });
     }
 
-    setQuestions((prevQuestions) => {
-      const updatedQuestions = [...prevQuestions];
-      updatedQuestions[questionIndex].answers[answerIndex].answer = text;
-      return updatedQuestions;
+    setTest((prevTest) => {
+      let updatedTest = {...prevTest}
+      updatedTest.questions[questionIndex].answers[answerIndex].answer = text;
+      return updatedTest;
     });
   };
 
   const handleAnswerDelete = (answerIndex: number, questionIndex: number) => {
-    setQuestions((prevQuestions) => {
-      const updatedQuestions = [...prevQuestions];
-      updatedQuestions[questionIndex].answers.splice(answerIndex, 1);
-      return updatedQuestions;
+    setTest((prevTest) => {
+      let updatedTest = {...prevTest}
+      updatedTest.questions[questionIndex].answers.splice(answerIndex, 1);
+      return updatedTest;
     });
   };
 
   const handleAddAnswer = (questionIndex: number) => {
-    setQuestions((prevQuestions) => {
-      const updatedQuestions = [...prevQuestions];
-      updatedQuestions[questionIndex].answers.push({
+    setTest((prevTest) => {
+      let updatedTest = prevTest;
+      updatedTest.questions[questionIndex].answers.push({
         answer: "",
         isCorrect: false,
       });
-      return updatedQuestions;
+      return updatedTest;
     });
   };
 
@@ -128,17 +130,17 @@ const Create = () => {
     answerIndex: number,
     questionIndex: number
   ) => {
-    setQuestions((prevQuestions) => {
-      const updatedQuestions = [...prevQuestions];
-      updatedQuestions[questionIndex].answers[answerIndex].isCorrect =
-        !updatedQuestions[questionIndex].answers[answerIndex].isCorrect;
-      return updatedQuestions;
+    setTest((prevTest) => {
+      let updatedTest = {...prevTest}
+      updatedTest.questions[questionIndex].answers[answerIndex].isCorrect =
+        !updatedTest.questions[questionIndex].answers[answerIndex].isCorrect;
+      return updatedTest;
     });
   };
 
   return (
     <div className="flex flex-col gap-10 p-10 pt-5 w-full ml-[210px]">
-      <SearchBar />
+      <SearchBar test={test} setTest={setTest} />
       <div className="flex flex-col border-slate-200 border-b">
         <h1 className="text-2xl font-bold text-zinc-800">Create a test</h1>
         <p className="text-slate-400 text-sm pt-3 pb-3">
@@ -148,9 +150,9 @@ const Create = () => {
         <div className="flex gap-5 mb-2 p-2">
           <Input
             placeholder="Insert test name..."
-            onChange={(e) => setTestTitle(e.target.value)}
+            onChange={(e) => handleSetTestTitle(e.target.value)}
             className="bg-slate-200"
-            value={testTitle}
+            value={test.title}
           />
           <AlertDialog>
             <AlertDialogTrigger className="bg-red-500 hover:bg-red-600 text-white inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4">
@@ -177,13 +179,13 @@ const Create = () => {
           </AlertDialog>
         </div>
       </div>
-      {questions.map((question, questionIndex) => {
+      {test.questions.map((question, questionIndex) => {
         return (
           <Question
             key={questionIndex}
             question={question}
             questionIndex={questionIndex}
-			onSetQuestionImage={handleSetQuestionImage}
+            onSetQuestionImage={handleSetQuestionImage}
             onQuestionChange={handleQuestionChange}
             onQuestionDelete={handleQuestionDelete}
             onAnswerChange={handleAnswerChange}
