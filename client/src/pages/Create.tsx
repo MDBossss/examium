@@ -2,7 +2,7 @@ import { useState } from "react";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/input";
-import { QuestionType } from "../types/models";
+import { QuestionType, TestType } from "../types/models";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,11 +15,27 @@ import {
   AlertDialogTrigger,
 } from "../components/ui/alertDialog";
 
+const initialValue: TestType = {
+  title: "",
+  createdAt: Date.now(),
+  questions: [
+    { question: "", answers: [{ answer: "", isCorrect: false }] },
+  ]
+
+}
+
 const Create = () => {
+  const [test,setTest] = useState<TestType>(initialValue);
   const [testTitle, setTestTitle] = useState<string>("");
   const [questions, setQuestions] = useState<QuestionType[]>([
     { question: "", answers: [{ answer: "", isCorrect: false }] },
   ]);
+
+  const handlePreviewTest = () => {
+    //check if title is set, at least 2 questions, and if user is logged in
+    //ir user not logged in display login modal first
+    //navigate to /preview and pass test object with react router
+  }
 
   const handleDeleteTest = () => {
     setTestTitle("");
@@ -29,6 +45,11 @@ const Create = () => {
   };
 
   const handleSetQuestionImage = (imageUrl:string | undefined, questionIndex: number) => {
+    setTest((prevTest) => {
+      prevTest.questions[questionIndex].imageUrl = imageUrl;
+      return prevTest
+    })
+
 	setQuestions((prevQuestions) => {
 		const updatedQuestions = [...prevQuestions];
 		updatedQuestions[questionIndex].imageUrl = imageUrl;
@@ -116,7 +137,7 @@ const Create = () => {
   };
 
   return (
-    <div className="flex flex-col gap-10 p-10 w-full ml-[210px]">
+    <div className="flex flex-col gap-10 p-10 pt-5 w-full ml-[210px]">
       <SearchBar />
       <div className="flex flex-col border-slate-200 border-b">
         <h1 className="text-2xl font-bold text-zinc-800">Create a test</h1>
@@ -182,7 +203,7 @@ const Create = () => {
         </div>
         <div
           className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
-          onClick={handleAddQuestion}
+          onClick={handlePreviewTest}
         >
           Preview test
         </div>

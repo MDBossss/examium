@@ -12,8 +12,17 @@ import { Button } from "./button";
 import { FileIcon, LogOutIcon, PlusIcon, UserIcon, UsersIcon } from "lucide-react";
 import ProgressDialog from "./ProgressDialog";
 import useNavigationDialog from "../../hooks/useNavigationDialog";
+import { useLocation } from "react-router-dom";
+import { TestType } from "../../types/models";
+import { useEffect } from "react";
 
-const LoginButton = () => {
+interface Props{
+	setTest: (test:TestType) => void;
+	test: TestType
+}
+
+const LoginButton = ({test,setTest}:Props) => {
+	const location = useLocation();
 	const { session } = useSession();
 	const { openSignIn, signOut } = useClerk();
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
@@ -22,6 +31,20 @@ const LoginButton = () => {
 		await signOut();
 		session?.end;
 	};
+
+	const handleSignIn = () => {
+		sessionStorage.setItem("test",JSON.stringify(test));
+		openSignIn({redirectUrl:location.pathname})
+	}
+
+	useEffect(() => {
+		const testJSON = sessionStorage.getItem("test")
+		if(testJSON){
+			let test: TestType = JSON.parse(testJSON)
+			setTest(test)
+			sessionStorage.removeItem("test");
+		}
+	},[])
 
 	return (
 		<>
@@ -64,7 +87,7 @@ const LoginButton = () => {
 					</DropdownMenuContent>
 				</DropdownMenu>
 			) : (
-				<Button variant="outline" onClick={() => openSignIn()}>
+				<Button variant="outline" onClick={handleSignIn}>
 					Login
 				</Button>
 			)}

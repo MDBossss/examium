@@ -8,9 +8,11 @@ export interface UserType{
 
 export interface TestType{
     id?:number,
+    title:string
     questions: QuestionType[],
-    author: UserType,
-    createdAt: Date
+    author?: UserType,
+    createdAt: number,
+    lastUpdatedAt?: number
 }
 
 export interface QuestionType{
