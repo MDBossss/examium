@@ -27,7 +27,7 @@ const Preview = () => {
         <h2 className="text-md font-medium text-blue-500">{test.title}</h2>
         {test.questions[questionNumber].imageUrl && (
           <div className="w-full">
-            <img src={test.questions[questionNumber].imageUrl} className="w-full"/>
+            <img src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${test.questions[questionNumber].imageUrl}`} className="w-full"/>
           </div>
         )}
         <h1 className="text-2xl font-bold text-center">
