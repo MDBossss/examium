@@ -3,8 +3,8 @@ import LoginButton from "./ui/LoginButton";
 import { TestType } from "../types/models";
 
 interface Props{
-	setTest: (test:TestType) => void;
-	test: TestType
+	setTest?: (test:TestType) => void;
+	test?: TestType
 }
 
 const SearchBar = ({test,setTest}:Props) => {

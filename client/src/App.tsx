@@ -1,19 +1,21 @@
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Sidebar from "./components/Sidebar";
 import Create from "./pages/Create";
+import Preview from "./pages/Preview";
+import NotFound404 from "./pages/NotFound404";
+import Layout from "./pages/Layout";
 
 function App() {
-
   return (
-    <div className="flex">
-    <Sidebar/>
-    <Routes>
-      <Route path="/" element={<Home/>}/>
-      <Route path="/create" element={<Create/>}/>
-    </Routes>
+    <div>
+      <Routes>
+        <Route path="*" element={<NotFound404 />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/create" element={<Layout><Create /></Layout>} />
+        <Route path="/create/preview" element={<Layout><Preview /></Layout>} />
+      </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

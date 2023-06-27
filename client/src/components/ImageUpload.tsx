@@ -41,7 +41,7 @@ const ImageUpload = ({ onSetQuestionImage, imageUrl,questionIndex }: Props) => {
         </>
       ) : (
         <>
-          <input {...getInputProps()} />
+          <input {...getInputProps()} accept=".png, .jpg"/>
           {isDragActive ? (
             <p className="text-blue-500">Drop the files here ...</p>
           ) : (

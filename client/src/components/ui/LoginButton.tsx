@@ -14,14 +14,13 @@ import ProgressDialog from "./ProgressDialog";
 import useNavigationDialog from "../../hooks/useNavigationDialog";
 import { useLocation } from "react-router-dom";
 import { TestType } from "../../types/models";
-import { useEffect } from "react";
 
 interface Props{
-	setTest: (test:TestType) => void;
-	test: TestType
+	setTest?: (test:TestType) => void;
+	test?: TestType
 }
 
-const LoginButton = ({test,setTest}:Props) => {
+const LoginButton = ({test}:Props) => {
 	const location = useLocation();
 	const { session } = useSession();
 	const { openSignIn, signOut } = useClerk();
@@ -37,14 +36,7 @@ const LoginButton = ({test,setTest}:Props) => {
 		openSignIn({redirectUrl:location.pathname})
 	}
 
-	useEffect(() => {
-		const testJSON = sessionStorage.getItem("test")
-		if(testJSON){
-			let test: TestType = JSON.parse(testJSON)
-			setTest(test)
-			sessionStorage.removeItem("test");
-		}
-	},[])
+
 
 	return (
 		<>

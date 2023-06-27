@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/input";
@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../components/ui/alertDialog";
+import { useNavigate } from "react-router-dom";
 
 const initialValue: TestType = {
   title: "",
@@ -23,16 +24,25 @@ const initialValue: TestType = {
 
 const Create = () => {
   const [test, setTest] = useState<TestType>(initialValue);
-  // const [testTitle, setTestTitle] = useState<string>("");
-  // const [questions, setQuestions] = useState<QuestionType[]>([
-  //   { question: "", answers: [{ answer: "", isCorrect: false }] },
-  // ]);
+  const navigate = useNavigate();
 
   const handlePreviewTest = () => {
+    sessionStorage.setItem("test",JSON.stringify(test));
+
     //check if title is set, at least 2 questions, and if user is logged in
     //ir user not logged in display login modal first
     //navigate to /preview and pass test object with react router
+    navigate("/create/preview", {state: {test}})
   };
+
+  useEffect(() => {
+		const testJSON = sessionStorage.getItem("test")
+		if(testJSON && setTest){
+			let test: TestType = JSON.parse(testJSON)
+			setTest(test)
+			sessionStorage.removeItem("test");
+		}
+	},[])
 
   const handleDeleteTest = () => {
     setTest(initialValue);
