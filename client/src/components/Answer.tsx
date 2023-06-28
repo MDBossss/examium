@@ -1,4 +1,4 @@
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "./ui/Textarea";
 import { CheckIcon, XIcon } from "lucide-react";
 import { AnswerType } from "../types/models";
 

@@ -41,7 +41,7 @@ const QuizAnswer = ({ answer, answerIndex,isChecked,questionDone,questionNumber,
 			className={`${selectedCorrect ? "bg-green-300" : selectedWrong ? "bg-red-500" : "bg-primary"} flex items-center gap-2 p-4 rounded-sm transition-all cursor-pointer`}
 			onClick={() => handleClick()}
 		>
-			<Checkbox checked={isChecked} disabled={questionDone[questionNumber]}/>
+			<Checkbox checked={isChecked} disabled={questionDone[questionNumber]} />
 			<p className="break-anywhere">{answer.answer}</p>
 		</div>
 	);

@@ -8,7 +8,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from "../alertDialog";
+} from "./AlertDialog";
 
 interface Props{
     onTrigger: () => void

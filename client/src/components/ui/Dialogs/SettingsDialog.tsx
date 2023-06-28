@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TestType } from "../../../types/models";
-import { Button } from "../button";
+import { Button } from "../Button";
 import {
 	Dialog,
 	DialogContent,
@@ -12,6 +12,7 @@ import {
 } from "../dialog";
 import { Input } from "../input";
 import { Switch } from "../switch";
+import { useToast } from "../../../hooks/useToast";
 
 interface Props {
 	test: TestType;
@@ -23,6 +24,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 	const [description, setDescription] = useState<string>(test.description);
 	const [randomizeQuestions, setRandomizeQuestions] = useState<boolean>(test.randomizeQuestions);
 	const [randomizeAnswers, setRandomizeAnswers] = useState<boolean>(test.randomizeAnswers);
+	const {toast} = useToast();
 
 	const handleSave = () => {
 		setTest((prevTest) => ({
@@ -32,6 +34,10 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 			randomizeQuestions: randomizeQuestions,
 			randomizeAnswers: randomizeAnswers,
 		}));
+
+		toast({
+			title: "✅ Settings saved.",
+		  })
 	};
 
 	useEffect(() => {

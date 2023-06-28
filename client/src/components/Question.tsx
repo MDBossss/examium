@@ -1,8 +1,8 @@
 import { XIcon, ImageIcon } from "lucide-react";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "./ui/Textarea";
 import { useRef, useEffect } from "react";
 import Answer from "./Answer";
-import { Button } from "./ui/button";
+import { Button } from "./ui/Button";
 import { QuestionType } from "../types/models";
 import {
 	AlertDialog,
@@ -13,7 +13,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 	AlertDialogTrigger,
-} from "../components/ui/alertDialog";
+} from "./ui/Dialogs/AlertDialog";
 import ImageUpload from "./ImageUpload";
 
 interface Props {

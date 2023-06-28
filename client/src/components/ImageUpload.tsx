@@ -1,6 +1,6 @@
 import { useDropzone } from "react-dropzone";
 import { useCallback } from "react";
-import { Button } from "./ui/button";
+import { Button } from "./ui/Button";
 import { Trash2Icon } from "lucide-react";
 import { removeImageFromBucket, uploadImageToBucket } from "../utils/supabaseUtils";
 

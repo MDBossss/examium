@@ -144,7 +144,7 @@ const Create = () => {
   };
 
   return (
-    <div className="flex flex-col gap-10 p-10 pt-5 w-full ml-[210px]">
+    <div className="flex flex-col gap-10 p-10 pt-5 w-full">
       <SearchBar test={test} setTest={setTest} />
       <div className="flex flex-col border-slate-200 border-b">
         <h1 className="text-2xl font-bold text-zinc-800">Create a test</h1>

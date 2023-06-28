@@ -3,6 +3,7 @@ import App from "./App.tsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
+import { Toaster } from "./components/ui/toaster.tsx";
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
 	throw new Error("Missing Publishable Key");
@@ -17,6 +18,7 @@ const apperance = {
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<ClerkProvider publishableKey={clerkPubKey} appearance={apperance}>
+		<Toaster />
 		<BrowserRouter>
 			<App />
 		</BrowserRouter>

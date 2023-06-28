@@ -1,5 +1,5 @@
 import { useClerk, useSession } from "@clerk/clerk-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -8,12 +8,13 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "./dropdown";
-import { Button } from "./button";
+import { Button } from "./Button";
 import { FileIcon, LogOutIcon, PlusIcon, UserIcon, UsersIcon } from "lucide-react";
 import ProgressDialog from "./Dialogs/ProgressDialog";
 import useNavigationDialog from "../../hooks/useNavigationDialog";
 import { useLocation } from "react-router-dom";
 import { TestType } from "../../types/models";
+import { useToast } from "../../hooks/useToast";
 
 interface Props{
 	setTest?: (test:TestType) => void;
@@ -25,15 +26,20 @@ const LoginButton = ({test}:Props) => {
 	const { session } = useSession();
 	const { openSignIn, signOut } = useClerk();
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
+	const {toast} = useToast();
 
 	const handleLogout = async () => {
 		await signOut();
 		session?.end;
+		toast({
+			title: "👋 Successfully logged out.",
+		  })
 	};
 
 	const handleSignIn = () => {
 		sessionStorage.setItem("test",JSON.stringify(test));
 		openSignIn({redirectUrl:location.pathname})
+		
 	}
 
 
