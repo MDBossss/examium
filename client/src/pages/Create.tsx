@@ -3,21 +3,15 @@ import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/input";
 import { TestType } from "../types/models";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../components/ui/alertDialog";
 import { useNavigate } from "react-router-dom";
+import ResetDialog from "../components/ui/Dialogs/ResetDialog";
+import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
 
 const initialValue: TestType = {
   title: "",
+  description: "",
+  randomizeQuestions: false,
+  randomizeAnswers: false,
   createdAt: Date.now(),
   questions: [{ question: "", answers: [{ answer: "", isCorrect: false }] }],
 };
@@ -47,6 +41,7 @@ const Create = () => {
   const handleDeleteTest = () => {
     setTest(initialValue);
   };
+
 
   const handleSetTestTitle = (title: string) => {
     setTest((prevTest) => ({
@@ -164,29 +159,8 @@ const Create = () => {
             className="bg-slate-200"
             value={test.title}
           />
-          <AlertDialog>
-            <AlertDialogTrigger className="bg-red-500 hover:bg-red-600 text-white inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4">
-              Reset
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will delete all the
-                  progress you made on this test.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  className="bg-red-500 hover:bg-red-600"
-                  onClick={handleDeleteTest}
-                >
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <SettingsDialog test={test} setTest={setTest}/>
+          <ResetDialog onTrigger={handleDeleteTest}/>
         </div>
       </div>
       {test.questions.map((question, questionIndex) => {

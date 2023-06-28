@@ -7,7 +7,7 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from "./alertDialog";
+} from "../alertDialog";
 
 interface Props {
 	onContinue: () => void;

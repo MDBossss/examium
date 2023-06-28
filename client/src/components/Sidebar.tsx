@@ -1,7 +1,7 @@
 import { PlusIcon, FileIcon, UserIcon, UsersIcon, EditIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { useLocation } from "react-router-dom";
-import ProgressDialog from "./ui/ProgressDialog";
+import ProgressDialog from "./ui/Dialogs/ProgressDialog";
 import useNavigationDialog from "../hooks/useNavigationDialog";
 import Logo from "./ui/logo";
 

@@ -8,7 +8,10 @@ export interface UserType{
 
 export interface TestType{
     id?:number,
-    title:string
+    title:string,
+    description:string,
+    randomizeQuestions:boolean,
+    randomizeAnswers:boolean
     questions: QuestionType[],
     author?: UserType,
     createdAt: number,

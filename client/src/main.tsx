@@ -11,8 +11,9 @@ const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 const apperance = {
 	variables: {
-	  colorPrimary: "#3b82f6",
-	}}
+		colorPrimary: "#3b82f6",
+	},
+};
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<ClerkProvider publishableKey={clerkPubKey} appearance={apperance}>

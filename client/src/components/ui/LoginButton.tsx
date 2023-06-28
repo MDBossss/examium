@@ -10,7 +10,7 @@ import {
 } from "./dropdown";
 import { Button } from "./button";
 import { FileIcon, LogOutIcon, PlusIcon, UserIcon, UsersIcon } from "lucide-react";
-import ProgressDialog from "./ProgressDialog";
+import ProgressDialog from "./Dialogs/ProgressDialog";
 import useNavigationDialog from "../../hooks/useNavigationDialog";
 import { useLocation } from "react-router-dom";
 import { TestType } from "../../types/models";
