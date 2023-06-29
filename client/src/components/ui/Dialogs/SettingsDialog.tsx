@@ -9,9 +9,9 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "../dialog";
+} from "../Dialog";
 import { Input } from "../input";
-import { Switch } from "../switch";
+import { Switch } from "../Switch";
 import { useToast } from "../../../hooks/useToast";
 
 interface Props {
@@ -24,7 +24,8 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 	const [description, setDescription] = useState<string>(test.description);
 	const [randomizeQuestions, setRandomizeQuestions] = useState<boolean>(test.randomizeQuestions);
 	const [randomizeAnswers, setRandomizeAnswers] = useState<boolean>(test.randomizeAnswers);
-	const {toast} = useToast();
+	const [showQuestionsOnResults,setShowQuestionsOnResults] = useState<boolean>(test.showQuestionsOnResults);
+	const { toast } = useToast();
 
 	const handleSave = () => {
 		setTest((prevTest) => ({
@@ -33,11 +34,12 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 			description: description,
 			randomizeQuestions: randomizeQuestions,
 			randomizeAnswers: randomizeAnswers,
+			showQuestionsOnResults: showQuestionsOnResults
 		}));
 
 		toast({
 			title: "✅ Settings saved.",
-		  })
+		});
 	};
 
 	useEffect(() => {
@@ -84,25 +86,35 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							onChange={(e) => setDescription(e.target.value)}
 						/>
 					</div>
-					<h3 className="border-slate-200 border-b">Enable randomize:</h3>
 					<div className="grid grid-cols-4 items-center gap-4">
-						<label htmlFor="randomize-questions" className="text-right">
-							Questions
+						<label htmlFor="questions-visible" className="text-left col-span-3">
+							Questions visible after results
+						</label>
+						<Switch
+							id="questions-visible"
+							className="col-span-1"
+							defaultChecked={test.showQuestionsOnResults}
+							onCheckedChange={(checked) => setShowQuestionsOnResults(checked)}
+						/>
+					</div>
+					<div className="grid grid-cols-4 items-center gap-4">
+						<label htmlFor="randomize-questions" className="text-left col-span-3">
+							Randomize questions
 						</label>
 						<Switch
 							id="randomize-questions"
-							className="col-span-3"
+							className="col-span-1"
 							defaultChecked={test.randomizeQuestions}
 							onCheckedChange={(checked) => setRandomizeQuestions(checked)}
 						/>
 					</div>
 					<div className="grid grid-cols-4 items-center gap-4">
-						<label htmlFor="randomize-answers" className="text-right">
-							Answers
+						<label htmlFor="randomize-answers" className="text-left col-span-3">
+							Randomize answers
 						</label>
 						<Switch
 							id="randomize-answers"
-							className="col-span-3"
+							className="col-span-1"
 							defaultChecked={test.randomizeAnswers}
 							onCheckedChange={(checked) => setRandomizeAnswers(checked)}
 						/>

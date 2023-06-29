@@ -1,5 +1,5 @@
 import { useClerk, useSession } from "@clerk/clerk-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "./Avatar"
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -7,7 +7,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "./dropdown";
+} from "./Dropdown";
 import { Button } from "./Button";
 import { FileIcon, LogOutIcon, PlusIcon, UserIcon, UsersIcon } from "lucide-react";
 import ProgressDialog from "./Dialogs/ProgressDialog";

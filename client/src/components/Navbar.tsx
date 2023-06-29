@@ -7,7 +7,7 @@ const Navbar = () => {
 	const navigate = useNavigate();
 
 	return (
-		<div className="fixed top-0 inset-x-0 h-fit bg-primary ">
+		<div className="fixed top-0 inset-x-0 h-fit bg-primary border-b-2 border-slate-200 ">
 			<div className="max-w-7xl mx-auto flex justify-between items-center p-3">
 				<div
 					className="flex gap-1 items-center text-xl cursor-pointer"

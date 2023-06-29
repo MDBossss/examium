@@ -15,6 +15,8 @@ import {
 	AlertDialogTrigger,
 } from "./ui/Dialogs/AlertDialog";
 import ImageUpload from "./ImageUpload";
+import { useSession } from "@clerk/clerk-react";
+import { useToast } from "../hooks/useToast";
 
 interface Props {
 	question: QuestionType;
@@ -40,6 +42,8 @@ const Question = ({
 	toggleAnswerCorrect,
 }: Props) => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const { isSignedIn } = useSession();
+	const {toast} = useToast();
 
 	useEffect(() => {
 		const textarea = textareaRef.current;
@@ -57,14 +61,24 @@ const Question = ({
 		}
 	}, []);
 
+	const handleOpenImageModal = () => {
+		if(!isSignedIn){
+			toast({
+				title: "Login required",
+				description: "Please login in order to add images.",
+				variant: "destructive"
+			  })
+		}
+	}
+
 	return (
 		<div className=" bg-slate-200 w-full p-5">
 			<div className="flex flex-col gap-5 max-w-4xl mx-auto pt-10 pb-10">
 				<div className="flex justify-between">
 					<h1 className="flex gap-3 items-center text-2xl font-bold">
 						<AlertDialog>
-							<AlertDialogTrigger>
-								<div className="bg-transparent border border-dashed border-slate-400 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4">
+							<AlertDialogTrigger disabled={!isSignedIn} >
+								<div className="bg-transparent border border-dashed border-slate-400 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4" onClick={handleOpenImageModal}>
 									{question.imageUrl ? (
 										<img
 											src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${question.imageUrl}`}

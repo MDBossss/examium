@@ -10,8 +10,9 @@ export interface TestType{
     id?:number,
     title:string,
     description:string,
+    showQuestionsOnResults: boolean,
     randomizeQuestions:boolean,
-    randomizeAnswers:boolean
+    randomizeAnswers:boolean,
     questions: QuestionType[],
     author?: UserType,
     createdAt: number,

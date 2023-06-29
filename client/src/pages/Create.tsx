@@ -10,6 +10,7 @@ import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
 const initialValue: TestType = {
   title: "",
   description: "",
+  showQuestionsOnResults: true,
   randomizeQuestions: false,
   randomizeAnswers: false,
   createdAt: Date.now(),
