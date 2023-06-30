@@ -59,7 +59,7 @@ const ImageUpload = ({ onSetQuestionImage, imageUrl, questionIndex }: Props) => 
 					) : isLoading ? (
 						<Spinner/>
 					) : (
-						<p>Drag 'n' drop some files here, or click to select files</p>
+						<p>Drag 'n' drop .png files here, or click to select files</p>
 					)}
 				</>
 			)}
