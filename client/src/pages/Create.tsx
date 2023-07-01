@@ -6,6 +6,8 @@ import { TestType } from "../types/models";
 import { useNavigate } from "react-router-dom";
 import ResetDialog from "../components/ui/Dialogs/ResetDialog";
 import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
+import {z} from "zod";
+import { useToast } from "../hooks/useToast";
 
 const initialValue: TestType = {
   title: "",
@@ -18,9 +20,13 @@ const initialValue: TestType = {
   questions: [{ question: "", answers: [{ answer: "", isCorrect: false }] }],
 };
 
+const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
+
 const Create = () => {
   const [test, setTest] = useState<TestType>(initialValue);
+  const [titleError,setTitleError] = useState<boolean>(false);
   const navigate = useNavigate();
+  const {toast} = useToast();
 
   const handlePreviewTest = () => {
     sessionStorage.setItem("test",JSON.stringify(test));
@@ -46,10 +52,21 @@ const Create = () => {
 
 
   const handleSetTestTitle = (title: string) => {
-    setTest((prevTest) => ({
-      ...prevTest,
-      title:title
-    }))
+    try{
+      titleSchema.parse(title);
+      setTitleError(false)
+      setTest((prevTest) => ({
+        ...prevTest,
+        title:title
+      }))
+    }catch(error){
+      setTitleError(true)
+      console.log(error)
+      toast({
+				description: "Title is at most 50 characters",
+				variant: "destructive",
+			});
+    }
   };
 
 
@@ -158,7 +175,7 @@ const Create = () => {
           <Input
             placeholder="Insert test name..."
             onChange={(e) => handleSetTestTitle(e.target.value)}
-            className="bg-slate-200"
+            className={`${titleError && "focus-visible:ring-red-500"} bg-slate-200`}
             value={test.title}
           />
           <SettingsDialog test={test} setTest={setTest}/>
