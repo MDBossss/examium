@@ -10,6 +10,7 @@ export interface TestType{
     id?:number,
     title:string,
     description:string,
+    passCriteria: number,
     showQuestionsOnResults: boolean,
     randomizeQuestions:boolean,
     randomizeAnswers:boolean,

@@ -10,6 +10,12 @@ const SettingsDisplay = ({ test }: Props) => {
 		<div className="flex flex-1 flex-col  w-full p-5 gap-2">
 			<p className="self-start font-medium  ">Active settings:</p>
 			<div className="flex flex-col p-3 gap-1">
+			<div className="grid grid-cols-4">
+					<p className="text-left col-span-3 text-sm">
+						Pass criteria: 
+					</p>
+					<p className="col-span-1 text-sm">{test.passCriteria}%</p>
+				</div>
 				<div className="grid grid-cols-4">
 					<label htmlFor="questions-visible" className="text-left col-span-3 text-sm">
 						Questions visible after results

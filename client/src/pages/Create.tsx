@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
-import { Input } from "../components/ui/input";
+import { Input } from "../components/ui/Input";
 import { TestType } from "../types/models";
 import { useNavigate } from "react-router-dom";
 import ResetDialog from "../components/ui/Dialogs/ResetDialog";
@@ -10,6 +10,7 @@ import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
 const initialValue: TestType = {
   title: "",
   description: "",
+  passCriteria: 50,
   showQuestionsOnResults: true,
   randomizeQuestions: false,
   randomizeAnswers: false,

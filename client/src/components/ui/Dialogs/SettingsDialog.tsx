@@ -10,7 +10,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "../Dialog";
-import { Input } from "../input";
+import { Input } from "../Input";
 import { Switch } from "../Switch";
 import { useToast } from "../../../hooks/useToast";
 
@@ -24,7 +24,10 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 	const [description, setDescription] = useState<string>(test.description);
 	const [randomizeQuestions, setRandomizeQuestions] = useState<boolean>(test.randomizeQuestions);
 	const [randomizeAnswers, setRandomizeAnswers] = useState<boolean>(test.randomizeAnswers);
-	const [showQuestionsOnResults,setShowQuestionsOnResults] = useState<boolean>(test.showQuestionsOnResults);
+	const [showQuestionsOnResults, setShowQuestionsOnResults] = useState<boolean>(
+		test.showQuestionsOnResults
+	);
+	const [passCriteria, setPassCriteria] = useState<number>(test.passCriteria);
 	const { toast } = useToast();
 
 	const handleSave = () => {
@@ -34,7 +37,8 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 			description: description,
 			randomizeQuestions: randomizeQuestions,
 			randomizeAnswers: randomizeAnswers,
-			showQuestionsOnResults: showQuestionsOnResults
+			showQuestionsOnResults: showQuestionsOnResults,
+			passCriteria: passCriteria,
 		}));
 
 		toast({
@@ -84,6 +88,18 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							className="col-span-3"
 							defaultValue={test.description}
 							onChange={(e) => setDescription(e.target.value)}
+						/>
+					</div>
+					<div className="grid grid-cols-4 items-center gap-4">
+						<label htmlFor="pass" className="text-right">
+							Pass criteria
+						</label>
+						<Input
+							id="pass"
+							type="number"
+							defaultValue={test.passCriteria}
+							onChange={(e) => setPassCriteria(parseInt(e.target.value))}
+							className="col-span-3"
 						/>
 					</div>
 					<div className="grid grid-cols-4 items-center gap-4">

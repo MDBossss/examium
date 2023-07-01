@@ -29,6 +29,10 @@ const Results = () => {
 		}
 	}, []);
 
+	const handleReturn = () => {
+			navigate("/");
+	};
+
 	const handleRestart = () => {};
 
 	const handlePrint = () => {};
@@ -39,7 +43,7 @@ const Results = () => {
 			<div className="max-w-7xl mx-auto flex flex-col w-full items-center">
 				<div className="flex w-full justify-between items-center py-5">
 					<div className="flex gap-5 items-center">
-						<ArrowLeft className="w-7 h-7 text-blue-500 cursor-pointer" />
+						<ArrowLeft className="w-7 h-7 text-blue-500 cursor-pointer" onClick={handleReturn} />
 						<h1 className="text-2xl font-">{test?.title}</h1>
 					</div>
 					<DropdownMenu>
@@ -62,13 +66,25 @@ const Results = () => {
 					<SettingsDisplay test={test} />
 				</div>
 				<div className="flex flex-col w-full gap-3 mt-10">
-					<p className="self-start font-medium">Your answers: ({userScore.value}/{maxScore} correct)</p>
-					{test?.questions.map((question,questionIndex) => {
-						return <QuestionResult key={questionIndex} question={question} answersChecked={answersChecked[questionIndex]}/>
+					<p className="self-start font-medium">
+						Your answers: ({userScore.value}/{maxScore} correct)
+					</p>
+					{test?.questions.map((question, questionIndex) => {
+						return (
+							<QuestionResult
+								key={questionIndex}
+								question={question}
+								answersChecked={answersChecked[questionIndex]}
+								questionIndex={questionIndex}
+							/>
+						);
 					})}
 				</div>
 			</div>
-			<div className="flex bg-blue-200 h-min text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer">
+			<div
+				className="flex bg-blue-200 h-min text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
+				onClick={handleReturn}
+			>
 				Return
 			</div>
 		</div>
