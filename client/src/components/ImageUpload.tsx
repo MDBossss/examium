@@ -6,18 +6,18 @@ import { removeImageFromBucket, uploadImageToBucket } from "../utils/supabaseUti
 import Spinner from "./ui/Spinner";
 
 interface Props {
-	onSetQuestionImage: (imageUrl: string | undefined, questionIndex: number) => void;
+	onSetQuestionImage: (imageUrl: string | undefined, questionID: string) => void;
 	imageUrl: string | undefined;
-	questionIndex: number;
+	questionID: string
 }
 
-const ImageUpload = ({ onSetQuestionImage, imageUrl, questionIndex }: Props) => {
+const ImageUpload = ({ onSetQuestionImage, imageUrl, questionID }: Props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const onDrop = useCallback(async (acceptedFiles: File[]) => {
 		setIsLoading(true);
 		const path = await uploadImageToBucket("questionImages", acceptedFiles[0]);
-		onSetQuestionImage(path, questionIndex);
+		onSetQuestionImage(path, questionID);
 		setIsLoading(false);
 	}, []);
 
@@ -26,7 +26,7 @@ const ImageUpload = ({ onSetQuestionImage, imageUrl, questionIndex }: Props) => 
 	const handleDeleteImage = async () => {
 		if (imageUrl) {
 			await removeImageFromBucket("questionImages", imageUrl);
-			onSetQuestionImage(undefined, questionIndex);
+			onSetQuestionImage(undefined, questionID);
 		}
 	};
 
