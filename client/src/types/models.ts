@@ -1,5 +1,5 @@
 export interface UserType{
-    id?:number,
+    id:string,
     firstName: string,
     lastName: string,
     email:string,
@@ -7,7 +7,7 @@ export interface UserType{
 }
 
 export interface TestType{
-    id?:number,
+    id:string,
     title:string,
     description:string,
     passCriteria: number,
@@ -21,14 +21,14 @@ export interface TestType{
 }
 
 export interface QuestionType{
-    id?:number
+    id:string,
     question: string,
     answers: AnswerType[],
     imageUrl?: string,
 }
 
 export interface AnswerType{
-    id?:number,
+    id:string,
     answer:string,
     isCorrect:boolean,
 }

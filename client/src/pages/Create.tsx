@@ -8,22 +8,14 @@ import ResetDialog from "../components/ui/Dialogs/ResetDialog";
 import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
 import {z} from "zod";
 import { useToast } from "../hooks/useToast";
+import useGenerateData from "../hooks/useGenerateData";
 
-const initialValue: TestType = {
-  title: "",
-  description: "",
-  passCriteria: 50,
-  showQuestionsOnResults: true,
-  randomizeQuestions: false,
-  randomizeAnswers: false,
-  createdAt: Date.now(),
-  questions: [{ question: "", answers: [{ answer: "", isCorrect: false }] }],
-};
 
 const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
 
 const Create = () => {
-  const [test, setTest] = useState<TestType>(initialValue);
+  const {generateAnswer,generateQuestion,generateTest} = useGenerateData();
+  const [test, setTest] = useState<TestType>(generateTest());
   const [titleError,setTitleError] = useState<boolean>(false);
   const navigate = useNavigate();
   const {toast} = useToast();
@@ -32,10 +24,13 @@ const Create = () => {
     sessionStorage.setItem("test",JSON.stringify(test));
 
     //check if title is set, at least 2 questions, and if user is logged in
-    //ir user not logged in display login modal first
+    //ir user not logged in display login modal fairst
     //navigate to /preview and pass test object with react router
     navigate("/create/preview", {state: {test}})
   };
+
+  console.log(test)
+
 
   useEffect(() => {
 		const testJSON = sessionStorage.getItem("test")
@@ -47,7 +42,7 @@ const Create = () => {
 	},[])
 
   const handleDeleteTest = () => {
-    setTest(initialValue);
+    setTest(generateTest());
   };
 
 
@@ -92,10 +87,7 @@ const Create = () => {
   const handleAddQuestion = () => {
     setTest((prevTest) => {
       let updatedTest = {...prevTest}
-      updatedTest.questions.push({
-        question: "",
-        answers: [{ answer: "", isCorrect: false }],
-      });
+      updatedTest.questions.push(generateQuestion());
       return updatedTest;
     });
   };
@@ -116,10 +108,7 @@ const Create = () => {
     if (answerIndex === test.questions[questionIndex].answers.length - 1) {
       setTest((prevTest) => {
         let updatedTest = {...prevTest}
-        updatedTest.questions[questionIndex].answers.push({
-          answer: "",
-          isCorrect: false,
-        });
+        updatedTest.questions[questionIndex].answers.push(generateAnswer());
         return updatedTest;
       });
     }
@@ -142,10 +131,7 @@ const Create = () => {
   const handleAddAnswer = (questionIndex: number) => {
     setTest((prevTest) => {
       let updatedTest = prevTest;
-      updatedTest.questions[questionIndex].answers.push({
-        answer: "",
-        isCorrect: false,
-      });
+      updatedTest.questions[questionIndex].answers.push(generateAnswer());
       return updatedTest;
     });
   };
