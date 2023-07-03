@@ -29,7 +29,7 @@ const useGenerateData = () => {
 			showQuestionsOnResults: true,
 			randomizeQuestions: false,
 			randomizeAnswers: false,
-			createdAt: Date.now(),
+			createdAt: new Date(),
 			questions: [generateQuestion()],
 		} as TestType;
 	};

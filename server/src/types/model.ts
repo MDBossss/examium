@@ -14,17 +14,17 @@ export interface TestType{
     showQuestionsOnResults: boolean,
     randomizeQuestions:boolean,
     randomizeAnswers:boolean,
-    questions: QuestionType[],
-    author?: UserType,
     createdAt: Date,
-    updatedAt?: Date
+    updatedAt?: Date,
+    authorId?: string,
+    questions: QuestionType[],
 }
 
 export interface QuestionType{
     id:string,
     question: string,
-    answers: AnswerType[],
     imageUrl?: string,
+    answers: AnswerType[],
 }
 
 export interface AnswerType{

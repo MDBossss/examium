@@ -10,7 +10,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String @unique
+  imageUrl  String
+  tests     Test[]
+}
+
+model Test {
+  id                     String     @id @default(uuid())
+  title                  String
+  description            String
+  passCriteria           Int
+  showQuestionsOnResults Boolean
+  randomizeQuestions     Boolean
+  randomizeAnswers       Boolean
+  createdAt              DateTime
+  updatedAt              DateTime   @updatedAt
+  questions              Question[]
+  authorId               String
+  author                 User       @relation(fields: [authorId], references: [id])
+}
+
 model Question {
-  id    Int    @id @default(autoincrement())
-  title String
+  id       String   @id @default(uuid())
+  question String
+  imageUrl String?
+  answers  Answer[]
+  testId   String
+  test     Test     @relation(fields: [testId], references: [id])
+}
+
+model Answer {
+  id         String   @id @default(uuid())
+  answer     String
+  isCorrect  Boolean
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
 }
