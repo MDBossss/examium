@@ -30,7 +30,7 @@ const Results = () => {
 	}, []);
 
 	const handleReturn = () => {
-			navigate("/");
+		navigate("/");
 	};
 
 	const handleRestart = () => {};
@@ -62,23 +62,24 @@ const Results = () => {
 				</div>
 				<div className="w-full h-[100px] bg-slate-200"></div>
 				<div className="flex w-full border-b border-slate-200">
-					<ScoreDisplay userScore={userScore} />
+					<ScoreDisplay userScore={userScore} passCriteria={test.passCriteria}/>
 					<SettingsDisplay test={test} />
 				</div>
 				<div className="flex flex-col w-full gap-3 mt-10">
 					<p className="self-start font-medium">
 						Your answers: ({userScore.value}/{maxScore} correct)
 					</p>
-					{test?.questions.map((question, questionIndex) => {
-						return (
-							<QuestionResult
-								key={questionIndex}
-								question={question}
-								answersChecked={answersChecked[questionIndex]}
-								questionIndex={questionIndex}
-							/>
-						);
-					})}
+					{test.showQuestionsOnResults &&
+						test?.questions.map((question, questionIndex) => {
+							return (
+								<QuestionResult
+									key={questionIndex}
+									question={question}
+									answersChecked={answersChecked[questionIndex]}
+									questionIndex={questionIndex}
+								/>
+							);
+						})}
 				</div>
 			</div>
 			<div

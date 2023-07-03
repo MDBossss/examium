@@ -131,7 +131,7 @@ const Question = ({
 						let label = String.fromCharCode(65 + answerIndex);
 						return (
 							<Answer
-								key={answerIndex}
+								key={answer.id}
 								answerIndex={answerIndex}
 								questionID={question.id}
 								questionIndex={questionIndex}

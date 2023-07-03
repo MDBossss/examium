@@ -29,7 +29,7 @@ const Answer = ({
 			<div className="relative flex w-full">
 				<Textarea
 					className="bg-primary text-lg p-5 pr-14 overflow-hidden resize-none"
-					onChange={(e) => onAnswerChange(e.target.value, questionIndex,answerIndex)}
+					onChange={(e) => onAnswerChange(e.target.value, questionIndex, answerIndex)}
 					placeholder="Answer..."
 					value={answer.answer}
 				/>
@@ -37,7 +37,7 @@ const Answer = ({
 					className={`${
 						answer.isCorrect ? "bg-green-500 text-white" : "text-green-600 bg-green-100"
 					} absolute right-2 top-2 z-10 h-8 w-8 p-2 rounded-sm  hover:bg-green-500 hover:text-white cursor-pointer`}
-					onClick={() => toggleAnswerCorrect(questionID,answer.id)}
+					onClick={() => toggleAnswerCorrect(questionID, answer.id)}
 				/>
 				<XIcon
 					className="absolute right-2 top-12 z-10 h-8 w-8 p-2 rounded-sm text-zinc-400 bg-transparent hover:bg-red-500 hover:text-white cursor-pointer"

@@ -15,6 +15,8 @@ import useNavigationDialog from "../../hooks/useNavigationDialog";
 import { useLocation } from "react-router-dom";
 import { TestType } from "../../types/models";
 import { useToast } from "../../hooks/useToast";
+import { useEffect, useState } from "react";
+import useGenerateData from "../../hooks/useGenerateData";
 
 interface Props{
 	setTest?: (test:TestType) => void;
@@ -22,15 +24,18 @@ interface Props{
 }
 
 const LoginButton = ({test}:Props) => {
+	const {toast} = useToast();
 	const location = useLocation();
 	const { session } = useSession();
-	const { openSignIn, signOut } = useClerk();
+	const {generateUser} = useGenerateData();
+	const { openSignIn, signOut,  } = useClerk();
+	const [userChecked,setUserChecked] = useState<boolean>(false)
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
-	const {toast} = useToast();
 
 	const handleLogout = async () => {
 		await signOut();
 		session?.end;
+		setUserChecked(false)
 		toast({
 			title: "👋 Successfully logged out.",
 		  })
@@ -38,9 +43,20 @@ const LoginButton = ({test}:Props) => {
 
 	const handleSignIn = () => {
 		sessionStorage.setItem("test",JSON.stringify(test));
-		openSignIn({redirectUrl:location.pathname})
-		
+		openSignIn({redirectUrl:location.pathname, })
 	}
+
+	useEffect(() => {
+		if(session && session.user && !userChecked){
+			const user = generateUser(session.user)
+			console.log(user)
+			setUserChecked(true)
+			//send user to backend and check if exists
+			//if not, write user to db
+			//when saving the test, but userID from session.user.id
+		}
+	},[session])
+
 
 
 

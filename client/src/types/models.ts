@@ -3,7 +3,7 @@ export interface UserType{
     firstName: string,
     lastName: string,
     email:string,
-    imageUrl?:string
+    imageUrl:string
 }
 
 export interface TestType{

@@ -9,6 +9,8 @@ import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
 import { z } from "zod";
 import { useToast } from "../hooks/useToast";
 import useGenerateData from "../hooks/useGenerateData";
+import { validateTest } from "../utils/testUtils";
+import { useSession } from "@clerk/clerk-react";
 
 const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
 
@@ -18,16 +20,47 @@ const Create = () => {
 	const [titleError, setTitleError] = useState<boolean>(false);
 	const navigate = useNavigate();
 	const { toast } = useToast();
+	const { session } = useSession();
 
-	const handlePreviewTest = () => {
-		sessionStorage.setItem("test", JSON.stringify(test));
+	const handleSaveTest = () => {
+		if (session && session?.status === "active") {
+			const { testValid, messages } = validateTest(test);
+			if (!testValid) {
+				messages.forEach((message) => {
+					toast({
+						description: message,
+						variant: "destructive",
+					});
+				});
+			} else {
+				//send data to backend and handle errors
 
-		//check if title is set, at least 2 questions, and if user is logged in
-		//ir user not logged in display login modal fairst
-		//navigate to /preview and pass test object with react router
-		navigate("/create/preview", { state: { test } });
+				toast({
+					description: "✅ Saved successfully.",
+				});
+			}
+		} else {
+			toast({
+				description: "You need to be logged in to save the test.",
+				variant: "destructive",
+			});
+		}
 	};
 
+	const handlePreviewTest = () => {
+		const { testValid, messages } = validateTest(test);
+		if (!testValid) {
+			messages.forEach((message) => {
+				toast({
+					description: message,
+					variant: "destructive",
+				});
+			});
+		} else {
+			sessionStorage.setItem("test", JSON.stringify(test));
+			navigate("/create/preview", { state: { test } });
+		}
+	};
 
 	useEffect(() => {
 		const testJSON = sessionStorage.getItem("test");
@@ -153,7 +186,6 @@ const Create = () => {
 		}));
 	};
 
-
 	return (
 		<div className="flex flex-col gap-10 p-10 pt-5 w-full">
 			<SearchBar test={test} setTest={setTest} />
@@ -177,7 +209,7 @@ const Create = () => {
 			{test.questions.map((question, questionIndex) => {
 				return (
 					<Question
-						key={questionIndex}
+						key={question.id}
 						question={question}
 						questionIndex={questionIndex}
 						onSetQuestionImage={handleSetQuestionImage}
@@ -203,6 +235,12 @@ const Create = () => {
 					onClick={handlePreviewTest}
 				>
 					Preview test
+				</div>
+				<div
+					className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
+					onClick={handleSaveTest}
+				>
+					Save test
 				</div>
 			</div>
 		</div>
