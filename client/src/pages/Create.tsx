@@ -28,6 +28,7 @@ const Create = () => {
 		navigate("/create/preview", { state: { test } });
 	};
 
+
 	useEffect(() => {
 		const testJSON = sessionStorage.getItem("test");
 		if (testJSON && setTest) {

@@ -148,6 +148,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 								id="questions-visible"
 								className="col-span-1"
 								defaultChecked={test.showQuestionsOnResults}
+								onCheckedChange={(v) => setValue("showQuestionsOnResults", v)}
 								{...register("showQuestionsOnResults")}
 							/>
 						</div>
@@ -159,17 +160,19 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 								id="randomize-questions"
 								className="col-span-1"
 								defaultChecked={test.randomizeQuestions}
+								onCheckedChange={(v) => setValue("randomizeQuestions", v)}
 								{...register("randomizeQuestions")}
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="randomize-answers" className="text-left col-span-3">
+							<label htmlFor="randomizeAnswers" className="text-left col-span-3">
 								Randomize answers
 							</label>
 							<Switch
-								id="randomize-answers"
+								id="randomizeAnswers"
 								className="col-span-1"
 								defaultChecked={test.randomizeAnswers}
+								onCheckedChange={(v) => setValue("randomizeAnswers", v)}
 								{...register("randomizeAnswers")}
 							/>
 						</div>
