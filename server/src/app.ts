@@ -12,8 +12,8 @@ const app = express();
 app.use(cors());
 
 //Routes
-app.use("/users",userRoutes);
-app.use("/tests",testRoutes);
+app.use("api/users",userRoutes);
+app.use("api/tests",testRoutes);
 
 //Error handling middleware
 app.use((err:Error,req:Request,res:Response, next: NextFunction) => {
