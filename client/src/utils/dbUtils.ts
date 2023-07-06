@@ -1,4 +1,4 @@
-import { UserType } from "../types/models";
+import { TestType, UserType } from "../types/models";
 import axios from "axios";
 
 export async function fetchUsers() {
@@ -21,10 +21,10 @@ export async function fetchUserById(userId: string) {
 			return null; // Or throw new Error("User not found");
 		} else {
 			// Handle other status codes if needed
-			return null
+			return null;
 		}
 	} catch (error) {
-		return null
+		return null;
 	}
 }
 
@@ -37,20 +37,31 @@ export async function createUser(user: UserType) {
 	}
 }
 
-export async function updateUser(user:UserType){
-    try{
-        const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`,user);
-        return response.data;
-    }catch(error){
-        throw new Error("Failed to update user");
-    }
+export async function updateUser(user: UserType) {
+	try {
+		const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`, user);
+		return response.data;
+	} catch (error) {
+		throw new Error("Failed to update user");
+	}
 }
 
-export async function deleteUser(userId:string){
-    try{
-        const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/users/${userId}`);
-        return response.data;
-    }catch(error){
-        throw new Error("Failed to delete user");
-    }
+export async function deleteUser(userId: string) {
+	try {
+		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/users/${userId}`);
+		return response.data;
+	} catch (error) {
+		throw new Error("Failed to delete user");
+	}
+}
+
+
+
+export async function createTest(test: TestType) {
+	try {
+		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/tests`, test);
+		return response.data;
+	} catch (error) {
+		throw new Error("Failed to create test");
+	}
 }

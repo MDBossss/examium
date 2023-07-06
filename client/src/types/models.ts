@@ -14,10 +14,10 @@ export interface TestType{
     showQuestionsOnResults: boolean,
     randomizeQuestions:boolean,
     randomizeAnswers:boolean,
-    questions: QuestionType[],
-    author?: UserType,
     createdAt: Date,
     updatedAt?: Date
+    authorId?: string,
+    questions: QuestionType[],
 }
 
 export interface QuestionType{

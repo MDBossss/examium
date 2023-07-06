@@ -28,6 +28,64 @@ class TestController {
 		}
 	}
 
+	// async createTest(req: Request, res: Response) {
+	// 	try {
+	// 		const {
+	// 			id,
+	// 			title,
+	// 			description,
+	// 			passCriteria,
+	// 			showQuestionsOnResults,
+	// 			randomizeQuestions,
+	// 			randomizeAnswers,
+	// 			createdAt,
+	// 			questions,
+	// 			authorId,
+	// 		}: TestType = req.body;
+
+	// 		const newTest = await prisma.test.create({
+	// 			data: {
+	// 				id,
+	// 				title,
+	// 				description,
+	// 				passCriteria,
+	// 				showQuestionsOnResults,
+	// 				randomizeQuestions,
+	// 				randomizeAnswers,
+	// 				createdAt,
+	// 				author: {
+	// 					connect: { id: authorId! },
+	// 				},
+	// 				questions: {
+	// 					createMany: {
+	// 						data: questions.map((question) => ({
+	// 							...question,
+	// 							answers: {
+	// 								createMany: {
+	// 									data: question.answers,
+	// 								},
+	// 							},
+	// 						})),
+	// 					},
+	// 				},
+	// 			},
+	// 			include: {
+	// 				author: true,
+	// 				questions: {
+	// 					include: {
+	// 						answers: true,
+	// 					},
+	// 				},
+	// 			},
+	// 		});
+
+	// 		res.status(201).json(newTest);
+	// 	} catch (error) {
+	// 		console.error("Error creating test:", error);
+	// 		res.status(500).json({ error: "Failed to create test" });
+	// 	}
+	// }
+
 	async createTest(req: Request, res: Response) {
 		try {
 			const {
@@ -57,25 +115,23 @@ class TestController {
 						connect: { id: authorId! },
 					},
 					questions: {
-						createMany: {
-							data: questions.map((question) => ({
-								...question,
-								answers: {
-									createMany: {
-										data: question.answers,
-									},
-								},
-							})),
-						},
+						create: questions.map((question) => ({
+							id:question.id,
+							question:question.question,
+							imageUrl: question.imageUrl,
+							answers: {
+								create: question.answers.map((answer) => ({
+									id: answer.id,
+									answer: answer.answer,
+									isCorrect: answer.isCorrect
+								}))
+							}
+						}))
 					},
 				},
 				include: {
 					author: true,
-					questions: {
-						include: {
-							answers: true,
-						},
-					},
+					questions: true,
 				},
 			});
 

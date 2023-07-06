@@ -4,6 +4,8 @@ import TestController from "../controllers/TestController";
 const router: Router = express.Router();
 const testController = new TestController();
 
+router.use(express.json())
+
 router.get("/", testController.getAllTests);
 router.get("/:id", testController.getTestById);
 router.post("/", testController.createTest);

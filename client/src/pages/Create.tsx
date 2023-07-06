@@ -11,6 +11,7 @@ import { useToast } from "../hooks/useToast";
 import useGenerateData from "../hooks/useGenerateData";
 import { validateTest } from "../utils/testUtils";
 import { useSession } from "@clerk/clerk-react";
+import { createTest } from "../utils/dbUtils";
 
 const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
 
@@ -22,22 +23,34 @@ const Create = () => {
 	const { toast } = useToast();
 	const { session } = useSession();
 
-	const handleSaveTest = () => {
+	const handleSaveTest = async () => {
 		if (session && session?.status === "active") {
 			const { testValid, messages } = validateTest(test);
-			if (!testValid) {
+			if (testValid) {
+				//send data to backend and handle errors
+				if(test.updatedAt){
+					//update test
+				}
+				else{
+					//create test and set creator of the test
+					updateTestAuthor()
+					await createTest(test);
+					console.log("saved test")
+				}
+
+				toast({
+					description: "✅ Saved successfully.",
+				});
+				
+			} else {
 				messages.forEach((message) => {
 					toast({
 						description: message,
 						variant: "destructive",
 					});
 				});
-			} else {
-				//send data to backend and handle errors
 
-				toast({
-					description: "✅ Saved successfully.",
-				});
+				
 			}
 		} else {
 			toast({
@@ -92,6 +105,10 @@ const Create = () => {
 			});
 		}
 	};
+
+	const updateTestAuthor = () => {
+		setTest((prevTest) => ({...prevTest,authorId: session?.user.id}))
+	}
 
 	const handleSetQuestionImage = (imageUrl: string | undefined, questionID: string) => {
 		setTest((prevTest) => ({

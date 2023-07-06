@@ -30,7 +30,6 @@ class UserController {
 	}
 
 	async createUser(req: Request, res: Response) {
-		console.log("here")
 		try {
 			const { ...userData }: UserType = req.body;
 			const newUser = await prisma.user.create({
