@@ -1,10 +1,10 @@
-import axios from "axios";
 import { UserType } from "../types/models";
+import axios from "axios";
 
 export async function fetchUsers() {
 	try {
 		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users`);
-		return response.data;
+		return response.data as UserType;
 	} catch (error) {
 		throw new Error("Failed to fetch new users");
 	}
@@ -13,9 +13,18 @@ export async function fetchUsers() {
 export async function fetchUserById(userId: string) {
 	try {
 		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/${userId}`);
-		return response.data;
+		if (response.status === 200) {
+			// User exists, return the data
+			return response.data as UserType;
+		} else if (response.status === 404) {
+			// User not found, return null or throw an error
+			return null; // Or throw new Error("User not found");
+		} else {
+			// Handle other status codes if needed
+			return null
+		}
 	} catch (error) {
-		throw new Error("Failed to fetch user.");
+		return null
 	}
 }
 
