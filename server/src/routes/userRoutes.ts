@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import UserController from "../controllers/UserController";
 
 const router: Router = express.Router();
+router.use(express.json())
 const userController = new UserController();
 
 router.get("/", userController.getAllUsers);

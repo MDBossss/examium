@@ -14,12 +14,13 @@ class UserController {
 	}
 
 	async getUserById(req: Request, res: Response) {
+		console.log(req)
 		try {
 			const { id } = req.params;
 			const user = await prisma.user.findUnique({ where: { id } });
 			if (!user) {
 				res.status(404).json({ error: "User not found" });
-				return;
+				return null;
 			}
 			res.json(user);
 		} catch (error) {
@@ -29,6 +30,7 @@ class UserController {
 	}
 
 	async createUser(req: Request, res: Response) {
+		console.log("here")
 		try {
 			const { ...userData }: UserType = req.body;
 			const newUser = await prisma.user.create({
