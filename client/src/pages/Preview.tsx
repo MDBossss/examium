@@ -19,7 +19,7 @@ const Preview = () => {
 
 	//protection against users wandering to this route without any data 
 	useEffect(() => {
-		if (!test) {
+		if (!test) { // or || if theres no id from the link of exisiting test
 			navigate("/", { replace: true });
 		}
 	}, []);
@@ -54,9 +54,6 @@ const Preview = () => {
 		}
 	};
 
-	//send one value from the array if the answer has been checked, and if it has lock the question so that you cant edit the checkboxes anymore
-	//and sent that  one value from the array to the answer and when its set to true lock the checkboxes and color the answers and handle the
-	//correct or wrong logic inside that
 
 	const handleDecrementQuestion = () => {
 		setQuestionNumber((prev) => prev - 1);

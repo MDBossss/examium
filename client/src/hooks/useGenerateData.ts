@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import { AnswerType, QuestionType, TestType } from "../types/models";
+import { AnswerType, QuestionType, TestType, UserType } from "../types/models";
+import {UserResource} from "@clerk/types"
+
 
 const useGenerateData = () => {
 	const generateAnswer = () => {
@@ -27,15 +29,26 @@ const useGenerateData = () => {
 			showQuestionsOnResults: true,
 			randomizeQuestions: false,
 			randomizeAnswers: false,
-			createdAt: Date.now(),
+			createdAt: new Date(),
 			questions: [generateQuestion()],
 		} as TestType;
 	};
+
+	const generateUser = (clerkUser: UserResource) => {
+		return {
+			id: clerkUser.id,
+			firstName: clerkUser.firstName,
+			lastName: clerkUser.lastName,
+			email: clerkUser.primaryEmailAddress?.emailAddress,
+			imageUrl: clerkUser.imageUrl
+		} as UserType
+	}
 
 	return {
 		generateTest,
 		generateQuestion,
 		generateAnswer,
+		generateUser
 	};
 };
 

@@ -3,204 +3,315 @@ import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/Input";
 import { TestType } from "../types/models";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ResetDialog from "../components/ui/Dialogs/ResetDialog";
 import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
-import {z} from "zod";
+import { z } from "zod";
 import { useToast } from "../hooks/useToast";
 import useGenerateData from "../hooks/useGenerateData";
-
+import { validateTest } from "../utils/testUtils";
+import { useSession } from "@clerk/clerk-react";
+import { createTest, deleteTest, fetchTestById, updateTest } from "../utils/dbUtils";
 
 const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
 
 const Create = () => {
-  const {generateAnswer,generateQuestion,generateTest} = useGenerateData();
-  const [test, setTest] = useState<TestType>(generateTest());
-  const [titleError,setTitleError] = useState<boolean>(false);
-  const navigate = useNavigate();
-  const {toast} = useToast();
+	const { id } = useParams();
+	const [hasParamId, setHasParamId] = useState<boolean>(false);
+	const { generateAnswer, generateQuestion, generateTest } = useGenerateData();
+	const [test, setTest] = useState<TestType>(generateTest());
+	const [titleError, setTitleError] = useState<boolean>(false);
+	const navigate = useNavigate();
+	const { toast } = useToast();
+	const { session } = useSession();
 
-  const handlePreviewTest = () => {
-    sessionStorage.setItem("test",JSON.stringify(test));
+	useEffect(() => {
+		const initialLoad = async () => {
+			if (id) {
+				setHasParamId(true);
+				const response = await fetchTestById(id);
+				if(response){
+					setTest(response);
+				}
+				else{
+					navigate("/404");
+				}
+			} else {
+				setHasParamId(false);
+				setTest(generateTest());
+			}
+		};
+		initialLoad();
+	}, [id]);
 
-    //check if title is set, at least 2 questions, and if user is logged in
-    //ir user not logged in display login modal fairst
-    //navigate to /preview and pass test object with react router
-    navigate("/create/preview", {state: {test}})
-  };
+	const handleSaveTest = async () => {
+		if (session && session?.status === "active") {
+			const { testValid, messages } = validateTest(test, setTest);
+			if (testValid) {
+				//send data to backend and handle errors
+				if (hasParamId) {
+					//update test
+					const res = await updateTest(test);
+					//console.log(res);
+					if (res) {
+						toast({
+							description: "✅ Saved successfully.",
+						});
+					} else {
+						toast({
+							description: "😓 Failed to save the test.",
+						});
+					}
+				} else {
+					//create test and set creator of the test
+					updateTestAuthor();
+					const res = await createTest(test);
+					//console.log(res);
+					if (res) {
+						toast({
+							description: "✅ Created successfully.",
+						});
+					} else {
+						toast({
+							description: "😓 Failed to create the test.",
+						});
+					}
+				}
+			} else {
+				messages.forEach((message) => {
+					toast({
+						description: message,
+						variant: "destructive",
+					});
+				});
+			}
+		} else {
+			toast({
+				description: "You need to be logged in order to do that.",
+				variant: "destructive",
+			});
+		}
+	};
 
-  console.log(test)
+	const handlePreviewTest = () => {
+		const { testValid, messages } = validateTest(test, setTest);
+		if (!testValid) {
+			messages.forEach((message) => {
+				toast({
+					description: message,
+					variant: "destructive",
+				});
+			});
+		} else {
+			sessionStorage.setItem("test", JSON.stringify(test));
+			navigate("/create/preview", { state: { test } });
+		}
+	};
 
-
-  useEffect(() => {
-		const testJSON = sessionStorage.getItem("test")
-		if(testJSON && setTest){
-			let test: TestType = JSON.parse(testJSON)
-			setTest(test)
+	useEffect(() => {
+		const testJSON = sessionStorage.getItem("test");
+		if (testJSON && setTest) {
+			let test: TestType = JSON.parse(testJSON);
+			setTest(test);
 			sessionStorage.removeItem("test");
 		}
-	},[])
+	}, []);
 
-  const handleDeleteTest = () => {
-    setTest(generateTest());
-  };
+	const handleDeleteTest = async () => {
+		if(hasParamId){
+			const res = await deleteTest(test.id);
+			console.log(res)
+			if(res){
+				navigate("/create")
+				toast({
+					description: "✅ Deleted successfully.",
+				});
+			}
+			else{
+				toast({
+					description: "😓 Failed to delete the test.",
+				});
+			}
+		}
+		else{
+			navigate("/create")
+		}
+	};
 
-
-  const handleSetTestTitle = (title: string) => {
-    try{
-      titleSchema.parse(title);
-      setTitleError(false)
-      setTest((prevTest) => ({
-        ...prevTest,
-        title:title
-      }))
-    }catch(error){
-      setTitleError(true)
-      console.log(error)
-      toast({
+	const handleSetTestTitle = (title: string) => {
+		try {
+			titleSchema.parse(title);
+			setTitleError(false);
+			setTest((prevTest) => ({
+				...prevTest,
+				title: title,
+			}));
+		} catch (error) {
+			setTitleError(true);
+			console.log(error);
+			toast({
 				description: "Title is at most 50 characters",
 				variant: "destructive",
 			});
-    }
-  };
+		}
+	};
 
+	const updateTestAuthor = () => {
+		setTest((prevTest) => ({ ...prevTest, authorId: session?.user.id }));
+	};
 
-  const handleSetQuestionImage = (
-    imageUrl: string | undefined,
-    questionIndex: number
-  ) => {
-    setTest((prevTest) => {
-      let updatedTest = {...prevTest}
-      updatedTest.questions[questionIndex].imageUrl = imageUrl;
-      return updatedTest;
-    });
-  };
+	const handleSetQuestionImage = (imageUrl: string | undefined, questionID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question) =>
+				question.id === questionID ? { ...question, imageUrl } : question
+			),
+		}));
+	};
 
-  const handleQuestionChange = (text: string, questionIndex: number) => {
-    setTest((prevTest) => {
-      let updatedTest = {...prevTest}
-      updatedTest.questions[questionIndex].question = text;
-      return updatedTest;
-    });
-  };
+	const handleQuestionChange = (text: string, questionID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question) =>
+				question.id === questionID ? { ...question, question: text } : question
+			),
+		}));
+	};
 
-  const handleAddQuestion = () => {
-    setTest((prevTest) => {
-      let updatedTest = {...prevTest}
-      updatedTest.questions.push(generateQuestion());
-      return updatedTest;
-    });
-  };
+	const handleAddQuestion = () => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: [...prevTest.questions, generateQuestion()],
+		}));
+	};
 
-  const handleQuestionDelete = (questionIndex: number) => {
-    setTest((prevTest) => {
-      let updatedTest = {...prevTest}
-      updatedTest.questions.splice(questionIndex, 1);
-      return updatedTest;
-    });
-  };
+	const handleQuestionDelete = (questionID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.filter((question) => question.id !== questionID),
+		}));
+	};
 
-  const handleAnswerChange = (
-    text: string,
-    answerIndex: number,
-    questionIndex: number
-  ) => {
-    if (answerIndex === test.questions[questionIndex].answers.length - 1) {
-      setTest((prevTest) => {
-        let updatedTest = {...prevTest}
-        updatedTest.questions[questionIndex].answers.push(generateAnswer());
-        return updatedTest;
-      });
-    }
+	const handleAnswerChange = (text: string, questionIndex: number, answerIndex: number) => {
+		if (answerIndex === test.questions[questionIndex].answers.length - 1) {
+			setTest((prevTest) => {
+				let updatedTest = { ...prevTest };
+				updatedTest.questions[questionIndex].answers.push(generateAnswer());
+				return updatedTest;
+			});
+		}
 
-    setTest((prevTest) => {
-      let updatedTest = {...prevTest}
-      updatedTest.questions[questionIndex].answers[answerIndex].answer = text;
-      return updatedTest;
-    });
-  };
+		setTest((prevTest) => {
+			let updatedTest = { ...prevTest };
+			updatedTest.questions[questionIndex].answers[answerIndex].answer = text;
+			return updatedTest;
+		});
+	};
 
-  const handleAnswerDelete = (answerIndex: number, questionIndex: number) => {
-    setTest((prevTest) => {
-      let updatedTest = {...prevTest}
-      updatedTest.questions[questionIndex].answers.splice(answerIndex, 1);
-      return updatedTest;
-    });
-  };
+	const handleAnswerDelete = (questionID: string, answerID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question) => ({
+				...question,
+				answers:
+					question.id === questionID
+						? question.answers.filter((ans) => ans.id !== answerID)
+						: question.answers,
+			})),
+		}));
+	};
 
-  const handleAddAnswer = (questionIndex: number) => {
-    setTest((prevTest) => {
-      let updatedTest = prevTest;
-      updatedTest.questions[questionIndex].answers.push(generateAnswer());
-      return updatedTest;
-    });
-  };
+	const handleAddAnswer = (questionID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question) =>
+				question.id == questionID
+					? { ...question, answers: [...question.answers, generateAnswer()] }
+					: question
+			),
+		}));
+	};
 
-  const handleToggleCorrectAnswer = (
-    answerIndex: number,
-    questionIndex: number
-  ) => {
-    setTest((prevTest) => {
-      let updatedTest = {...prevTest}
-      updatedTest.questions[questionIndex].answers[answerIndex].isCorrect =
-        !updatedTest.questions[questionIndex].answers[answerIndex].isCorrect;
-      return updatedTest;
-    });
-  };
+	const handleToggleCorrectAnswer = (questionID: string, answerID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question) =>
+				question.id === questionID
+					? {
+							...question,
+							answers: question.answers.map((answer) =>
+								answer.id === answerID
+									? {
+											...answer,
+											isCorrect: !answer.isCorrect,
+									  }
+									: answer
+							),
+					  }
+					: question
+			),
+		}));
+	};
 
-  return (
-    <div className="flex flex-col gap-10 p-10 pt-5 w-full">
-      <SearchBar test={test} setTest={setTest} />
-      <div className="flex flex-col border-slate-200 border-b">
-        <h1 className="text-2xl font-bold text-zinc-800">Create a test</h1>
-        <p className="text-slate-400 text-sm pt-3 pb-3">
-          Great! Now compose your test - add questions answers to each of them.
-          Each question must have at least one correct answer.
-        </p>
-        <div className="flex gap-5 mb-2 p-2">
-          <Input
-            placeholder="Insert test name..."
-            onChange={(e) => handleSetTestTitle(e.target.value)}
-            className={`${titleError && "focus-visible:ring-red-500"} bg-slate-200`}
-            value={test.title}
-          />
-          <SettingsDialog test={test} setTest={setTest}/>
-          <ResetDialog onTrigger={handleDeleteTest}/>
-        </div>
-      </div>
-      {test.questions.map((question, questionIndex) => {
-        return (
-          <Question
-            key={questionIndex}
-            question={question}
-            questionIndex={questionIndex}
-            onSetQuestionImage={handleSetQuestionImage}
-            onQuestionChange={handleQuestionChange}
-            onQuestionDelete={handleQuestionDelete}
-            onAnswerChange={handleAnswerChange}
-            onAnswerDelete={handleAnswerDelete}
-            toggleAnswerCorrect={handleToggleCorrectAnswer}
-            onAnswerAdd={handleAddAnswer}
-          />
-        );
-      })}
+	return (
+		<div className="flex flex-col gap-10 p-10 pt-5 w-full">
+			<SearchBar test={test} setTest={setTest} />
+			<div className="flex flex-col border-slate-200 border-b">
+				<h1 className="text-2xl font-bold text-zinc-800">Create a test</h1>
+				<p className="text-slate-400 text-sm pt-3 pb-3">
+					Great! Now compose your test - add questions answers to each of them. Each question must
+					have at least one correct answer.
+				</p>
+				<div className="flex gap-5 mb-2 p-2">
+					<Input
+						placeholder="Insert test name..."
+						onChange={(e) => handleSetTestTitle(e.target.value)}
+						className={`${titleError && "focus-visible:ring-red-500"} bg-slate-200`}
+						value={test.title}
+					/>
+					<SettingsDialog test={test} setTest={setTest} />
+					<ResetDialog onTrigger={handleDeleteTest} hasParamId={hasParamId} />
+				</div>
+			</div>
+			{test.questions.map((question, questionIndex) => {
+				return (
+					<Question
+						key={question.id}
+						question={question}
+						questionIndex={questionIndex}
+						onSetQuestionImage={handleSetQuestionImage}
+						onQuestionChange={handleQuestionChange}
+						onQuestionDelete={handleQuestionDelete}
+						onAnswerChange={handleAnswerChange}
+						onAnswerDelete={handleAnswerDelete}
+						toggleAnswerCorrect={handleToggleCorrectAnswer}
+						onAnswerAdd={handleAddAnswer}
+					/>
+				);
+			})}
 
-      <div className="flex gap-3 justify-center">
-        <div
-          className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
-          onClick={handleAddQuestion}
-        >
-          Add question +
-        </div>
-        <div
-          className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
-          onClick={handlePreviewTest}
-        >
-          Preview test
-        </div>
-      </div>
-    </div>
-  );
+			<div className="flex gap-3 justify-center">
+				<div
+					className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
+					onClick={handleAddQuestion}
+				>
+					Add question +
+				</div>
+				<div
+					className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
+					onClick={handlePreviewTest}
+				>
+					Preview test
+				</div>
+				<div
+					className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
+					onClick={handleSaveTest}
+				>
+					{hasParamId ? "Save test" : "Create test"}
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default Create;

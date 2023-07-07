@@ -15,7 +15,7 @@ export interface TestType{
     randomizeQuestions:boolean,
     randomizeAnswers:boolean,
     createdAt: Date,
-    updatedAt?: Date
+    updatedAt?: Date,
     authorId?: string,
     questions: QuestionType[],
 }
@@ -23,8 +23,8 @@ export interface TestType{
 export interface QuestionType{
     id:string,
     question: string,
-    answers: AnswerType[],
     imageUrl?: string,
+    answers: AnswerType[],
 }
 
 export interface AnswerType{

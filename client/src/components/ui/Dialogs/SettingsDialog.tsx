@@ -16,6 +16,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
+import { Percent } from "lucide-react";
 
 const schema = z.object({
 	title: z.string().max(50, { message: "Title must be at most 50 characters" }),
@@ -129,6 +130,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
+							<div className="absolute right-8 p-1 border z-50 bg-primary border-slate-200 rounded-sm "><Percent className="w-4 h-4  "/></div>
 							<label htmlFor="pass" className="text-right">
 								Pass criteria
 							</label>
@@ -148,6 +150,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 								id="questions-visible"
 								className="col-span-1"
 								defaultChecked={test.showQuestionsOnResults}
+								onCheckedChange={(v) => setValue("showQuestionsOnResults", v)}
 								{...register("showQuestionsOnResults")}
 							/>
 						</div>
@@ -159,17 +162,19 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 								id="randomize-questions"
 								className="col-span-1"
 								defaultChecked={test.randomizeQuestions}
+								onCheckedChange={(v) => setValue("randomizeQuestions", v)}
 								{...register("randomizeQuestions")}
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="randomize-answers" className="text-left col-span-3">
+							<label htmlFor="randomizeAnswers" className="text-left col-span-3">
 								Randomize answers
 							</label>
 							<Switch
-								id="randomize-answers"
+								id="randomizeAnswers"
 								className="col-span-1"
 								defaultChecked={test.randomizeAnswers}
+								onCheckedChange={(v) => setValue("randomizeAnswers", v)}
 								{...register("randomizeAnswers")}
 							/>
 						</div>

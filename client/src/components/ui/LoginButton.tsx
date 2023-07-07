@@ -1,5 +1,5 @@
 import { useClerk, useSession } from "@clerk/clerk-react";
-import { Avatar, AvatarFallback, AvatarImage } from "./Avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "./Avatar";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -15,34 +15,58 @@ import useNavigationDialog from "../../hooks/useNavigationDialog";
 import { useLocation } from "react-router-dom";
 import { TestType } from "../../types/models";
 import { useToast } from "../../hooks/useToast";
+import { useEffect, useState } from "react";
+import useGenerateData from "../../hooks/useGenerateData";
+import { createUser, fetchUserById } from "../../utils/dbUtils";
 
-interface Props{
-	setTest?: (test:TestType) => void;
-	test?: TestType
+interface Props {
+	setTest?: (test: TestType) => void;
+	test?: TestType;
 }
 
-const LoginButton = ({test}:Props) => {
+const LoginButton = ({ test }: Props) => {
+	const { toast } = useToast();
 	const location = useLocation();
 	const { session } = useSession();
+	const { generateUser } = useGenerateData();
 	const { openSignIn, signOut } = useClerk();
+	const [userChecked, setUserChecked] = useState<boolean>(false);
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
-	const {toast} = useToast();
 
 	const handleLogout = async () => {
 		await signOut();
 		session?.end;
+		setUserChecked(false);
 		toast({
 			title: "👋 Successfully logged out.",
-		  })
+		});
 	};
 
 	const handleSignIn = () => {
-		sessionStorage.setItem("test",JSON.stringify(test));
-		openSignIn({redirectUrl:location.pathname})
-		
-	}
+		sessionStorage.setItem("test", JSON.stringify(test));
+		openSignIn({ redirectUrl: location.pathname });
+	};
 
+	useEffect(() => {
+		const checkUser = async () => {
+			if (session && session.user && !userChecked) {
+				const user = generateUser(session.user);
 
+				const response = await fetchUserById(user.id);
+				console.log("fetching user")
+				if(!response){
+					await createUser(user);
+					console.log("added user to db")
+				}
+
+				setUserChecked(true);
+				//send user to backend and check if exists
+				//if not, write user to db
+				//when saving the test, put userID from session.user.id
+			}
+		}
+		checkUser();
+	}, [session]);
 
 	return (
 		<>

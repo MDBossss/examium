@@ -21,13 +21,13 @@ import { useToast } from "../hooks/useToast";
 interface Props {
 	question: QuestionType;
 	questionIndex: number;
-	onSetQuestionImage: (imageUrl: string | undefined, questionIndex: number) => void;
-	onQuestionChange: (text: string, questionIndex: number) => void;
-	onQuestionDelete: (questionIndex: number) => void;
-	onAnswerAdd: (questionIndex: number) => void;
-	onAnswerChange: (text: string, answerIndex: number, questionIndex: number) => void;
-	onAnswerDelete: (answerIndex: number, questionIndex: number) => void;
-	toggleAnswerCorrect: (answerIndex: number, questionIndex: number) => void;
+	onSetQuestionImage: (imageUrl: string | undefined, questionID: string) => void;
+	onQuestionChange: (text: string, questionID: string) => void;
+	onQuestionDelete: (questionID: string) => void;
+	onAnswerAdd: (questionID: string) => void;
+	onAnswerChange: (text: string, questionIndex:number,answerIndex:number) => void;
+	onAnswerDelete: (questionID: string, answerID: string) => void;
+	toggleAnswerCorrect: (questionID: string, answerID: string) => void;
 }
 
 const Question = ({
@@ -43,7 +43,7 @@ const Question = ({
 }: Props) => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const { isSignedIn } = useSession();
-	const {toast} = useToast();
+	const { toast } = useToast();
 
 	useEffect(() => {
 		const textarea = textareaRef.current;
@@ -62,14 +62,14 @@ const Question = ({
 	}, []);
 
 	const handleOpenImageModal = () => {
-		if(!isSignedIn){
+		if (!isSignedIn) {
 			toast({
 				title: "Login required",
 				description: "Please login in order to add images.",
-				variant: "destructive"
-			  })
+				variant: "destructive",
+			});
 		}
-	}
+	};
 
 	return (
 		<div className=" bg-slate-200 w-full p-5">
@@ -77,8 +77,11 @@ const Question = ({
 				<div className="flex justify-between">
 					<h1 className="flex gap-3 items-center text-2xl font-bold">
 						<AlertDialog>
-							<AlertDialogTrigger disabled={!isSignedIn} >
-								<div className="bg-transparent border border-dashed border-slate-400 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4" onClick={handleOpenImageModal}>
+							<AlertDialogTrigger disabled={!isSignedIn}>
+								<div
+									className="bg-transparent border border-dashed border-slate-400 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4"
+									onClick={handleOpenImageModal}
+								>
 									{question.imageUrl ? (
 										<img
 											src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${question.imageUrl}`}
@@ -95,7 +98,7 @@ const Question = ({
 									<ImageUpload
 										onSetQuestionImage={onSetQuestionImage}
 										imageUrl={question.imageUrl}
-										questionIndex={questionIndex}
+										questionID={question.id}
 									/>
 								</AlertDialogHeader>
 								<AlertDialogFooter>
@@ -113,13 +116,13 @@ const Question = ({
 					</h1>
 					<XIcon
 						className="text-slate-400 h-7 w-7 cursor-pointer hover:text-red-600"
-						onClick={() => onQuestionDelete(questionIndex)}
+						onClick={() => onQuestionDelete(question.id)}
 					/>
 				</div>
 				<Textarea
 					ref={textareaRef}
 					className="bg-primary text-lg p-5 overflow-hidden resize-none"
-					onChange={(e) => onQuestionChange(e.target.value, questionIndex)}
+					onChange={(e) => onQuestionChange(e.target.value, question.id)}
 					placeholder="Insert question..."
 					value={question.question}
 				/>
@@ -128,8 +131,9 @@ const Question = ({
 						let label = String.fromCharCode(65 + answerIndex);
 						return (
 							<Answer
-								key={answerIndex}
+								key={answer.id}
 								answerIndex={answerIndex}
+								questionID={question.id}
 								questionIndex={questionIndex}
 								label={label}
 								answer={answer}
@@ -144,7 +148,7 @@ const Question = ({
 					<Button
 						variant="ghost"
 						className="text-blue-500 font-bold text-lg hover:bg-transparent hover:text-blue-600"
-						onClick={() => onAnswerAdd(questionIndex)}
+						onClick={() => onAnswerAdd(question.id)}
 					>
 						Add answer +
 					</Button>
