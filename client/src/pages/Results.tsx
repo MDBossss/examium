@@ -30,7 +30,7 @@ const Results = () => {
 	}, []);
 
 	const handleReturn = () => {
-		navigate("/");
+		navigate(-2);
 	};
 
 	const handleRestart = () => {};

@@ -1,6 +1,6 @@
 import { TestType } from "../types/models"
 
-export const validateTest = (test: TestType, ) => {
+export const validateTest = (test: TestType, setTest: React.Dispatch<React.SetStateAction<TestType>>) => {
 
     let testValid: boolean = true;
     let messages: string[] = [];
@@ -13,6 +13,20 @@ export const validateTest = (test: TestType, ) => {
     if(test.questions.length < 2){
         testValid = false;
         messages.push("Test needs to have at least 2 questions!")
+    }
+
+    if(testValid){
+      setTest((prevTest) => {
+				let updatedTest = { ...prevTest };
+				updatedTest.questions.forEach((question,questionIndex) => {
+          question.answers.forEach((answer,answerIndex) => {
+            if(answer.answer === ""){
+              updatedTest.questions[questionIndex].answers.splice(answerIndex,1)
+            }
+          })
+        })
+        return updatedTest;
+			});
     }
 
     return {testValid,messages}

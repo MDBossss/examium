@@ -16,7 +16,16 @@ class TestController {
 	async getTestById(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			const test = await prisma.test.findUnique({ where: { id } });
+			const test = await prisma.test.findUnique({
+				where: { id },
+				include: {
+					questions: {
+						include: {
+							answers: true,
+						},
+					},
+				},
+			});
 			if (!test) {
 				res.status(404).json({ error: "Test not found" });
 				return;
@@ -27,64 +36,6 @@ class TestController {
 			res.status(500).json({ error: "Internal Server Error" });
 		}
 	}
-
-	// async createTest(req: Request, res: Response) {
-	// 	try {
-	// 		const {
-	// 			id,
-	// 			title,
-	// 			description,
-	// 			passCriteria,
-	// 			showQuestionsOnResults,
-	// 			randomizeQuestions,
-	// 			randomizeAnswers,
-	// 			createdAt,
-	// 			questions,
-	// 			authorId,
-	// 		}: TestType = req.body;
-
-	// 		const newTest = await prisma.test.create({
-	// 			data: {
-	// 				id,
-	// 				title,
-	// 				description,
-	// 				passCriteria,
-	// 				showQuestionsOnResults,
-	// 				randomizeQuestions,
-	// 				randomizeAnswers,
-	// 				createdAt,
-	// 				author: {
-	// 					connect: { id: authorId! },
-	// 				},
-	// 				questions: {
-	// 					createMany: {
-	// 						data: questions.map((question) => ({
-	// 							...question,
-	// 							answers: {
-	// 								createMany: {
-	// 									data: question.answers,
-	// 								},
-	// 							},
-	// 						})),
-	// 					},
-	// 				},
-	// 			},
-	// 			include: {
-	// 				author: true,
-	// 				questions: {
-	// 					include: {
-	// 						answers: true,
-	// 					},
-	// 				},
-	// 			},
-	// 		});
-
-	// 		res.status(201).json(newTest);
-	// 	} catch (error) {
-	// 		console.error("Error creating test:", error);
-	// 		res.status(500).json({ error: "Failed to create test" });
-	// 	}
-	// }
 
 	async createTest(req: Request, res: Response) {
 		try {
@@ -116,17 +67,17 @@ class TestController {
 					},
 					questions: {
 						create: questions.map((question) => ({
-							id:question.id,
-							question:question.question,
+							id: question.id,
+							question: question.question,
 							imageUrl: question.imageUrl,
 							answers: {
 								create: question.answers.map((answer) => ({
 									id: answer.id,
 									answer: answer.answer,
-									isCorrect: answer.isCorrect
-								}))
-							}
-						}))
+									isCorrect: answer.isCorrect,
+								})),
+							},
+						})),
 					},
 				},
 				include: {
@@ -171,14 +122,18 @@ class TestController {
 						connect: { id: authorId! },
 					},
 					questions: {
-						updateMany: questions.map((question) => ({
+						update: questions.map((question) => ({
 							where: { id: question.id },
 							data: {
-								...question,
+								question: question.question,
+								imageUrl: question.imageUrl,
 								answers: {
-									updateMany: question.answers.map((answer) => ({
+									update: question.answers.map((answer) => ({
 										where: { id: answer.id },
-										data: answer,
+										data: {
+											answer: answer.answer,
+											isCorrect: answer.isCorrect,
+										},
 									})),
 								},
 							},
@@ -205,7 +160,17 @@ class TestController {
 	async deleteTest(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			await prisma.test.delete({ where: { id } });
+			await prisma.test.delete({
+				where: { id },
+				include: {
+					author: true,
+					questions: {
+						include: {
+							answers: true,
+						},
+					},
+				},
+			});
 			res.json({ message: "Test deleted successfully" });
 		} catch (error) {
 			console.error(error);

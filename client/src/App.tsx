@@ -12,7 +12,8 @@ function App() {
       <Routes>
         <Route path="*" element={<NotFound />} />
         <Route path="/" element={<Home />} />
-        <Route path="/create" element={<Layout><Create /></Layout>} />
+        <Route path="/create" element={<Layout><Create/></Layout>} />
+        <Route path="/create/:id" element={<Layout><Create/></Layout>}/>
         <Route path="/create/preview" element={<Layout><Preview /></Layout>} />
         <Route path="/create/preview/results" element={<Layout><Results/></Layout>}/>
       </Routes>

@@ -1,12 +1,13 @@
 import { PlusIcon, FileIcon, UserIcon, UsersIcon, EditIcon } from "lucide-react";
 import { Button } from "./ui/Button";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ProgressDialog from "./ui/Dialogs/ProgressDialog";
 import useNavigationDialog from "../hooks/useNavigationDialog";
 import Logo from "./ui/Logo";
 
 const Navbar = () => {
 	const location = useLocation();
+	const navigate = useNavigate();
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
 
 	const handlePreviewTest = () => {
@@ -16,7 +17,17 @@ const Navbar = () => {
 		});
 	};
 
+	const handleBack = () => {
+		if(location.pathname === "/create/preview"){
+			navigate(-1);
+		}
+		else if(location.pathname === "/create/preview/results"){
+			navigate(-2);
+		}
+	}
+
 	return (
+		
 		<>
 			{showDialog && (
 				<ProgressDialog
@@ -39,13 +50,13 @@ const Navbar = () => {
 						location.pathname === "/create/preview/results" ? (
 							<Button
 								className="bg-blue-500 hover:bg-blue-600 flex items-center gap-2"
-								onClick={() => handleNavigate("/create")}
+								onClick={() => handleBack()}
 							>
 								Back to editor <EditIcon className="w-5 h-5" />
 							</Button>
 						) : null}
 
-						{location.pathname === "/create" ? (
+						{location.pathname.startsWith("/create") ? (
 							<Button
 								className="bg-blue-500 hover:bg-blue-600 flex items-center gap-2"
 								onClick={() => handleNavigate("/create")}
@@ -86,7 +97,7 @@ const Navbar = () => {
 							</ul>
 						</div>
 					</div>
-					{location.pathname === "/create" && (
+					{(location.pathname.startsWith("/create") && location.pathname !== "/create/preview") && (
 						<div className="flex">
 							<Button className="bg-blue-500 hover:bg-blue-600 flex-1" onClick={handlePreviewTest}>
 								Preview test

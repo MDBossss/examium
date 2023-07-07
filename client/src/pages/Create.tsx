@@ -3,7 +3,7 @@ import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/Input";
 import { TestType } from "../types/models";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ResetDialog from "../components/ui/Dialogs/ResetDialog";
 import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
 import { z } from "zod";
@@ -11,11 +11,13 @@ import { useToast } from "../hooks/useToast";
 import useGenerateData from "../hooks/useGenerateData";
 import { validateTest } from "../utils/testUtils";
 import { useSession } from "@clerk/clerk-react";
-import { createTest } from "../utils/dbUtils";
+import { createTest, deleteTest, fetchTestById, updateTest } from "../utils/dbUtils";
 
 const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
 
 const Create = () => {
+	const { id } = useParams();
+	const [hasParamId, setHasParamId] = useState<boolean>(false);
 	const { generateAnswer, generateQuestion, generateTest } = useGenerateData();
 	const [test, setTest] = useState<TestType>(generateTest());
 	const [titleError, setTitleError] = useState<boolean>(false);
@@ -23,25 +25,58 @@ const Create = () => {
 	const { toast } = useToast();
 	const { session } = useSession();
 
-	const handleSaveTest = async () => {
-		if (session && session?.status === "active") {
-			const { testValid, messages } = validateTest(test);
-			if (testValid) {
-				//send data to backend and handle errors
-				if(test.updatedAt){
-					//update test
+	useEffect(() => {
+		const initialLoad = async () => {
+			if (id) {
+				setHasParamId(true);
+				const response = await fetchTestById(id);
+				if(response){
+					setTest(response);
 				}
 				else{
-					//create test and set creator of the test
-					updateTestAuthor()
-					await createTest(test);
-					console.log("saved test")
+					navigate("/404");
 				}
+			} else {
+				setHasParamId(false);
+				setTest(generateTest());
+			}
+		};
+		initialLoad();
+	}, [id]);
 
-				toast({
-					description: "✅ Saved successfully.",
-				});
-				
+	const handleSaveTest = async () => {
+		if (session && session?.status === "active") {
+			const { testValid, messages } = validateTest(test, setTest);
+			if (testValid) {
+				//send data to backend and handle errors
+				if (hasParamId) {
+					//update test
+					const res = await updateTest(test);
+					//console.log(res);
+					if (res) {
+						toast({
+							description: "✅ Saved successfully.",
+						});
+					} else {
+						toast({
+							description: "😓 Failed to save the test.",
+						});
+					}
+				} else {
+					//create test and set creator of the test
+					updateTestAuthor();
+					const res = await createTest(test);
+					//console.log(res);
+					if (res) {
+						toast({
+							description: "✅ Created successfully.",
+						});
+					} else {
+						toast({
+							description: "😓 Failed to create the test.",
+						});
+					}
+				}
 			} else {
 				messages.forEach((message) => {
 					toast({
@@ -49,19 +84,17 @@ const Create = () => {
 						variant: "destructive",
 					});
 				});
-
-				
 			}
 		} else {
 			toast({
-				description: "You need to be logged in to save the test.",
+				description: "You need to be logged in order to do that.",
 				variant: "destructive",
 			});
 		}
 	};
 
 	const handlePreviewTest = () => {
-		const { testValid, messages } = validateTest(test);
+		const { testValid, messages } = validateTest(test, setTest);
 		if (!testValid) {
 			messages.forEach((message) => {
 				toast({
@@ -84,8 +117,25 @@ const Create = () => {
 		}
 	}, []);
 
-	const handleDeleteTest = () => {
-		setTest(generateTest());
+	const handleDeleteTest = async () => {
+		if(hasParamId){
+			const res = await deleteTest(test.id);
+			console.log(res)
+			if(res){
+				navigate("/create")
+				toast({
+					description: "✅ Deleted successfully.",
+				});
+			}
+			else{
+				toast({
+					description: "😓 Failed to delete the test.",
+				});
+			}
+		}
+		else{
+			navigate("/create")
+		}
 	};
 
 	const handleSetTestTitle = (title: string) => {
@@ -107,8 +157,8 @@ const Create = () => {
 	};
 
 	const updateTestAuthor = () => {
-		setTest((prevTest) => ({...prevTest,authorId: session?.user.id}))
-	}
+		setTest((prevTest) => ({ ...prevTest, authorId: session?.user.id }));
+	};
 
 	const handleSetQuestionImage = (imageUrl: string | undefined, questionID: string) => {
 		setTest((prevTest) => ({
@@ -220,7 +270,7 @@ const Create = () => {
 						value={test.title}
 					/>
 					<SettingsDialog test={test} setTest={setTest} />
-					<ResetDialog onTrigger={handleDeleteTest} />
+					<ResetDialog onTrigger={handleDeleteTest} hasParamId={hasParamId} />
 				</div>
 			</div>
 			{test.questions.map((question, questionIndex) => {
@@ -257,7 +307,7 @@ const Create = () => {
 					className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
 					onClick={handleSaveTest}
 				>
-					Save test
+					{hasParamId ? "Save test" : "Create test"}
 				</div>
 			</div>
 		</div>
