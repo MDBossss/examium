@@ -1,5 +1,6 @@
 import { TestType, UserType } from "../types/models";
 import axios from "axios";
+import { removeAllTestImagesFromBucket } from "./supabaseUtils";
 
 export async function fetchUsers() {
 	try {
@@ -62,7 +63,7 @@ export async function createTest(test: TestType) {
 		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/tests`, test);
 		return response.data;
 	} catch (error) {
-		return null
+		throw new Error("Failed to create test")
 	}
 }
 
@@ -71,7 +72,7 @@ export async function updateTest(test: TestType){
 		const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/tests/${test.id}`,test);
 		return response.data;
 	}catch(error){
-		return null;
+		throw new Error("Failed to update test")
 	}
 }
 
@@ -80,7 +81,7 @@ export async function fetchTests(){
 		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/tests`);
 		return response.data as TestType[];
 	}catch(error){
-		return null;
+		throw new Error("Failed to fetch tests")
 	}
 }
 
@@ -89,16 +90,17 @@ export async function fetchTestById(testId: string){
 		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/tests/${testId}`);
 		return response.data as TestType;
 	}catch(error){
-		return null;
+		throw new Error("Failed to fetch test")
 	}
 }
 
-export async function deleteTest(testId: string){
+export async function deleteTest(test: TestType){
 	try{
-		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/tests/${testId}`);
+		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/tests/${test.id}`);
+		removeAllTestImagesFromBucket(test);
 		return response.data;
 	}catch(error){
-		return null;
+		throw new Error("Failed to  test")
 	}
 	
 }

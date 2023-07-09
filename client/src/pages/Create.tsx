@@ -25,8 +25,10 @@ const Create = () => {
 	const { toast } = useToast();
 	const { session } = useSession();
 
+
 	useEffect(() => {
 		const initialLoad = async () => {
+			//test generation
 			if (id) {
 				setHasParamId(true);
 				const response = await fetchTestById(id);
@@ -44,6 +46,21 @@ const Create = () => {
 		initialLoad();
 	}, [id]);
 
+
+
+	useEffect(() => {
+		const testJSON = sessionStorage.getItem("test");
+		if (testJSON && setTest) {
+			let test: TestType = JSON.parse(testJSON);
+			setTest(test);
+			sessionStorage.removeItem("test");
+		}
+	}, []);
+
+	useEffect(() => {
+		updateTestAuthor();
+	},[session?.user])
+
 	const handleSaveTest = async () => {
 		if (session && session?.status === "active") {
 			const { testValid, messages } = validateTest(test, setTest);
@@ -51,31 +68,34 @@ const Create = () => {
 				//send data to backend and handle errors
 				if (hasParamId) {
 					//update test
-					const res = await updateTest(test);
-					//console.log(res);
-					if (res) {
+					await updateTest(test)
+					.then(() => {
 						toast({
 							description: "✅ Saved successfully.",
 						});
-					} else {
+					})
+					.catch(() => {
 						toast({
 							description: "😓 Failed to save the test.",
+							variant: "destructive"
 						});
-					}
+					});
+
 				} else {
-					//create test and set creator of the test
-					updateTestAuthor();
-					const res = await createTest(test);
-					//console.log(res);
-					if (res) {
+					//create test 
+					await createTest(test)
+					.then(() => {
+						setHasParamId(true)
 						toast({
 							description: "✅ Created successfully.",
 						});
-					} else {
+					})
+					.catch(() => {
 						toast({
 							description: "😓 Failed to create the test.",
+							variant: "destructive"
 						});
-					}
+					});
 				}
 			} else {
 				messages.forEach((message) => {
@@ -108,30 +128,22 @@ const Create = () => {
 		}
 	};
 
-	useEffect(() => {
-		const testJSON = sessionStorage.getItem("test");
-		if (testJSON && setTest) {
-			let test: TestType = JSON.parse(testJSON);
-			setTest(test);
-			sessionStorage.removeItem("test");
-		}
-	}, []);
 
 	const handleDeleteTest = async () => {
 		if(hasParamId){
-			const res = await deleteTest(test.id);
-			console.log(res)
-			if(res){
+			await deleteTest(test)
+			.then(() => {
+				setTest(generateTest())
 				navigate("/create")
 				toast({
 					description: "✅ Deleted successfully.",
 				});
-			}
-			else{
+			})
+			.catch(() => {
 				toast({
 					description: "😓 Failed to delete the test.",
 				});
-			}
+			});
 		}
 		else{
 			navigate("/create")

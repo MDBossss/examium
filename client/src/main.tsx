@@ -1,9 +1,9 @@
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
-import { Toaster } from "./components/ui/toaster.tsx";
+import { Toaster } from "./components/ui/Toaster.tsx";
+import "./index.css";
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
 	throw new Error("Missing Publishable Key");
