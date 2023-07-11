@@ -36,11 +36,11 @@ const Answer = ({
 				<CheckIcon
 					className={`${
 						answer.isCorrect ? "bg-green-500 text-white" : "text-green-600 bg-green-100"
-					} absolute right-2 top-2 z-10 h-8 w-8 p-2 rounded-sm  hover:bg-green-500 hover:text-white cursor-pointer`}
+					} absolute right-2 top-2 z-10 h-8 w-8 p-2 rounded-sm  hover:bg-green-500 hover:text-white cursor-pointer transition-all`}
 					onClick={() => toggleAnswerCorrect(questionID, answer.id)}
 				/>
 				<XIcon
-					className="absolute right-2 top-12 z-10 h-8 w-8 p-2 rounded-sm text-zinc-400 bg-transparent hover:bg-red-500 hover:text-white cursor-pointer"
+					className="absolute right-2 top-12 z-10 h-8 w-8 p-2 rounded-sm text-zinc-400 bg-transparent hover:bg-red-500 hover:text-white cursor-pointer transition-all"
 					onClick={() => onAnswerDelete(questionID, answer.id)}
 				/>
 			</div>

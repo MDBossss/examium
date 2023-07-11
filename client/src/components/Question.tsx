@@ -88,7 +88,7 @@ const Question = ({
 											className="w-[40px] h-full"
 										/>
 									) : (
-										<ImageIcon className="text-slate-400 h-7 w-7 hover:text-blue-500" />
+										<ImageIcon className="text-slate-400 h-7 w-7 hover:text-blue-500 transition-all" />
 									)}
 								</div>
 							</AlertDialogTrigger>

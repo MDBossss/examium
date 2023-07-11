@@ -96,8 +96,12 @@ body{
 
 .mesh-home{
   
-  background-color: rgb(255, 255, 255);
-  background-image: radial-gradient(at 62% 63%, rgb(186, 230, 253) 0, transparent 83%), radial-gradient(at 50% 52%, rgb(167, 139, 250) 0, transparent 23%), radial-gradient(at 67% 43%, rgb(59, 130, 246) 0, transparent 21%), radial-gradient(at 40% 52%, rgb(255, 255, 255) 0, transparent 100%);
+
+
+  background-color: rgb(226, 232, 240);
+  background-image: radial-gradient(at 100% 100%, rgb(99, 102, 241) 0, transparent 51%), radial-gradient(at 0% 100%, rgb(59, 130, 246) 0, transparent 42%), radial-gradient(at 50% 53%, rgb(255, 255, 255) 0, transparent 100%), radial-gradient(at 6% 55%, rgb(255, 255, 255) 0, transparent 100%);
+
+
 
 }
 
