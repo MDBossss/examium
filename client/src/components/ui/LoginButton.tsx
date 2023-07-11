@@ -12,12 +12,13 @@ import { Button } from "./Button";
 import { FileIcon, LogOutIcon, PlusIcon, UserIcon, UsersIcon } from "lucide-react";
 import ProgressDialog from "./Dialogs/ProgressDialog";
 import useNavigationDialog from "../../hooks/useNavigationDialog";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { TestType } from "../../types/models";
 import { useToast } from "../../hooks/useToast";
 import { useEffect, useState } from "react";
 import useGenerateData from "../../hooks/useGenerateData";
 import { createUser, fetchUserById } from "../../utils/dbUtils";
+import Spinner from "./Spinner";
 
 interface Props {
 	setTest?: (test: TestType) => void;
@@ -27,6 +28,7 @@ interface Props {
 const LoginButton = ({ test }: Props) => {
 	const { toast } = useToast();
 	const location = useLocation();
+	const navigate = useNavigate();
 	const { session } = useSession();
 	const { generateUser } = useGenerateData();
 	const { openSignIn, signOut } = useClerk();
@@ -37,6 +39,7 @@ const LoginButton = ({ test }: Props) => {
 		await signOut();
 		session?.end;
 		setUserChecked(false);
+		navigate("/");
 		toast({
 			title: "👋 Successfully logged out.",
 		});
@@ -53,10 +56,10 @@ const LoginButton = ({ test }: Props) => {
 				const user = generateUser(session.user);
 
 				const response = await fetchUserById(user.id);
-				console.log("fetching user")
-				if(!response){
+				console.log("fetching user");
+				if (!response) {
 					await createUser(user);
-					console.log("added user to db")
+					console.log("added user to db");
 				}
 
 				setUserChecked(true);
@@ -64,7 +67,7 @@ const LoginButton = ({ test }: Props) => {
 				//if not, write user to db
 				//when saving the test, put userID from session.user.id
 			}
-		}
+		};
 		checkUser();
 	}, [session]);
 
@@ -82,7 +85,9 @@ const LoginButton = ({ test }: Props) => {
 					<DropdownMenuTrigger className="outline-none">
 						<Avatar className="cursor-pointer ">
 							<AvatarImage src={session.user.imageUrl} />
-							<AvatarFallback>CN</AvatarFallback>
+							<AvatarFallback>
+								<Spinner />
+							</AvatarFallback>
 						</Avatar>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent className="bg-primary">
@@ -109,7 +114,11 @@ const LoginButton = ({ test }: Props) => {
 					</DropdownMenuContent>
 				</DropdownMenu>
 			) : (
-				<Button variant="outline" onClick={handleSignIn}>
+				<Button
+					variant="outline"
+					className="hover:bg-slate-300 border-slate-300"
+					onClick={handleSignIn}
+				>
 					Login
 				</Button>
 			)}

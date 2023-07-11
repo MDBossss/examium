@@ -50,7 +50,7 @@ const Create = () => {
 
 	useEffect(() => {
 		const testJSON = sessionStorage.getItem("test");
-		if (testJSON && setTest) {
+		if (testJSON ) {
 			let test: TestType = JSON.parse(testJSON);
 			setTest(test);
 			sessionStorage.removeItem("test");
