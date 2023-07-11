@@ -85,6 +85,15 @@ export async function fetchTests(){
 	}
 }
 
+export async function fetchTestsByUserId(userId: string){
+	try{
+		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/tests/user/${userId}`);
+		return response.data as TestType[];
+	}catch(error){
+		throw new Error("Failed to fetch user tests");
+	}
+}
+
 export async function fetchTestById(testId: string){
 	try{
 		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/tests/${testId}`);

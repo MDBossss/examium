@@ -56,14 +56,12 @@ const Navbar = () => {
 							</Button>
 						) : null}
 
-						{location.pathname.startsWith("/create") ? (
-							<Button
-								className="bg-blue-500 hover:bg-blue-600 flex items-center gap-2"
-								onClick={() => handleNavigate("/create")}
-							>
-								New test <PlusIcon className="w-6 h-6" />
-							</Button>
-						) : null}
+						<Button
+							className="bg-blue-500 hover:bg-blue-600 flex items-center gap-2"
+							onClick={() => handleNavigate("/create")}
+						>
+							New test <PlusIcon className="w-6 h-6" />
+						</Button>
 						{session?.user ? (
 							<div className="h-full">
 								<h4 className=" text-sm border-gray-300 border-b">Menu</h4>
@@ -71,7 +69,7 @@ const Navbar = () => {
 									<li>
 										<div
 											className="flex items-center gap-1 cursor-pointer p-1 rounded-sm transition-all hover:bg-slate-300"
-											onClick={() => handleNavigate("/tests/:id")}
+											onClick={() => handleNavigate(`/tests/${session.user.id}`)}
 										>
 											<FileIcon className="w-5 h-5" />
 											My tests

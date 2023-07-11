@@ -5,6 +5,7 @@ import Preview from "./pages/Preview";
 import NotFound from "./pages/NotFound";
 import Layout from "./pages/Layout";
 import Results from "./pages/Results";
+import MyTests from "./pages/MyTests";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/create/:id" element={<Layout><Create/></Layout>}/>
         <Route path="/create/preview" element={<Layout><Preview /></Layout>} />
         <Route path="/create/preview/results" element={<Layout><Results/></Layout>}/>
+        <Route path="/tests/:id" element={<Layout><MyTests/></Layout>}/>
       </Routes>
     </div>
   );
