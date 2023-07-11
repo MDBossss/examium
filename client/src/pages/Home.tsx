@@ -1,11 +1,10 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { Button } from "../components/ui/Button";
 import Footer from "../components/Footer";
 
 const Home = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
 
 	return (
 		<div className="w-screen h-screen mesh-home">
