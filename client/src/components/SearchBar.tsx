@@ -1,9 +1,15 @@
 import { useSession } from "@clerk/clerk-react";
 import LoginButton from "./ui/LoginButton";
 import { TestType } from "../types/models";
-import { ChevronLeftIcon, ChevronRightIcon, PanelLeftCloseIcon, PanelLeftOpenIcon } from "lucide-react";
+import {
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	PanelLeftCloseIcon,
+	PanelLeftOpenIcon,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSidebarStore } from "../store/sidebarStore";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/Tooltip";
 
 interface Props {
 	setTest?: (test: TestType) => void;
@@ -31,26 +37,60 @@ const SearchBar = ({ test, setTest }: Props) => {
 	return (
 		<div className="flex flex-row gap-3 items-center justify-between">
 			<div className="flex gap-2 items-center">
-				{showSidebar ? (
-					<PanelLeftCloseIcon
-						className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
-						onClick={handleToggleSidebar}
-					/>
-				) : (
-					<PanelLeftOpenIcon
-						className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
-						onClick={handleToggleSidebar}
-					/>
+				{!location.pathname.startsWith("/solve") && (
+					<>
+						{showSidebar ? (
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<PanelLeftCloseIcon
+										className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
+										onClick={handleToggleSidebar}
+									/>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>Hide Sidebar</p>
+								</TooltipContent>
+							</Tooltip>
+						) : (
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<PanelLeftOpenIcon
+										className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
+										onClick={handleToggleSidebar}
+									/>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>Show Sidebar</p>
+								</TooltipContent>
+							</Tooltip>
+						)}
+
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<ChevronLeftIcon
+									className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
+									onClick={handleNext}
+								/>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Go Back</p>
+							</TooltipContent>
+						</Tooltip>
+
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<ChevronRightIcon
+									className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
+									onClick={handlePrevious}
+								/>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Go Forward</p>
+							</TooltipContent>
+						</Tooltip>
+					</>
 				)}
 
-				<ChevronLeftIcon
-					className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
-					onClick={handleNext}
-				/>
-				<ChevronRightIcon
-					className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
-					onClick={handlePrevious}
-				/>
 				<p className="text-sm text-slate-400">
 					{date.toLocaleDateString(undefined, {
 						weekday: "long",

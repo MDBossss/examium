@@ -10,7 +10,7 @@ const Home = () => {
 		<div className="w-screen h-screen mesh-home">
 			<div className="flex flex-col h-full gap-2 container max-w-7xl mx-auto">
 				<Navbar />
-				<div className="flex flex-col text-center max-w-lg gap-5 items-center m-auto">
+				<div className="flex flex-col text-center max-w-lg gap-5 items-center m-auto pb-32">
 					<h1 className="text-5xl font-extrabold text-zinc-800">
 						Your{" "}
 						<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-violet-600">

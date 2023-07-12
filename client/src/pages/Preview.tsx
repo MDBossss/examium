@@ -1,35 +1,54 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { TestType } from "../types/models";
 import { useEffect, useState } from "react";
 import QuizAnswer from "../components/QuizAnswer";
 import { Button } from "../components/ui/Button";
+import { fetchTestById } from "../utils/dbUtils";
 
 const Preview = () => {
+	const { id } = useParams();
+	const [hasParamId, setHasParamId] = useState<boolean>(false);
 	const location = useLocation();
 	const navigate = useNavigate();
-	const test: TestType = location.state?.test;
+	const [test, setTest] = useState<TestType>(location.state?.test);
 	const [questionNumber, setQuestionNumber] = useState<number>(0);
-	const [questionDone, setQuestionDone] = useState<boolean[]>(
-		Array(test?.questions.length).fill(false)
-	);
-	const [answersChecked, setAnswersChecked] = useState<boolean[][]>(
-		test?.questions.map(() => Array(test?.questions[0].answers.length).fill(false))
-	);
-
-	//protection against users wandering to this route without any data 
-	useEffect(() => {
-		if (!test) { // or || if theres no id from the link of exisiting test
-			navigate("/", { replace: true });
-		}
-	}, []);
+	const [questionDone, setQuestionDone] = useState<boolean[]>([]);
+	const [answersChecked, setAnswersChecked] = useState<boolean[][]>([]);
 
 	useEffect(() => {
+		const initialLoad = async () => {
+			if (id) {
+				setHasParamId(true);
+				await fetchTestById(id)
+					.then((response) => {
+						console.log("has id and fetched");
+						setTest(response);
+						setInitialData(response);
+					})
+					.catch(() => {
+						console.log("has id not fetched");
+						navigate("/404");
+					});
+			} else if (test) {
+				console.log("passed test thru navigate");
+				setInitialData(test);
+				setHasParamId(false);
+			} else {
+				console.log("nothing passed thru, and no id, send him back");
+				setHasParamId(false);
+				navigate("/", { replace: true });
+			}
+		};
+		initialLoad();
+	}, [id]);
+
+	const setInitialData = (test: TestType) => {
+		setQuestionDone(Array(test.questions.length).fill(false));
 		setAnswersChecked(
 			test?.questions.map(() => Array(test?.questions[0].answers.length).fill(false))
 		);
-		setQuestionDone(Array(test?.questions.length).fill(false));
-	}, []);
+	};
 
 	const handleCheck = (questionIndex: number, answerIndex: number) => {
 		setAnswersChecked((prev) => {
@@ -54,7 +73,6 @@ const Preview = () => {
 		}
 	};
 
-
 	const handleDecrementQuestion = () => {
 		setQuestionNumber((prev) => prev - 1);
 	};
@@ -66,7 +84,15 @@ const Preview = () => {
 			return updatedArray;
 		});
 		setTimeout(() => {
-			navigate("/create/preview/results", {state: {test: test, answersChecked:answersChecked}});
+			if (hasParamId) {
+				navigate("/solve/results", { 
+					state: { test: test, answersChecked: answersChecked, hasParamId: hasParamId } 
+				});
+			} else {
+				navigate("/create/preview/results", {
+					state: { test: test, answersChecked: answersChecked, hasParamId: hasParamId },
+				});
+			}
 		}, 3000);
 	};
 
@@ -92,7 +118,7 @@ const Preview = () => {
 					{test?.questions[questionNumber].answers.map((answer, answerIndex) =>
 						answer.answer.length ? (
 							<QuizAnswer
-								key={answer.answer + questionNumber}
+								key={answer.id}
 								answer={answer}
 								answerIndex={answerIndex}
 								isChecked={answersChecked[questionNumber][answerIndex]}

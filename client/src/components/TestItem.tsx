@@ -7,6 +7,7 @@ import { getTimeAgo } from "../utils/dateUtils";
 import { useToast } from "../hooks/useToast";
 import { useNavigate } from "react-router";
 import { CopyIcon, EditIcon } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/Tooltip";
 
 interface Props {
 	test: TestType;
@@ -18,9 +19,20 @@ const TestItem = ({ test, session }: Props) => {
 	const navigate = useNavigate();
 
 	const handleCopyLink = () => {
-		toast({
-			description: "📋 Copied link to clipboard.",
-		});
+		navigator.clipboard.writeText(`${window.location.host}/solve/${test.id}`)
+		.then(() => {
+			toast({
+				description: "📋 Copied link to clipboard.",
+			});
+		})
+		.catch(() => {
+			toast({
+				description: "📋 Failed to copy link to clipboard.",
+				variant: "destructive"
+			});
+		})
+		
+		
 	};
 
 	const handleEdit = () => {
@@ -28,7 +40,7 @@ const TestItem = ({ test, session }: Props) => {
 	};
 
 	const handleStart = () => {
-		//todo make a new component where /test/:id to solve
+		navigate(`/solve/${test.id}`)
 	};
 
 	return (
@@ -50,12 +62,32 @@ const TestItem = ({ test, session }: Props) => {
 				</div>
 			</div>
 			<div className="flex gap-3">
-				<Button size="sm" variant="outline" className="hover:bg-slate-200" onClick={handleCopyLink}>
-					<CopyIcon className="w-5 h-5" />
-				</Button>
-				<Button size="sm" className="bg-blue-500 hover:bg-blue-600" onClick={handleEdit}>
-					<EditIcon className="w-5 h-5" />
-				</Button>
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<Button
+							size="sm"
+							variant="outline"
+							className="hover:bg-slate-200"
+							onClick={handleCopyLink}
+						>
+							<CopyIcon className="w-4 h-4" />
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>Copy link</p>
+					</TooltipContent>
+				</Tooltip>
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<Button size="sm" className="bg-blue-500 hover:bg-blue-600" onClick={handleEdit}>
+							<EditIcon className="w-4 h-4" />
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>Edit</p>
+					</TooltipContent>
+				</Tooltip>
+
 				<Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={handleStart}>
 					Start
 				</Button>

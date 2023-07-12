@@ -18,6 +18,8 @@ function App() {
         <Route path="/create/preview" element={<Layout><Preview /></Layout>} />
         <Route path="/create/preview/results" element={<Layout><Results/></Layout>}/>
         <Route path="/tests/:id" element={<Layout><MyTests/></Layout>}/>
+        <Route path="/solve/:id" element={<Preview/>}/>
+        <Route path="/solve/results" element={<Results/>}/>
       </Routes>
     </div>
   );

@@ -17,6 +17,7 @@ const QuestionResult = ({ question, questionIndex, answersChecked }: Props) => {
 					{question.answers.map((answer, answerIndex) =>
 						answer.answer.length ? (
 							<ResultAnswer
+								key={answer.id}
 								answer={answer}
 								answerIndex={answerIndex}
 								isChecked={answersChecked[answerIndex]}

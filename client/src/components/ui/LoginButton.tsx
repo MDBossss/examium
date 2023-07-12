@@ -56,7 +56,6 @@ const LoginButton = ({ test }: Props) => {
 				const user = generateUser(session.user);
 
 				const response = await fetchUserById(user.id);
-				console.log("fetching user");
 				if (!response) {
 					await createUser(user);
 					console.log("added user to db");
@@ -99,7 +98,7 @@ const LoginButton = ({ test }: Props) => {
 						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate("/create")}>
 							<PlusIcon className="h-4 w-4" /> New test
 						</DropdownMenuItem>
-						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate("/tests:id")}>
+						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate(`/tests/${session.user.id}`)}>
 							<FileIcon className="h-4 w-4" /> My tests
 						</DropdownMenuItem>
 						<DropdownMenuItem
