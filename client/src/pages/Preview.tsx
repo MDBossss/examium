@@ -115,7 +115,7 @@ const Preview = () => {
 					{test?.questions[questionNumber].question}
 				</h1>
 				<div className="grid grid-cols-2 w-full gap-3">
-					{test?.questions[questionNumber].answers.map((answer, answerIndex) =>
+					{(answersChecked.length > 1 && test.questions && test.questions.length > 0) && test?.questions[questionNumber].answers.map((answer, answerIndex) =>
 						answer.answer.length ? (
 							<QuizAnswer
 								key={answer.id}

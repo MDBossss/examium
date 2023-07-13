@@ -10,28 +10,27 @@ import { useCallback, useState } from "react";
 import { TestType } from "../types/models";
 
 const MyTests = () => {
-	const { session } = useSession();
-	const [filterTitle,setFilterTitle] = useState<string>("");
+	const {session} = useSession()
+	const userId = session?.user.id;
+	const [filterTitle, setFilterTitle] = useState<string>("");
+
+	const filterTestsByTitle = useCallback(
+		(tests: TestType[]) => {
+			if (!filterTitle) return tests;
+			return tests.filter((test) => test.title.toLowerCase().includes(filterTitle));
+		},
+		[filterTitle]
+	);
 
 
-
-	const filterTestsByTitle = useCallback((tests:TestType[]) => {
-		if(!filterTitle) return tests;
-		return tests.filter((test) => test.title.toLowerCase().includes(filterTitle))
-	},[filterTitle])
-
-
-
-	const { data, isLoading, isError } = useQuery({
-		queryKey: ["tests", session?.user.id],
-		queryFn: () => fetchTestsByUserId(session?.user.id!),
+	const { data, isLoading, isError} = useQuery({
+		queryKey: ["tests", userId],
+		queryFn: () => fetchTestsByUserId(userId!),
 		select: filterTestsByTitle,
-		refetchOnWindowFocus: false
+		refetchOnWindowFocus: false,
+		enabled: !!userId
 	});
 
-	if (!session) {
-		return;
-	}
 
 	return (
 		<div className="flex flex-col gap-10 p-10 pt-5 w-full">
@@ -45,8 +44,14 @@ const MyTests = () => {
 				</div>
 				<div className="flex flex-col gap-2 mt-1">
 					<div className="flex gap-2">
-						<Input placeholder="Filter tests by title..." className="bg-slate-200" onChange={(e) => setFilterTitle(e.target.value)}/>
-						<Button variant="outline" className="hover:bg-slate-200">Filter</Button>
+						<Input
+							placeholder="Filter tests by title..."
+							className="bg-slate-200"
+							onChange={(e) => setFilterTitle(e.target.value)}
+						/>
+						<Button variant="outline" className="hover:bg-slate-200">
+							Filter
+						</Button>
 					</div>
 					{isLoading && !isError ? (
 						<Spinner />

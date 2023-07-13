@@ -15,10 +15,10 @@ class TestController {
 
 	async getTestsByUserId(req: Request, res: Response) {
 		try {
-			const { userId } = req.params;
+			const { id } = req.params;
 			const tests = await prisma.test.findMany({
 				where: {
-					authorId: userId,
+					authorId: id,
 				},
 			});
 			res.json(tests);

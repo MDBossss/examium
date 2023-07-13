@@ -17,7 +17,7 @@ const queryClient = new QueryClient();
 const appearance = {
 	variables: {
 		colorPrimary: "#3b82f6",
-		colorBackground: "#f4fafa",
+		colorBackground: "#fff",
 		fontFamily: "Poppins"
 	},
 };

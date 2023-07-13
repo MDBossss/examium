@@ -72,6 +72,7 @@ const LoginButton = ({ test }: Props) => {
 		await signOut();
 		session?.end;
 		setUserChecked(false);
+		sessionStorage.removeItem("test")
 		navigate("/");
 		toast({
 			title: "👋 Successfully logged out.",
