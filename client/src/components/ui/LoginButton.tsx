@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import useGenerateData from "../../hooks/useGenerateData";
 import { createUser, fetchUserById } from "../../utils/dbUtils";
 import Spinner from "./Spinner";
+import ProfileDialog from "./Dialogs/ProfileDialog";
 
 interface Props {
 	setTest?: (test: TestType) => void;
@@ -33,22 +34,8 @@ const LoginButton = ({ test }: Props) => {
 	const { generateUser } = useGenerateData();
 	const { openSignIn, signOut } = useClerk();
 	const [userChecked, setUserChecked] = useState<boolean>(false);
+	const [showProfileDialog, setShowProfileDialog] = useState<boolean>(false);
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
-
-	const handleLogout = async () => {
-		await signOut();
-		session?.end;
-		setUserChecked(false);
-		navigate("/");
-		toast({
-			title: "👋 Successfully logged out.",
-		});
-	};
-
-	const handleSignIn = () => {
-		sessionStorage.setItem("test", JSON.stringify(test));
-		openSignIn({ redirectUrl: location.pathname });
-	};
 
 	useEffect(() => {
 		const checkUser = async () => {
@@ -70,6 +57,32 @@ const LoginButton = ({ test }: Props) => {
 		checkUser();
 	}, [session]);
 
+	const handleToggleProfile = (value:boolean) => {
+		if(value == true){
+			setShowProfileDialog(value);
+			document.body.style.overflow = "hidden";
+		}
+		else{
+			setShowProfileDialog(value)
+			document.body.style.overflow = "";
+		}
+	};
+
+	const handleLogout = async () => {
+		await signOut();
+		session?.end;
+		setUserChecked(false);
+		navigate("/");
+		toast({
+			title: "👋 Successfully logged out.",
+		});
+	};
+
+	const handleSignIn = () => {
+		sessionStorage.setItem("test", JSON.stringify(test));
+		openSignIn({ redirectUrl: location.pathname });
+	};
+
 	return (
 		<>
 			{showDialog && (
@@ -79,6 +92,9 @@ const LoginButton = ({ test }: Props) => {
 					dialogOpen={showDialog}
 				/>
 			)}
+
+			{showProfileDialog && <ProfileDialog handleToggleProfile={handleToggleProfile} />}
+
 			{session?.user ? (
 				<DropdownMenu>
 					<DropdownMenuTrigger className="outline-none">
@@ -92,13 +108,16 @@ const LoginButton = ({ test }: Props) => {
 					<DropdownMenuContent className="bg-primary">
 						<DropdownMenuLabel>My Account</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate("/profile")}>
+						<DropdownMenuItem className="flex gap-1" onClick={() => handleToggleProfile(true)}>
 							<UserIcon className="h-4 w-4" /> Profile
 						</DropdownMenuItem>
 						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate("/create")}>
 							<PlusIcon className="h-4 w-4" /> New test
 						</DropdownMenuItem>
-						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate(`/tests/${session.user.id}`)}>
+						<DropdownMenuItem
+							className="flex gap-1"
+							onClick={() => handleNavigate(`/tests/${session.user.id}`)}
+						>
 							<FileIcon className="h-4 w-4" /> My tests
 						</DropdownMenuItem>
 						<DropdownMenuItem

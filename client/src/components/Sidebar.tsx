@@ -84,15 +84,6 @@ const Navbar = () => {
 											Collaborations
 										</div>
 									</li>
-									<li>
-										<div
-											className="flex items-center gap-1 cursor-pointer p-1 rounded-sm transition-all hover:bg-slate-300"
-											onClick={() => handleNavigate("/profile")}
-										>
-											<UserIcon className="w-5 h-5" />
-											Profile
-										</div>
-									</li>
 								</ul>
 							</div>
 						) : (

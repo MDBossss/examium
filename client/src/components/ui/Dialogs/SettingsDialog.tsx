@@ -8,7 +8,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "../Dialog";
+} from "./Dialog";
 import { Input } from "../Input";
 import { Switch } from "../Switch";
 import { useToast } from "../../../hooks/useToast";

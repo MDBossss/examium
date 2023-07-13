@@ -14,14 +14,16 @@ const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 const queryClient = new QueryClient();
 
-const apperance = {
+const appearance = {
 	variables: {
 		colorPrimary: "#3b82f6",
+		colorBackground: "#f4fafa",
+		fontFamily: "Poppins"
 	},
 };
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<ClerkProvider publishableKey={clerkPubKey} appearance={apperance}>
+	<ClerkProvider publishableKey={clerkPubKey} appearance={appearance}>
 		<QueryClientProvider client={queryClient}>
 			<TooltipProvider>
 				<Toaster />

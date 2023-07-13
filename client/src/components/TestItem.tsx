@@ -19,20 +19,19 @@ const TestItem = ({ test, session }: Props) => {
 	const navigate = useNavigate();
 
 	const handleCopyLink = () => {
-		navigator.clipboard.writeText(`${window.location.host}/solve/${test.id}`)
-		.then(() => {
-			toast({
-				description: "📋 Copied link to clipboard.",
+		navigator.clipboard
+			.writeText(`${window.location.host}/solve/${test.id}`)
+			.then(() => {
+				toast({
+					description: "📋 Copied link to clipboard.",
+				});
+			})
+			.catch(() => {
+				toast({
+					description: "📋 Failed to copy link to clipboard.",
+					variant: "destructive",
+				});
 			});
-		})
-		.catch(() => {
-			toast({
-				description: "📋 Failed to copy link to clipboard.",
-				variant: "destructive"
-			});
-		})
-		
-		
 	};
 
 	const handleEdit = () => {
@@ -40,7 +39,7 @@ const TestItem = ({ test, session }: Props) => {
 	};
 
 	const handleStart = () => {
-		navigate(`/solve/${test.id}`)
+		navigate(`/solve/${test.id}`);
 	};
 
 	return (
@@ -77,6 +76,7 @@ const TestItem = ({ test, session }: Props) => {
 						<p>Copy link</p>
 					</TooltipContent>
 				</Tooltip>
+
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<Button size="sm" className="bg-blue-500 hover:bg-blue-600" onClick={handleEdit}>
