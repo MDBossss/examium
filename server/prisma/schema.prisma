@@ -11,16 +11,17 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(uuid())
-  firstName String
-  lastName  String
-  email     String @unique
-  imageUrl  String
-  tests     Test[]
+  id             String          @id @default(uuid())
+  firstName      String
+  lastName       String
+  email          String          @unique
+  imageUrl       String
+  tests          Test[]
+  collaborations Collaboration[] @relation("Collaborators")
 }
 
 model Test {
-  id                     String     @id @default(uuid())
+  id                     String          @id @default(uuid())
   title                  String
   description            String
   passCriteria           Int
@@ -28,10 +29,11 @@ model Test {
   randomizeQuestions     Boolean
   randomizeAnswers       Boolean
   createdAt              DateTime
-  updatedAt              DateTime   @updatedAt
+  updatedAt              DateTime        @updatedAt
   questions              Question[]
   authorId               String
-  author                 User       @relation(fields: [authorId], references: [id])
+  author                 User            @relation(fields: [authorId], references: [id])
+  collaborators          Collaboration[] @relation("Collaborators")
 }
 
 model Question {
@@ -49,4 +51,13 @@ model Answer {
   isCorrect  Boolean
   questionId String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model Collaboration {
+  email  String
+  testId String
+  test   Test   @relation("Collaborators", fields: [testId], references: [id])
+  user   User   @relation("Collaborators", fields: [email], references: [email])
+
+  @@id([email, testId])
 }
