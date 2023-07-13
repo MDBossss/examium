@@ -80,7 +80,9 @@ const LoginButton = ({ test }: Props) => {
 	};
 
 	const handleSignIn = () => {
-		sessionStorage.setItem("test", JSON.stringify(test));
+		if(test){
+			sessionStorage.setItem("test", JSON.stringify(test));
+		}
 		openSignIn({ redirectUrl: location.pathname });
 	};
 
