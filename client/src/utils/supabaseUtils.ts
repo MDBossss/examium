@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { TestType } from "../types/models";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
@@ -24,5 +25,20 @@ export async function removeImageFromBucket(bucketName: string, path: string) {
 	if (error) {
 		console.error("Error removing image:", error.message);
 	}
+}
 
+export async function removeAllTestImagesFromBucket(test:TestType){
+	let filePaths: string[] = [];
+
+	test.questions.map((question) => {
+		if(question.imageUrl){
+			filePaths.push(question.imageUrl)
+		}
+	})
+
+	const {error} = await supabase.storage.from("questionImages").remove(filePaths)
+
+	if(error){
+		console.log("Error removeing all test images from bucket: ", error.message)
+	}
 }

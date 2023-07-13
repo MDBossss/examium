@@ -13,13 +13,16 @@ import { useScore } from "../hooks/useScore";
 import SettingsDisplay from "../components/ui/SettingsDisplay";
 import ScoreDisplay from "../components/ui/ScoreDisplay";
 import QuestionResult from "../components/QuestionResult";
+import { useToast } from "../hooks/useToast";
 
 const Results = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const test: TestType = location.state?.test;
 	const answersChecked: boolean[][] = location.state?.answersChecked;
+	const hasParamId: boolean = location.state?.hasParamId;
 
+	const {toast} = useToast();
 	const { userScore, maxScore } = useScore(test?.questions, answersChecked);
 
 	//protection against users wandering to this route without any data
@@ -30,12 +33,28 @@ const Results = () => {
 	}, []);
 
 	const handleReturn = () => {
-		navigate(-2);
+		if (hasParamId) {
+			navigate("/");
+		} else {
+			navigate(-2);
+		}
 	};
 
-	const handleRestart = () => {};
+	const handleRestart = () => {
+		if(hasParamId){
+			navigate(`/solve/${test.id}`);
+		}
+		else{
+			navigate("/create/preview", { state: { test } });
+		}
+	};
 
-	const handlePrint = () => {};
+	const handlePrint = () => {
+		toast({
+			description: "Couldn't connect to printer.",
+			variant: "destructive"
+		})
+	};
 
 	return (
 		<div className="flex flex-col gap-10 p-10 pt-5 w-full">
@@ -62,7 +81,7 @@ const Results = () => {
 				</div>
 				<div className="w-full h-[100px] bg-slate-200"></div>
 				<div className="flex w-full border-b border-slate-200">
-					<ScoreDisplay userScore={userScore} passCriteria={test.passCriteria}/>
+					<ScoreDisplay userScore={userScore} passCriteria={test.passCriteria} />
 					<SettingsDisplay test={test} />
 				</div>
 				<div className="flex flex-col w-full gap-3 mt-10">
@@ -73,7 +92,7 @@ const Results = () => {
 						test?.questions.map((question, questionIndex) => {
 							return (
 								<QuestionResult
-									key={questionIndex}
+									key={question.id}
 									question={question}
 									answersChecked={answersChecked[questionIndex]}
 									questionIndex={questionIndex}

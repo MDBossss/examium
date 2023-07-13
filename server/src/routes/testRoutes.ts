@@ -4,9 +4,10 @@ import TestController from "../controllers/TestController";
 const router: Router = express.Router();
 const testController = new TestController();
 
-router.use(express.json())
+router.use(express.json());
 
 router.get("/", testController.getAllTests);
+router.get("/user/:id", testController.getTestsByUserId);
 router.get("/:id", testController.getTestById);
 router.post("/", testController.createTest);
 router.put("/:id", testController.updateUser);

@@ -14,7 +14,6 @@ class UserController {
 	}
 
 	async getUserById(req: Request, res: Response) {
-		console.log(req)
 		try {
 			const { id } = req.params;
 			const user = await prisma.user.findUnique({ where: { id } });

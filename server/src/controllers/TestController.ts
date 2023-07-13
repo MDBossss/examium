@@ -13,6 +13,21 @@ class TestController {
 		}
 	}
 
+	async getTestsByUserId(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const tests = await prisma.test.findMany({
+				where: {
+					authorId: id,
+				},
+			});
+			res.json(tests);
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
 	async getTestById(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
