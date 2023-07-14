@@ -39,7 +39,7 @@ class TestController {
 							answers: true,
 						},
 					},
-					collaborators : true
+					collaborators: true,
 				},
 			});
 			if (!test) {
@@ -69,6 +69,7 @@ class TestController {
 				authorId,
 			}: TestType = req.body;
 
+
 			const newTest = await prisma.test.create({
 				data: {
 					id,
@@ -96,20 +97,22 @@ class TestController {
 							},
 						})),
 					},
-					...(collaborators && {collaborators: {
+					collaborators: {
+						create: collaborators?.map((collaborator) => ({
+							email: collaborator,
+						})),
 						connect: collaborators?.map((collaborator) => ({
 							email_testId: {
 								email: collaborator,
-								testId: id
-							}
-						}))
-					}
-					})
+								testId: id,
+							},
+						})),
+					},
 				},
 				include: {
 					author: true,
 					questions: true,
-					collaborators: true
+					collaborators: true,
 				},
 			});
 
@@ -171,10 +174,10 @@ class TestController {
 						connect: collaborators?.map((collaborator) => ({
 							email_testId: {
 								email: collaborator,
-								testId: id
-							}
-						}))
-					}
+								testId: id,
+							},
+						})),
+					},
 				},
 				include: {
 					author: true,
@@ -183,7 +186,7 @@ class TestController {
 							answers: true,
 						},
 					},
-					collaborators: true
+					collaborators: true,
 				},
 			});
 
@@ -206,7 +209,7 @@ class TestController {
 							answers: true,
 						},
 					},
-					collaborators: true
+					collaborators: true,
 				},
 			});
 			res.json({ message: "Test deleted successfully" });
