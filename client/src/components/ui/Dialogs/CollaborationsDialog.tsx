@@ -15,6 +15,7 @@ import CollaboratorsTable from "../../CollaboratorsTable";
 import { useState } from "react";
 import { z } from "zod";
 import { useToast } from "../../../hooks/useToast";
+import { fetchUserByEmail } from "../../../utils/dbUtils";
 
 interface Props {
 	test: TestType;
@@ -30,11 +31,17 @@ const CollaborationsDialog = ({ test, setTest }: Props) => {
 	const { toast } = useToast();
 	const [emailInput, setEmailInput] = useState<string>("");
 
-	const handleAdd = () => {
+	const handleAdd = async () => {
 		try {
 			const validatedEmail = titleSchema.parse(emailInput);
+			await fetchUserByEmail(validatedEmail)
+			.then((res) => {
+				if(!res){
+					throw Error("No such user exists")
+				}
+			})
 
-            if (test.collaborators?.some((collaborator) => collaborator === emailInput)) {
+            if (test.collaboratorEmails?.some((collaborator) => collaborator === emailInput)) {
                 toast({
                   description: "This email is already added.",
                   variant:"destructive"
@@ -44,7 +51,7 @@ const CollaborationsDialog = ({ test, setTest }: Props) => {
 
 			setTest((prevTest) => ({
 				...prevTest,
-				collaborators: [...(prevTest.collaborators ?? []), validatedEmail],
+				collaboratorEmails: [...(prevTest.collaboratorEmails ?? []), validatedEmail],
 			}));
 			setEmailInput("");
             toast({
@@ -57,7 +64,7 @@ const CollaborationsDialog = ({ test, setTest }: Props) => {
 		} catch (error: unknown) {
 			if (error instanceof Error) {
 				toast({
-					description: "Email not valid.",
+					description: error.message,
 					variant: "destructive",
 				});
 			}
@@ -67,7 +74,7 @@ const CollaborationsDialog = ({ test, setTest }: Props) => {
 	const handleDelete = (email: String) => {
 		setTest((prevTest) => ({
 			...prevTest,
-			collaborators: prevTest.collaborators?.filter((item) => item !== email),
+			collaboratorEmails: prevTest.collaboratorEmails?.filter((item) => item !== email),
 		}));
         toast({
             description: (
@@ -110,7 +117,7 @@ const CollaborationsDialog = ({ test, setTest }: Props) => {
 						Add
 					</Button>
 				</div>
-				<CollaboratorsTable collaborators={test.collaborators} onDelete={handleDelete} />
+				<CollaboratorsTable collaborators={test.collaboratorEmails} onDelete={handleDelete} />
 			</DialogContent>
 		</Dialog>
 	);
