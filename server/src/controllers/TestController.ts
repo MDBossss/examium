@@ -39,6 +39,7 @@ class TestController {
 							answers: true,
 						},
 					},
+					collaborators : true
 				},
 			});
 			if (!test) {
@@ -64,6 +65,7 @@ class TestController {
 				randomizeAnswers,
 				createdAt,
 				questions,
+				collaborators,
 				authorId,
 			}: TestType = req.body;
 
@@ -94,10 +96,20 @@ class TestController {
 							},
 						})),
 					},
+					...(collaborators && {collaborators: {
+						connect: collaborators?.map((collaborator) => ({
+							email_testId: {
+								email: collaborator,
+								testId: id
+							}
+						}))
+					}
+					})
 				},
 				include: {
 					author: true,
 					questions: true,
+					collaborators: true
 				},
 			});
 
@@ -120,6 +132,7 @@ class TestController {
 				randomizeAnswers,
 				createdAt,
 				questions,
+				collaborators,
 				authorId,
 			}: TestType = req.body;
 
@@ -154,6 +167,14 @@ class TestController {
 							},
 						})),
 					},
+					collaborators: {
+						connect: collaborators?.map((collaborator) => ({
+							email_testId: {
+								email: collaborator,
+								testId: id
+							}
+						}))
+					}
 				},
 				include: {
 					author: true,
@@ -162,6 +183,7 @@ class TestController {
 							answers: true,
 						},
 					},
+					collaborators: true
 				},
 			});
 
@@ -184,6 +206,7 @@ class TestController {
 							answers: true,
 						},
 					},
+					collaborators: true
 				},
 			});
 			res.json({ message: "Test deleted successfully" });
