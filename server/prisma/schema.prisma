@@ -17,6 +17,7 @@ model User {
   email     String @unique
   imageUrl  String
   tests     Test[]
+  collaboratedTests Test[] @relation("collaborator")
 }
 
 model Test {
@@ -30,8 +31,9 @@ model Test {
   createdAt              DateTime
   updatedAt              DateTime   @updatedAt
   questions              Question[]
-  authorId               String
+  authorId               String 
   author                 User       @relation(fields: [authorId], references: [id])
+  collaborators          User[]     @relation("collaborator")
 }
 
 model Question {

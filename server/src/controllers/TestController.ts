@@ -13,6 +13,29 @@ class TestController {
 		}
 	}
 
+	//gets all the tests the user is collaborating on
+	async getCollaborationTestsByUserId(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const tests = await prisma.test.findMany({
+				where: {
+					collaborators: {
+						some: {
+							id: id,
+						},
+					},
+				},
+				include:{
+					collaborators:true
+				}
+			});
+			res.json(tests);
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
 	async getTestsByUserId(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
@@ -39,13 +62,22 @@ class TestController {
 							answers: true,
 						},
 					},
+					collaborators: true,
 				},
 			});
+
+
 			if (!test) {
 				res.status(404).json({ error: "Test not found" });
 				return;
 			}
-			res.json(test);
+
+			const testWithCollaborators = {
+				...test,
+				collaboratorEmails: test.collaborators.map(collaborator => collaborator.email)
+			}
+
+			res.json(testWithCollaborators);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -64,6 +96,7 @@ class TestController {
 				randomizeAnswers,
 				createdAt,
 				questions,
+				collaboratorEmails,
 				authorId,
 			}: TestType = req.body;
 
@@ -94,11 +127,15 @@ class TestController {
 							},
 						})),
 					},
+					collaborators: {
+						connect: collaboratorEmails?.map((email) => ({ email })),
+					},
 				},
-				include: {
-					author: true,
-					questions: true,
-				},
+				// include: {
+				// 	author: true,
+				// 	questions: true,
+				// 	collaboratorEmails: true,
+				// },
 			});
 
 			res.status(201).json(newTest);
@@ -120,6 +157,7 @@ class TestController {
 				randomizeAnswers,
 				createdAt,
 				questions,
+				collaboratorEmails,
 				authorId,
 			}: TestType = req.body;
 
@@ -154,6 +192,9 @@ class TestController {
 							},
 						})),
 					},
+					collaborators: {
+						set: collaboratorEmails?.map((email) => ({ email })),
+					},
 				},
 				include: {
 					author: true,
@@ -162,6 +203,7 @@ class TestController {
 							answers: true,
 						},
 					},
+					collaborators: true,
 				},
 			});
 
@@ -184,6 +226,7 @@ class TestController {
 							answers: true,
 						},
 					},
+					collaborators: true,
 				},
 			});
 			res.json({ message: "Test deleted successfully" });

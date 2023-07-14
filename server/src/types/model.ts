@@ -17,6 +17,8 @@ export interface TestType{
     createdAt: Date,
     updatedAt?: Date,
     authorId?: string,
+    collaboratorEmails?: string[],
+    collaborators?:UserType[],
     questions: QuestionType[],
 }
 
