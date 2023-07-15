@@ -116,7 +116,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 
 					<div className="grid gap-4 py-4">
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="title" className="text-right">
+							<label htmlFor="title" className="text-right text-sm">
 								Title
 							</label>
 							<Input
@@ -127,7 +127,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="description" className="text-right">
+							<label htmlFor="description" className="text-right text-sm">
 								Description
 							</label>
 							<Input
@@ -139,7 +139,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
 							<div className="absolute right-8 p-1 border z-50 bg-primary border-slate-200 rounded-sm "><Percent className="w-4 h-4  "/></div>
-							<label htmlFor="pass" className="text-right">
+							<label htmlFor="pass" className="text-right text-sm">
 								Pass criteria
 							</label>
 							<Input
@@ -151,7 +151,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="questions-visible" className="text-left col-span-3">
+							<label htmlFor="questions-visible" className="text-left col-span-3 text-sm">
 								Questions visible after results
 							</label>
 							<Switch
@@ -163,7 +163,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="randomize-questions" className="text-left col-span-3">
+							<label htmlFor="randomize-questions" className="text-left col-span-3 text-sm">
 								Randomize questions
 							</label>
 							<Switch
@@ -175,7 +175,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="randomizeAnswers" className="text-left col-span-3">
+							<label htmlFor="randomizeAnswers" className="text-left col-span-3 text-sm">
 								Randomize answers
 							</label>
 							<Switch
