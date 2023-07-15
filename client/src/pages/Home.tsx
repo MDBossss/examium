@@ -8,7 +8,7 @@ const Home = () => {
 
 	return (
 		<div className="w-screen h-screen mesh-home">
-			<div className="flex flex-col h-full gap-2 container max-w-7xl mx-auto">
+			<div className="flex flex-col h-full gap-2 p-4 pt-5 sm:p-10 max-w-7xl mx-auto">
 				<Navbar />
 				<div className="flex flex-col text-center max-w-lg gap-5 items-center m-auto pb-32">
 					<h1 className="text-5xl font-extrabold text-zinc-800">

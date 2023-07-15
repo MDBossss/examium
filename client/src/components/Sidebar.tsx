@@ -36,7 +36,7 @@ const Navbar = () => {
 					dialogOpen={showDialog}
 				/>
 			)}
-			<div className="flex flex-col justify-between min-w-[204px] h-screen">
+			<div className="flex-col justify-between min-w-[204px] h-screen hidden md:flex">
 				<div className="flex flex-col justify-between fixed p-3 h-screen bg-slate-200">
 					<div className="flex flex-col h-full gap-5">
 						<div

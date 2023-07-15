@@ -1,5 +1,9 @@
-const logo = () => {
-  return <img src="/logo.png" alt="logo" className=" w-[180px]" />;
+interface Props{
+  className?: string
+}
+
+const Logo = ({ className }:Props) => {
+  return <img src="/logo.png" alt="logo" className={`w-[180px] ${className}`} />;
 };
 
-export default logo;
+export default Logo;

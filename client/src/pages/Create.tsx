@@ -26,17 +26,15 @@ const Create = () => {
 	const { toast } = useToast();
 	const { session } = useSession();
 
-
 	useEffect(() => {
 		const initialLoad = async () => {
 			//test generation
 			if (id) {
 				setHasParamId(true);
 				const response = await fetchTestById(id);
-				if(response){
+				if (response) {
 					setTest(response);
-				}
-				else{
+				} else {
 					navigate("/404");
 				}
 			} else {
@@ -47,11 +45,9 @@ const Create = () => {
 		initialLoad();
 	}, [id]);
 
-
-
 	useEffect(() => {
 		const testJSON = sessionStorage.getItem("test");
-		if (testJSON ) {
+		if (testJSON) {
 			let test: TestType = JSON.parse(testJSON);
 			setTest(test);
 			sessionStorage.removeItem("test");
@@ -60,8 +56,7 @@ const Create = () => {
 
 	useEffect(() => {
 		updateTestAuthor();
-	},[session?.user])
-
+	}, [session?.user]);
 
 	const handleSaveTest = async () => {
 		if (session && session?.status === "active") {
@@ -71,33 +66,32 @@ const Create = () => {
 				if (hasParamId) {
 					//update test
 					await updateTest(test)
-					.then(() => {
-						toast({
-							description: "✅ Saved successfully.",
+						.then(() => {
+							toast({
+								description: "✅ Saved successfully.",
+							});
+						})
+						.catch(() => {
+							toast({
+								description: "😓 Failed to save the test.",
+								variant: "destructive",
+							});
 						});
-					})
-					.catch(() => {
-						toast({
-							description: "😓 Failed to save the test.",
-							variant: "destructive"
-						});
-					});
-
 				} else {
-					//create test 
+					//create test
 					await createTest(test)
-					.then(() => {
-						setHasParamId(true)
-						toast({
-							description: "✅ Created successfully.",
+						.then(() => {
+							setHasParamId(true);
+							toast({
+								description: "✅ Created successfully.",
+							});
+						})
+						.catch(() => {
+							toast({
+								description: "😓 Failed to create the test.",
+								variant: "destructive",
+							});
 						});
-					})
-					.catch(() => {
-						toast({
-							description: "😓 Failed to create the test.",
-							variant: "destructive"
-						});
-					});
 				}
 			} else {
 				messages.forEach((message) => {
@@ -130,34 +124,30 @@ const Create = () => {
 		}
 	};
 
-
 	const handleDeleteTest = async () => {
-		if(hasParamId){
-			if(session?.user.id === test.authorId){
+		if (hasParamId) {
+			if (session?.user.id === test.authorId) {
 				await deleteTest(test)
-				.then(() => {
-					setTest(generateTest())
-					navigate("/create")
-					toast({
-						description: "✅ Deleted successfully.",
+					.then(() => {
+						setTest(generateTest());
+						navigate("/create");
+						toast({
+							description: "✅ Deleted successfully.",
+						});
+					})
+					.catch(() => {
+						toast({
+							description: "😓 Failed to delete the test.",
+						});
 					});
-				})
-				.catch(() => {
-					toast({
-						description: "😓 Failed to delete the test.",
-					});
-				});
-			}
-			else{
+			} else {
 				toast({
 					description: "Only test author can do that.",
-					variant:"destructive"
-				})
+					variant: "destructive",
+				});
 			}
-			
-		}
-		else{
-			navigate("/create")
+		} else {
+			navigate("/create");
 		}
 	};
 
@@ -180,7 +170,7 @@ const Create = () => {
 	};
 
 	const updateTestAuthor = () => {
-		if(!test.authorId){
+		if (!test.authorId) {
 			setTest((prevTest) => ({ ...prevTest, authorId: session?.user.id }));
 		}
 	};
@@ -279,24 +269,26 @@ const Create = () => {
 	};
 
 	return (
-		<div className="flex flex-col gap-10 p-10 pt-5 w-full">
+		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
 			<SearchBar test={test} setTest={setTest} />
-			<div className="flex flex-col border-slate-200 border-b">
+			<div className="flex flex-col border-slate-200 border-b text-center sm:text-left">
 				<h1 className="text-2xl font-bold text-zinc-800">Create a test</h1>
 				<p className="text-slate-400 text-sm pt-3 pb-3">
 					Great! Now compose your test - add questions answers to each of them. Each question must
 					have at least one correct answer.
 				</p>
-				<div className="flex gap-3 mb-2 p-2">
+				<div className="flex flex-col-reverse md:flex-row gap-3 mb-2 p-2">
 					<Input
 						placeholder="Insert test name..."
 						onChange={(e) => handleSetTestTitle(e.target.value)}
 						className={`${titleError && "focus-visible:ring-red-500"} bg-slate-200`}
 						value={test.title}
 					/>
-					<SettingsDialog test={test} setTest={setTest} />
-					<CollaborationsDialog test={test} setTest={setTest} session={session}/>
-					<ResetDialog onTrigger={handleDeleteTest} hasParamId={hasParamId} />
+					<div className="flex gap-3">
+						<SettingsDialog test={test} setTest={setTest} />
+						<CollaborationsDialog test={test} setTest={setTest} session={session} />
+						<ResetDialog onTrigger={handleDeleteTest} hasParamId={hasParamId} />
+					</div>
 				</div>
 			</div>
 			{test.questions.map((question, questionIndex) => {
@@ -316,7 +308,7 @@ const Create = () => {
 				);
 			})}
 
-			<div className="flex gap-3 justify-center">
+			<div className="flex flex-col md:flex-row gap-3 justify-center text-center">
 				<div
 					className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
 					onClick={handleAddQuestion}

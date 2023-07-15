@@ -43,7 +43,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<PanelLeftCloseIcon
-										className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
+										className=" w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm hidden md:block"
 										onClick={handleToggleSidebar}
 									/>
 								</TooltipTrigger>
@@ -55,7 +55,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<PanelLeftOpenIcon
-										className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
+										className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm hidden md:block"
 										onClick={handleToggleSidebar}
 									/>
 								</TooltipTrigger>
@@ -91,7 +91,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 					</>
 				)}
 
-				<p className="text-sm text-slate-400">
+				<p className="text-sm text-slate-400 hidden sm:block">
 					{date.toLocaleDateString(undefined, {
 						weekday: "long",
 						year: "numeric",
@@ -102,7 +102,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 			</div>
 			<div className="flex gap-3 items-center">
 				{session && (
-					<p>
+					<p className="hidden md:block">
 						Welcome, <span className=" text-blue-500">{session.user.firstName}</span>
 					</p>
 				)}
