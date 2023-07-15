@@ -7,13 +7,14 @@ interface UserScore {
 []
 interface Props{
     userScore:UserScore,
-	passCriteria:number
+	passCriteria:number,
+	className?:string
 }
 
-const ScoreDisplay = ({userScore,passCriteria}:Props) => {
+const ScoreDisplay = ({userScore,passCriteria,className}:Props) => {
 	return (
-		<div className="flex flex-col p-5 flex-1 border-r border-slate-200 items-center gap-5">
-			<p className="self-start font-medium text- ">Percentage scored:</p>
+		<div className={`${className} flex flex-col p-5 flex-1 items-center gap-5`}>
+			<p className="self-start font-medium ">Percentage scored:</p>
 			<div>
 				<CircularProgress
 					percentage={userScore.percentage}

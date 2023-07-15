@@ -3,11 +3,12 @@ import { Switch } from "./Switch";
 
 interface Props {
 	test: TestType;
+	className?: string
 }
 
-const SettingsDisplay = ({ test }: Props) => {
+const SettingsDisplay = ({ test,className }: Props) => {
 	return (
-		<div className="flex flex-1 flex-col  w-full p-5 gap-2">
+		<div className={`${className} flex flex-1 flex-col  w-full p-5 gap-2`}>
 			<p className="self-start font-medium  ">Active settings:</p>
 			<div className="flex flex-col p-3 gap-1">
 			<div className="grid grid-cols-4">

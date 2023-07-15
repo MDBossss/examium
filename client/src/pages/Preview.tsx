@@ -97,7 +97,7 @@ const Preview = () => {
 	};
 
 	return (
-		<div className="flex flex-col gap-10 p-10 pt-5 w-full ">
+		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
 			<SearchBar />
 			<div className=" max-w-5xl mx-auto flex gap-5 flex-col w-full items-center bg-slate-200 p-7">
 				<h2 className="text-md font-medium text-blue-500">{test?.title}</h2>
@@ -114,7 +114,7 @@ const Preview = () => {
 				<h1 className="text-2xl font-bold text-center">
 					{test?.questions[questionNumber].question}
 				</h1>
-				<div className="grid grid-cols-2 w-full gap-3">
+				<div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
 					{(answersChecked.length > 1 && test.questions && test.questions.length > 0) && test?.questions[questionNumber].answers.map((answer, answerIndex) =>
 						answer.answer.length ? (
 							<QuizAnswer

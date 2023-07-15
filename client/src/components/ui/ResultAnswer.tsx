@@ -22,11 +22,11 @@ const ResultAnswer = ({ answer, answerIndex, isChecked }: Props) => {
 	return (
 		<div className="grid grid-cols-12 items-center">
 			<p
-				className={`${conditionalColors()} col-span-1 p-3 text-medium font-medium border-r border-slate-200`}
+				className={`${conditionalColors()} col-span-2 sm:col-span-1 p-3 text-medium font-medium border-r border-slate-200 `}
 			>
 				{String.fromCharCode(65 + answerIndex)}
 			</p>
-			<p className={`${conditionalColors()} col-span-11 text-medium font-medium px-5 py-3`}>
+			<p className={`${conditionalColors()} col-span-10 sm:col-span-11 text-medium font-medium px-5 py-3`}>
 				{answer.answer}
 			</p>
 		</div>
