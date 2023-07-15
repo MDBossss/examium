@@ -125,7 +125,7 @@ const LoginButton = ({ test }: Props) => {
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							className="flex gap-1"
-							onClick={() => handleNavigate("/collaborations")}
+							onClick={() => handleNavigate(`/collaborations/${session.user.id}`)}
 						>
 							<UsersIcon className="h-4 w-4" /> Collaborations
 						</DropdownMenuItem>
