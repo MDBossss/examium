@@ -55,17 +55,20 @@ const TestItem = ({ test }: Props) => {
 					</Avatar>
 
 					{test.collaborators &&
-						test.collaborators.map((collaborator) => (
-							<Avatar>
-								<AvatarImage
-									src={collaborator.imageUrl}
-									className="inline-block rounded-full border-2 border-white"
-								/>
-								<AvatarFallback>
-									<Spinner />
-								</AvatarFallback>
-							</Avatar>
-						))}
+						test.collaborators.map(
+							(collaborator, index) =>
+								index <= 2 && (
+									<Avatar key={index}>
+										<AvatarImage
+											src={collaborator.imageUrl}
+											className="inline-block rounded-full border-2 border-white"
+										/>
+										<AvatarFallback>
+											<Spinner />
+										</AvatarFallback>
+									</Avatar>
+								)
+						)}
 				</div>
 
 				<div className="flex flex-col">
