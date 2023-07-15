@@ -29,6 +29,24 @@ export async function fetchUserById(userId: string) {
 	}
 }
 
+export async function fetchUserByEmail(email:string){
+	try{
+		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/email/${email}`);
+		if (response.status === 200) {
+			// User exists, return the data
+			return response.data as UserType;
+		} else if (response.status === 404) {
+			// User not found, return null or throw an error
+			return null; // Or throw new Error("User not found");
+		} else {
+			// Handle other status codes if needed
+			return null;
+		}
+	} catch (error) {
+		return null;
+	}
+}
+
 export async function createUser(user: UserType) {
 	try {
 		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users`, user);
@@ -98,6 +116,15 @@ export async function fetchTestById(testId: string) {
 		return response.data as TestType;
 	} catch (error) {
 		throw new Error("Failed to fetch test");
+	}
+}
+
+export async function fetchCollaborationTestsByUserId(userId: string){
+	try{
+		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/tests/collaborations/${userId}`);
+		return response.data as TestType[];
+	}catch(error){
+		throw new Error("Failed to fetch user collaborations");
 	}
 }
 

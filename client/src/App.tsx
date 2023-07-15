@@ -6,6 +6,7 @@ import NotFound from "./pages/NotFound";
 import Layout from "./pages/Layout";
 import Results from "./pages/Results";
 import MyTests from "./pages/MyTests";
+import CollabTests from "./pages/CollabTests";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/create/preview" element={<Layout><Preview /></Layout>} />
         <Route path="/create/preview/results" element={<Layout><Results/></Layout>}/>
         <Route path="/tests/:id" element={<Layout><MyTests/></Layout>}/>
+        <Route path="/collaborations/:id" element={<Layout><CollabTests/></Layout>}/>
         <Route path="/solve/:id" element={<Preview/>}/>
         <Route path="/solve/results" element={<Results/>}/>
       </Routes>

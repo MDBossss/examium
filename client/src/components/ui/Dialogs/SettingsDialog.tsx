@@ -16,7 +16,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
-import { Percent } from "lucide-react";
+import { Percent, SettingsIcon } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip";
 
 const schema = z.object({
 	title: z.string().max(50, { message: "Title must be at most 50 characters" }),
@@ -88,16 +89,23 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+			<Tooltip>
 			<DialogTrigger asChild>
+				<TooltipTrigger asChild>
 				<Button
 					variant="outline"
 					className="border-slate-200 hover:bg-slate-200 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4"
 					onClick={() => setDialogOpen(true)}
 				>
-					Settings
+					<SettingsIcon className="text-slate-400 w-6 h-6"/>
 				</Button>
+				</TooltipTrigger>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px]">
+			<TooltipContent>
+					<p>Settings</p>
+				</TooltipContent>
+			</Tooltip>
+			<DialogContent className="sm:max-w-[425px] max-h-[90%] overflow-auto">
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<DialogHeader>
 						<DialogTitle>Settings</DialogTitle>

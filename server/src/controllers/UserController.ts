@@ -28,11 +28,29 @@ class UserController {
 		}
 	}
 
+	async getUserByEmail(req: Request, res: Response) {
+		try {
+			const { email } = req.params;
+			const user = await prisma.user.findUnique({ where: { email } });
+			if (!user) {
+				res.status(404).json({ error: "User not found" });
+				return null;
+			}
+			res.json(user);
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
 	async createUser(req: Request, res: Response) {
 		try {
-			const { ...userData }: UserType = req.body;
+			let { id, firstName, lastName, email, imageUrl }: UserType = req.body;
+			if (!lastName) {
+				lastName = "";
+			}
 			const newUser = await prisma.user.create({
-				data: { ...userData },
+				data: { id, firstName, lastName, email, imageUrl },
 			});
 			res.json(newUser);
 		} catch (error) {

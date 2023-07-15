@@ -12,6 +12,7 @@ import useGenerateData from "../hooks/useGenerateData";
 import { validateTest } from "../utils/testUtils";
 import { useSession } from "@clerk/clerk-react";
 import { createTest, deleteTest, fetchTestById, updateTest } from "../utils/dbUtils";
+import CollaborationsDialog from "../components/ui/Dialogs/CollaborationsDialog";
 
 const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
 
@@ -132,19 +133,28 @@ const Create = () => {
 
 	const handleDeleteTest = async () => {
 		if(hasParamId){
-			await deleteTest(test)
-			.then(() => {
-				setTest(generateTest())
-				navigate("/create")
-				toast({
-					description: "✅ Deleted successfully.",
+			if(session?.user.id === test.authorId){
+				await deleteTest(test)
+				.then(() => {
+					setTest(generateTest())
+					navigate("/create")
+					toast({
+						description: "✅ Deleted successfully.",
+					});
+				})
+				.catch(() => {
+					toast({
+						description: "😓 Failed to delete the test.",
+					});
 				});
-			})
-			.catch(() => {
+			}
+			else{
 				toast({
-					description: "😓 Failed to delete the test.",
-				});
-			});
+					description: "Only test author can do that.",
+					variant:"destructive"
+				})
+			}
+			
 		}
 		else{
 			navigate("/create")
@@ -170,7 +180,9 @@ const Create = () => {
 	};
 
 	const updateTestAuthor = () => {
-		setTest((prevTest) => ({ ...prevTest, authorId: session?.user.id }));
+		if(!test.authorId){
+			setTest((prevTest) => ({ ...prevTest, authorId: session?.user.id }));
+		}
 	};
 
 	const handleSetQuestionImage = (imageUrl: string | undefined, questionID: string) => {
@@ -275,7 +287,7 @@ const Create = () => {
 					Great! Now compose your test - add questions answers to each of them. Each question must
 					have at least one correct answer.
 				</p>
-				<div className="flex gap-5 mb-2 p-2">
+				<div className="flex gap-3 mb-2 p-2">
 					<Input
 						placeholder="Insert test name..."
 						onChange={(e) => handleSetTestTitle(e.target.value)}
@@ -283,6 +295,7 @@ const Create = () => {
 						value={test.title}
 					/>
 					<SettingsDialog test={test} setTest={setTest} />
+					<CollaborationsDialog test={test} setTest={setTest} session={session}/>
 					<ResetDialog onTrigger={handleDeleteTest} hasParamId={hasParamId} />
 				</div>
 			</div>
