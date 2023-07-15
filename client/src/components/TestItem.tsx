@@ -2,7 +2,6 @@ import { TestType } from "../types/models";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
 import Spinner from "./ui/Spinner";
 import { Button } from "./ui/Button";
-import { ActiveSessionResource } from "@clerk/types";
 import { getTimeAgo } from "../utils/dateUtils";
 import { useToast } from "../hooks/useToast";
 import { useNavigate } from "react-router";
@@ -11,10 +10,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/Tooltip";
 
 interface Props {
 	test: TestType;
-	session: ActiveSessionResource | null | undefined;
 }
 
-const TestItem = ({ test, session }: Props) => {
+const TestItem = ({ test }: Props) => {
 	const { toast } = useToast();
 	const navigate = useNavigate();
 
@@ -45,12 +43,31 @@ const TestItem = ({ test, session }: Props) => {
 	return (
 		<div className="flex justify-between items-center w-full px-5 py-3 gap-5 border border-slate-200 rounded-sm">
 			<div className="flex gap-3 items-center">
-				<Avatar className="cursor-pointer ">
-					<AvatarImage src={session?.user.imageUrl} />
-					<AvatarFallback>
-						<Spinner />
-					</AvatarFallback>
-				</Avatar>
+				<div className="flex -space-x-5 overflow-hidden">
+					<Avatar>
+						<AvatarImage
+							src={test.author?.imageUrl}
+							className="inline-block rounded-full border-2 border-white"
+						/>
+						<AvatarFallback>
+							<Spinner />
+						</AvatarFallback>
+					</Avatar>
+
+					{test.collaborators &&
+						test.collaborators.map((collaborator) => (
+							<Avatar>
+								<AvatarImage
+									src={collaborator.imageUrl}
+									className="inline-block rounded-full border-2 border-white"
+								/>
+								<AvatarFallback>
+									<Spinner />
+								</AvatarFallback>
+							</Avatar>
+						))}
+				</div>
+
 				<div className="flex flex-col">
 					<h2 className="font-medium text-zinc-800">{test.title}</h2>
 					<p className="text-xs text-slate-400">

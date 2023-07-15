@@ -25,9 +25,10 @@ class TestController {
 						},
 					},
 				},
-				include:{
-					collaborators:true
-				}
+				include: {
+					collaborators: true,
+					author: true,
+				},
 			});
 			res.json(tests);
 		} catch (error) {
@@ -42,6 +43,9 @@ class TestController {
 			const tests = await prisma.test.findMany({
 				where: {
 					authorId: id,
+				},
+				include: {
+					author: true,
 				},
 			});
 			res.json(tests);
@@ -63,9 +67,9 @@ class TestController {
 						},
 					},
 					collaborators: true,
+					author: true,
 				},
 			});
-
 
 			if (!test) {
 				res.status(404).json({ error: "Test not found" });
@@ -74,8 +78,8 @@ class TestController {
 
 			const testWithCollaborators = {
 				...test,
-				collaboratorEmails: test.collaborators.map(collaborator => collaborator.email)
-			}
+				collaboratorEmails: test.collaborators.map((collaborator) => collaborator.email),
+			};
 
 			res.json(testWithCollaborators);
 		} catch (error) {

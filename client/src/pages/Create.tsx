@@ -133,19 +133,28 @@ const Create = () => {
 
 	const handleDeleteTest = async () => {
 		if(hasParamId){
-			await deleteTest(test)
-			.then(() => {
-				setTest(generateTest())
-				navigate("/create")
-				toast({
-					description: "✅ Deleted successfully.",
+			if(session?.user.id === test.authorId){
+				await deleteTest(test)
+				.then(() => {
+					setTest(generateTest())
+					navigate("/create")
+					toast({
+						description: "✅ Deleted successfully.",
+					});
+				})
+				.catch(() => {
+					toast({
+						description: "😓 Failed to delete the test.",
+					});
 				});
-			})
-			.catch(() => {
+			}
+			else{
 				toast({
-					description: "😓 Failed to delete the test.",
-				});
-			});
+					description: "Only test author can do that.",
+					variant:"destructive"
+				})
+			}
+			
 		}
 		else{
 			navigate("/create")
@@ -171,7 +180,9 @@ const Create = () => {
 	};
 
 	const updateTestAuthor = () => {
-		setTest((prevTest) => ({ ...prevTest, authorId: session?.user.id }));
+		if(!test.authorId){
+			setTest((prevTest) => ({ ...prevTest, authorId: session?.user.id }));
+		}
 	};
 
 	const handleSetQuestionImage = (imageUrl: string | undefined, questionID: string) => {
@@ -284,7 +295,7 @@ const Create = () => {
 						value={test.title}
 					/>
 					<SettingsDialog test={test} setTest={setTest} />
-					<CollaborationsDialog test={test} setTest={setTest}/>
+					<CollaborationsDialog test={test} setTest={setTest} session={session}/>
 					<ResetDialog onTrigger={handleDeleteTest} hasParamId={hasParamId} />
 				</div>
 			</div>

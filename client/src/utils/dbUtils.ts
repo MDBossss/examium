@@ -119,6 +119,15 @@ export async function fetchTestById(testId: string) {
 	}
 }
 
+export async function fetchCollaborationTestsByUserId(userId: string){
+	try{
+		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/tests/collaborations/${userId}`);
+		return response.data as TestType[];
+	}catch(error){
+		throw new Error("Failed to fetch user collaborations");
+	}
+}
+
 export async function deleteTest(test: TestType) {
 	try {
 		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/tests/${test.id}`);

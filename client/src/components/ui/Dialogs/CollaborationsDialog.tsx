@@ -16,10 +16,12 @@ import { useState } from "react";
 import { z } from "zod";
 import { useToast } from "../../../hooks/useToast";
 import { fetchUserByEmail } from "../../../utils/dbUtils";
+import { ActiveSessionResource } from "@clerk/types";
 
 interface Props {
 	test: TestType;
 	setTest: React.Dispatch<React.SetStateAction<TestType>>;
+	session: ActiveSessionResource | null | undefined;
 }
 
 const titleSchema = z
@@ -27,62 +29,76 @@ const titleSchema = z
 	.min(1, { message: "Email cannot be empty" })
 	.email("This is not a valid email.");
 
-const CollaborationsDialog = ({ test, setTest }: Props) => {
+const CollaborationsDialog = ({ test, setTest, session }: Props) => {
 	const { toast } = useToast();
 	const [emailInput, setEmailInput] = useState<string>("");
 
 	const handleAdd = async () => {
-		try {
-			const validatedEmail = titleSchema.parse(emailInput);
-			await fetchUserByEmail(validatedEmail)
-			.then((res) => {
-				if(!res){
-					throw Error("No such user exists")
-				}
-			})
-
-            if (test.collaboratorEmails?.some((collaborator) => collaborator === emailInput)) {
-                toast({
-                  description: "This email is already added.",
-                  variant:"destructive"
-                });
-                return; // Exit the function
-              }
-
-			setTest((prevTest) => ({
-				...prevTest,
-				collaboratorEmails: [...(prevTest.collaboratorEmails ?? []), validatedEmail],
-			}));
-			setEmailInput("");
-            toast({
-                description: (
-                  <p>
-                    🎉 Added <strong style={{ fontWeight: 'bold' }}>{emailInput}</strong> to collaborators.
-                  </p>
-                ),
-              });
-		} catch (error: unknown) {
-			if (error instanceof Error) {
-				toast({
-					description: error.message,
-					variant: "destructive",
+		if (session?.user.id === test.authorId) {
+			try {
+				const validatedEmail = titleSchema.parse(emailInput);
+				await fetchUserByEmail(validatedEmail).then((res) => {
+					if (!res) {
+						throw Error("No such user exists");
+					}
 				});
+
+				if (test.collaboratorEmails?.some((collaborator) => collaborator === emailInput)) {
+					toast({
+						description: "This email is already added.",
+						variant: "destructive",
+					});
+					return; // Exit the function
+				}
+
+				setTest((prevTest) => ({
+					...prevTest,
+					collaboratorEmails: [...(prevTest.collaboratorEmails ?? []), validatedEmail],
+				}));
+				setEmailInput("");
+				toast({
+					description: (
+						<p>
+							🎉 Added <strong style={{ fontWeight: "bold" }}>{emailInput}</strong> to
+							collaborators.
+						</p>
+					),
+				});
+			} catch (error: unknown) {
+				if (error instanceof Error) {
+					toast({
+						description: error.message,
+						variant: "destructive",
+					});
+				}
 			}
+		} else {
+			toast({
+				description: "Only test author can do that.",
+				variant: "destructive",
+			});
 		}
 	};
 
 	const handleDelete = (email: String) => {
-		setTest((prevTest) => ({
-			...prevTest,
-			collaboratorEmails: prevTest.collaboratorEmails?.filter((item) => item !== email),
-		}));
-        toast({
-            description: (
-              <p>
-                👋 Removed <strong style={{ fontWeight: 'bold' }}>{email}</strong> from collaborators.
-              </p>
-            ),
-          });
+		if (session?.user.id === test.authorId) {
+			setTest((prevTest) => ({
+				...prevTest,
+				collaboratorEmails: prevTest.collaboratorEmails?.filter((item) => item !== email),
+			}));
+			toast({
+				description: (
+					<p>
+						👋 Removed <strong style={{ fontWeight: "bold" }}>{email}</strong> from collaborators.
+					</p>
+				),
+			});
+		} else {
+			toast({
+				description: "Only test author can do that.",
+				variant: "destructive",
+			});
+		}
 	};
 
 	return (
