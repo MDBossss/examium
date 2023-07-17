@@ -7,7 +7,7 @@
   <h3 align="center">Examium</h3>
 
   <p align="center">
-    Collaborative and customizable quiz maker app.
+    Collaborative and customizable quiz platform with the abilites to create and take tests.
     <br/>
     <br/>
     <a href="https://github.com/MDBossss/examium/issues">Report Bug</a>
