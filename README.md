@@ -1,7 +1,7 @@
 <br/>
 <p align="center">
   <a href="https://github.com/MDBossss/examium">
-    <img src="client/logo-square.png" alt="Logo" width="80" height="80">
+    <img src="client/public/logo-small.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Examium</h3>
