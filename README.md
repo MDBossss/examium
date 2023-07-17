@@ -7,7 +7,7 @@
   <h3 align="center">Examium</h3>
 
   <p align="center">
-    Collaborative quiz maker app built with React.js, Express.js, Prisma and MySQL.
+    Collaborative and customizable quiz maker app.
     <br/>
     <br/>
     <a href="https://github.com/MDBossss/examium/issues">Report Bug</a>
