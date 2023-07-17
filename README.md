@@ -20,9 +20,9 @@
 
 ---
 
-![Screen Shot](client/public/showcase-create.png)
-![Screen Shot](client/public/showcase-collaborate.png)
-![Screen Shot](client/public/showcase-results.png)
+![Screen Shot](images/showcase-create.png)
+![Screen Shot](images/showcase-collaborate.png)
+![Screen Shot](images/showcase-results.png)
 
 This is a work in progress project I started as a way to introduce myself to Prisma and using it with a Express.js backend. Currently the essential features are implemented, CRUD of the tests with the db, collaborating with other users, user auth... 
 
