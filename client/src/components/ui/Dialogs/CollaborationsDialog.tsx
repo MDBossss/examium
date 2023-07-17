@@ -65,7 +65,13 @@ const CollaborationsDialog = ({ test, setTest, session }: Props) => {
 					),
 				});
 			} catch (error: unknown) {
-				if (error instanceof Error) {
+				if (error instanceof z.ZodError) {
+					toast({
+						description: error.issues[0].message,
+						variant: "destructive",
+					});
+				}
+				else if(error instanceof Error){
 					toast({
 						description: error.message,
 						variant: "destructive",

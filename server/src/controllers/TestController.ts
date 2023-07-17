@@ -165,6 +165,34 @@ class TestController {
 				authorId,
 			}: TestType = req.body;
 
+			//Delete outdated answers
+			const outdatedAnswerIds = await prisma.answer.deleteMany({
+				where: {
+					question: {
+						testId: id,
+						NOT: {
+							id: {
+								in: questions.flatMap((question) =>
+									question.answers.map((answer) => answer.id).filter(Boolean)
+								),
+							},
+						},
+					},
+				},
+			});
+
+			// Delete outdated questions
+			const outdatedQuestionIds = await prisma.question.deleteMany({
+				where: {
+					testId: id,
+					NOT: {
+						id: {
+							in: questions.map((question) => question.id).filter(Boolean),
+						},
+					},
+				},
+			});
+
 			const updatedTest = await prisma.test.update({
 				where: { id },
 				data: {
@@ -179,15 +207,31 @@ class TestController {
 						connect: { id: authorId! },
 					},
 					questions: {
-						update: questions.map((question) => ({
+						upsert: questions.map((question) => ({
 							where: { id: question.id },
-							data: {
+							create: {
 								question: question.question,
 								imageUrl: question.imageUrl,
 								answers: {
-									update: question.answers.map((answer) => ({
+									createMany: {
+										data: question.answers.map((answer) => ({
+											answer: answer.answer,
+											isCorrect: answer.isCorrect,
+										})),
+									},
+								},
+							},
+							update: {
+								question: question.question,
+								imageUrl: question.imageUrl,
+								answers: {
+									upsert: question.answers.map((answer) => ({
 										where: { id: answer.id },
-										data: {
+										create: {
+											answer: answer.answer,
+											isCorrect: answer.isCorrect,
+										},
+										update: {
 											answer: answer.answer,
 											isCorrect: answer.isCorrect,
 										},
@@ -196,6 +240,7 @@ class TestController {
 							},
 						})),
 					},
+
 					collaborators: {
 						set: collaboratorEmails?.map((email) => ({ email })),
 					},

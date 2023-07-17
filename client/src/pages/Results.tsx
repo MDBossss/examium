@@ -57,7 +57,7 @@ const Results = () => {
 	};
 
 	return (
-		<div className="flex flex-col gap-10 p-10 pt-5 w-full">
+		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
 			<SearchBar />
 			<div className="max-w-7xl mx-auto flex flex-col w-full items-center">
 				<div className="flex w-full justify-between items-center py-5">
@@ -80,8 +80,8 @@ const Results = () => {
 					</DropdownMenu>
 				</div>
 				<div className="w-full h-[100px] bg-slate-200"></div>
-				<div className="flex w-full border-b border-slate-200">
-					<ScoreDisplay userScore={userScore} passCriteria={test.passCriteria} />
+				<div className="flex flex-col md:flex-row w-full border-b border-slate-200">
+					<ScoreDisplay userScore={userScore} passCriteria={test.passCriteria} className=" border-b md:border-r border-slate-200"/>
 					<SettingsDisplay test={test} />
 				</div>
 				<div className="flex flex-col w-full gap-3 mt-10">

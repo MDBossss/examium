@@ -8,7 +8,7 @@ const Navbar = () => {
 
 	return (
 		<div>
-			<div className="max-w-7xl mx-auto flex justify-between items-center p-3">
+			<div className="max-w-7xl mx-auto flex justify-between items-center p-0">
 				<div
 					className="flex gap-1 items-center text-xl cursor-pointer"
 					onClick={() => navigate("/")}
@@ -17,7 +17,7 @@ const Navbar = () => {
 				</div>
 				<div className="flex flex-row-reverse gap-3">
 					<LoginButton />
-					<Button className="bg-blue-500 hover:bg-blue-600" onClick={() => navigate("/create")}>
+					<Button className="bg-blue-500 hover:bg-blue-600 hidden sm:block" onClick={() => navigate("/create")}>
 						Get started
 					</Button>
 				</div>

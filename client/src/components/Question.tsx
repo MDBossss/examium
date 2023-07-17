@@ -72,7 +72,7 @@ const Question = ({
 	};
 
 	return (
-		<div className=" bg-slate-200 w-full p-5">
+		<div className=" bg-slate-200 w-full p-3 sm:p-5 rounded-sm">
 			<div className="flex flex-col gap-5 max-w-4xl mx-auto pt-10 pb-10">
 				<div className="flex justify-between">
 					<h1 className="flex gap-3 items-center text-2xl font-bold">

@@ -41,8 +41,8 @@ const TestItem = ({ test }: Props) => {
 	};
 
 	return (
-		<div className="flex justify-between items-center w-full px-5 py-3 gap-5 border border-slate-200 rounded-sm">
-			<div className="flex gap-3 items-center">
+		<div className="flex flex-col sm:flex-row justify-between items-center w-full px-5 py-3 gap-5 border border-slate-200 rounded-sm">
+			<div className="flex flex-row gap-3 items-start w-full ">
 				<div className="flex -space-x-5 overflow-hidden">
 					<Avatar>
 						<AvatarImage
@@ -55,21 +55,24 @@ const TestItem = ({ test }: Props) => {
 					</Avatar>
 
 					{test.collaborators &&
-						test.collaborators.map((collaborator) => (
-							<Avatar>
-								<AvatarImage
-									src={collaborator.imageUrl}
-									className="inline-block rounded-full border-2 border-white"
-								/>
-								<AvatarFallback>
-									<Spinner />
-								</AvatarFallback>
-							</Avatar>
-						))}
+						test.collaborators.map(
+							(collaborator, index) =>
+								index <= 2 && (
+									<Avatar key={index}>
+										<AvatarImage
+											src={collaborator.imageUrl}
+											className="inline-block rounded-full border-2 border-white"
+										/>
+										<AvatarFallback>
+											<Spinner />
+										</AvatarFallback>
+									</Avatar>
+								)
+						)}
 				</div>
 
 				<div className="flex flex-col">
-					<h2 className="font-medium text-zinc-800">{test.title}</h2>
+					<h2 className="font-medium text-zinc-800 break-words">{test.title}</h2>
 					<p className="text-xs text-slate-400">
 						{test.updatedAt
 							? `Last updated: ${getTimeAgo(test.updatedAt)}`
@@ -77,13 +80,13 @@ const TestItem = ({ test }: Props) => {
 					</p>
 				</div>
 			</div>
-			<div className="flex gap-3">
+			<div className="flex gap-3 w-full sm:w-auto">
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<Button
 							size="sm"
 							variant="outline"
-							className="hover:bg-slate-200"
+							className="hover:bg-slate-200 flex-1"
 							onClick={handleCopyLink}
 						>
 							<CopyIcon className="w-4 h-4" />
@@ -96,7 +99,7 @@ const TestItem = ({ test }: Props) => {
 
 				<Tooltip>
 					<TooltipTrigger asChild>
-						<Button size="sm" className="bg-blue-500 hover:bg-blue-600" onClick={handleEdit}>
+						<Button size="sm" className="bg-blue-500 hover:bg-blue-600 flex-1" onClick={handleEdit}>
 							<EditIcon className="w-4 h-4" />
 						</Button>
 					</TooltipTrigger>
@@ -105,7 +108,7 @@ const TestItem = ({ test }: Props) => {
 					</TooltipContent>
 				</Tooltip>
 
-				<Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={handleStart}>
+				<Button size="sm" className="bg-green-600 hover:bg-green-700 flex-1" onClick={handleStart}>
 					Start
 				</Button>
 			</div>

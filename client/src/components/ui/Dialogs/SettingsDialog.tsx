@@ -94,7 +94,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 				<TooltipTrigger asChild>
 				<Button
 					variant="outline"
-					className="border-slate-200 hover:bg-slate-200 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4"
+					className="border-slate-200 hover:bg-slate-200 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4 flex-1"
 					onClick={() => setDialogOpen(true)}
 				>
 					<SettingsIcon className="text-slate-400 w-6 h-6"/>
@@ -116,7 +116,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 
 					<div className="grid gap-4 py-4">
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="title" className="text-right">
+							<label htmlFor="title" className="text-right text-sm">
 								Title
 							</label>
 							<Input
@@ -127,7 +127,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="description" className="text-right">
+							<label htmlFor="description" className="text-right text-sm">
 								Description
 							</label>
 							<Input
@@ -139,7 +139,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
 							<div className="absolute right-8 p-1 border z-50 bg-primary border-slate-200 rounded-sm "><Percent className="w-4 h-4  "/></div>
-							<label htmlFor="pass" className="text-right">
+							<label htmlFor="pass" className="text-right text-sm">
 								Pass criteria
 							</label>
 							<Input
@@ -151,7 +151,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="questions-visible" className="text-left col-span-3">
+							<label htmlFor="questions-visible" className="text-left col-span-3 text-sm">
 								Questions visible after results
 							</label>
 							<Switch
@@ -163,7 +163,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="randomize-questions" className="text-left col-span-3">
+							<label htmlFor="randomize-questions" className="text-left col-span-3 text-sm">
 								Randomize questions
 							</label>
 							<Switch
@@ -175,7 +175,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="randomizeAnswers" className="text-left col-span-3">
+							<label htmlFor="randomizeAnswers" className="text-left col-span-3 text-sm">
 								Randomize answers
 							</label>
 							<Switch
