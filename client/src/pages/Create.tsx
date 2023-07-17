@@ -30,6 +30,7 @@ const Create = () => {
 		const initialLoad = async () => {
 			//test generation
 			if (id) {
+				console.log("fetched from db");
 				setHasParamId(true);
 				const response = await fetchTestById(id);
 				if (response) {
@@ -48,6 +49,7 @@ const Create = () => {
 	useEffect(() => {
 		const testJSON = sessionStorage.getItem("test");
 		if (testJSON) {
+			console.log("fetched from sessionstorage")
 			let test: TestType = JSON.parse(testJSON);
 			setTest(test);
 			sessionStorage.removeItem("test");
