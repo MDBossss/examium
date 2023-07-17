@@ -19,7 +19,11 @@
 ![Contributors](https://img.shields.io/github/contributors/MDBossss/examium?color=dark-green) ![Issues](https://img.shields.io/github/issues/MDBossss/examium) ![License](https://img.shields.io/github/license/MDBossss/examium) 
 
 ---
-![Showcase Video](images/examium-showcase.mp4)
+
+
+https://github.com/MDBossss/examium/assets/27899680/a8caa2ec-2077-4f82-8582-1d31007de48a
+
+
 
 ![Screen Shot](images/showcase-create.png)
 ![Screen Shot](images/showcase-collaborate.png)
