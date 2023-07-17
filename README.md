@@ -18,9 +18,11 @@
 
 ![Contributors](https://img.shields.io/github/contributors/MDBossss/examium?color=dark-green) ![Issues](https://img.shields.io/github/issues/MDBossss/examium) ![License](https://img.shields.io/github/license/MDBossss/examium) 
 
-## About The Project
 
-![Screen Shot](images/screenshot.png)
+
+![Screen Shot](client/public/showcase-create.png)
+![Screen Shot](client/public/showcase-collaborate.png)
+![Screen Shot](client/public/showcase-results.png)
 
 This is a work in progress project I started as a way to introduce myself to Prisma and using it with a Express.js backend. Currently the essential features are implemented, CRUD of the tests with the db, collaborating with other users, user auth... 
 
