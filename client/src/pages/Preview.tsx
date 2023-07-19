@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import QuizAnswer from "../components/QuizAnswer";
 import { Button } from "../components/ui/Button";
 import { fetchTestById } from "../utils/dbUtils";
+import { randomizeTest } from "../utils/testUtils";
 
 const Preview = () => {
 	const { id } = useParams();
@@ -19,20 +20,22 @@ const Preview = () => {
 
 	const line = document.getElementById("line");
 
+
 	useEffect(() => {
 		const initialLoad = async () => {
 			if (id) {
 				setHasParamId(true);
 				await fetchTestById(id)
 					.then((response) => {
-						setTest(response);
-						setInitialData(response);
+						setTest(randomizeTest(response));
+						setInitialData(randomizeTest(response));
 					})
 					.catch(() => {
 						navigate("/404");
 					});
 			} else if (test) {
-				setInitialData(test);
+				setTest(randomizeTest(test))
+				setInitialData(randomizeTest(test));
 				setHasParamId(false);
 			} else {
 				setHasParamId(false);
@@ -41,6 +44,8 @@ const Preview = () => {
 		};
 		initialLoad();
 	}, [id]);
+
+
 
 	const setInitialData = (test: TestType) => {
 		setQuestionDone(Array(test.questions.length).fill(false));

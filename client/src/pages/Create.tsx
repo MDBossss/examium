@@ -27,8 +27,8 @@ const Create = () => {
 	const { session } = useSession();
 
 	useEffect(() => {
+		//test generation
 		const initialLoad = async () => {
-			//test generation
 			const testJSON = sessionStorage.getItem("test"); // get test from sessionStorage
 			//if it exists, means we came from /preview and want to keep editing the same test, and not fetch
 			if (testJSON) {

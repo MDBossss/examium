@@ -1,45 +1,61 @@
-import { TestType } from "../types/models"
+import { TestType } from "../types/models";
 
-export const validateTest = (test: TestType, setTest: React.Dispatch<React.SetStateAction<TestType>>) => {
+export const validateTest = (
+	test: TestType,
+	setTest: React.Dispatch<React.SetStateAction<TestType>>
+) => {
+	let testValid: boolean = true;
+	let messages: string[] = [];
 
-    let testValid: boolean = true;
-    let messages: string[] = [];
+	if (test.title.length < 1) {
+		testValid = false;
+		messages.push("Test needs to have a title!");
+	}
 
-    if(test.title.length < 1){
-        testValid = false;
-        messages.push("Test needs to have a title!")
-    }
+	if (test.questions.length < 2) {
+		testValid = false;
+		messages.push("Test needs to have at least 2 questions!");
+	}
 
-    if(test.questions.length < 2){
-        testValid = false;
-        messages.push("Test needs to have at least 2 questions!")
-    }
-
-    if(testValid){
-      setTest((prevTest) => {
-				let updatedTest = { ...prevTest };
-				updatedTest.questions.forEach((question,questionIndex) => {
-          question.answers.forEach((answer,answerIndex) => {
-            if(answer.answer === ""){
-              updatedTest.questions[questionIndex].answers.splice(answerIndex,1)
-            }
-          })
-        })
-        return updatedTest;
+	if (testValid) {
+		setTest((prevTest) => {
+			let updatedTest = { ...prevTest };
+			updatedTest.questions.forEach((question, questionIndex) => {
+				question.answers.forEach((answer, answerIndex) => {
+					if (answer.answer === "") {
+						updatedTest.questions[questionIndex].answers.splice(answerIndex, 1);
+					}
+				});
 			});
-    }
+			return updatedTest;
+		});
+	}
 
-    return {testValid,messages}
-
-}
+	return { testValid, messages };
+};
 
 export const shuffleArray = <T>(array: T[]): T[] => {
-  const shuffledArray = [...array];
+	const shuffledArray = [...array];
 
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-  }
+	for (let i = shuffledArray.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+	}
 
-  return shuffledArray;
-}
+	return shuffledArray;
+};
+
+export const randomizeTest = (test: TestType) => {
+	const randomizedTest = { ...test };
+	if (test.randomizeQuestions) {
+		randomizedTest.questions = shuffleArray(test.questions);
+	}
+	if (test.randomizeAnswers) {
+		randomizedTest.questions = randomizedTest.questions.map((prevQuestion) => ({
+			...prevQuestion,
+			answers: shuffleArray(prevQuestion.answers),
+		}));
+	}
+
+	return randomizedTest as TestType;
+};
