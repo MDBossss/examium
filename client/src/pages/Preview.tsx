@@ -25,20 +25,16 @@ const Preview = () => {
 				setHasParamId(true);
 				await fetchTestById(id)
 					.then((response) => {
-						console.log("has id and fetched");
 						setTest(response);
 						setInitialData(response);
 					})
 					.catch(() => {
-						console.log("has id not fetched");
 						navigate("/404");
 					});
 			} else if (test) {
-				console.log("passed test thru navigate");
 				setInitialData(test);
 				setHasParamId(false);
 			} else {
-				console.log("nothing passed thru, and no id, send him back");
 				setHasParamId(false);
 				navigate("/", { replace: true });
 			}

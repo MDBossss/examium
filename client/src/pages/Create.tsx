@@ -29,8 +29,15 @@ const Create = () => {
 	useEffect(() => {
 		const initialLoad = async () => {
 			//test generation
-			if (id) {
-				console.log("fetched from db");
+			const testJSON = sessionStorage.getItem("test"); // get test from sessionStorage
+			//if it exists, means we came from /preview and want to keep editing the same test, and not fetch
+			if (testJSON) {
+				let test: TestType = JSON.parse(testJSON);
+				setTest(test);
+				sessionStorage.removeItem("test");
+			}
+			//if theres nothing in sessionStorage, get test from the db by id if there is one passed from the params
+			else if (id) {
 				setHasParamId(true);
 				const response = await fetchTestById(id);
 				if (response) {
@@ -38,6 +45,7 @@ const Create = () => {
 				} else {
 					navigate("/404");
 				}
+			//if theres nothing in sessionStorage and no id passed in params, generate an empty test
 			} else {
 				setHasParamId(false);
 				setTest(generateTest());
@@ -46,15 +54,6 @@ const Create = () => {
 		initialLoad();
 	}, [id]);
 
-	useEffect(() => {
-		const testJSON = sessionStorage.getItem("test");
-		if (testJSON) {
-			console.log("fetched from sessionstorage")
-			let test: TestType = JSON.parse(testJSON);
-			setTest(test);
-			sessionStorage.removeItem("test");
-		}
-	}, []);
 
 	useEffect(() => {
 		updateTestAuthor();

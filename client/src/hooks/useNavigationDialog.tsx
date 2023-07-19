@@ -8,7 +8,7 @@ const useNavigationDialog = () => {
 	const [route, setRoute] = useState("");
 
 	const handleNavigate = (path: string) => {
-		if (location.pathname === "/create" && path !== location.pathname) {
+		if (location.pathname.startsWith("/create") && path !== location.pathname) {
 			setShowDialog(true);
 			setRoute(path);
 		} else {
