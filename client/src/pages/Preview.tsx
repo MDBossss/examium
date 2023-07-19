@@ -15,6 +15,9 @@ const Preview = () => {
 	const [questionNumber, setQuestionNumber] = useState<number>(0);
 	const [questionDone, setQuestionDone] = useState<boolean[]>([]);
 	const [answersChecked, setAnswersChecked] = useState<boolean[][]>([]);
+	const [disableNavigation,setDisableNavigation] = useState<boolean>(false);
+
+	const line = document.getElementById("line");
 
 	useEffect(() => {
 		const initialLoad = async () => {
@@ -62,12 +65,16 @@ const Preview = () => {
 		if (questionDone[questionNumber]) {
 			setQuestionNumber((prev) => prev + 1);
 		} else {
+			setDisableNavigation(true);
 			setQuestionDone((prevArray) => {
 				const updatedArray = [...prevArray];
 				updatedArray[questionNumber] = true;
 				return updatedArray;
 			});
+			line?.classList.add("filled");
 			setTimeout(() => {
+				setDisableNavigation(false);
+				line?.classList.remove("filled");
 				setQuestionNumber((prev) => prev + 1);
 			}, 3000);
 		}
@@ -78,15 +85,19 @@ const Preview = () => {
 	};
 
 	const handleFinishTest = async () => {
+		setDisableNavigation(true);
 		setQuestionDone((prevArray) => {
 			const updatedArray = [...prevArray];
 			updatedArray[questionNumber] = true;
 			return updatedArray;
 		});
+		line?.classList.add("filled");
 		setTimeout(() => {
+			setDisableNavigation(false)
+			line?.classList.remove("filled");
 			if (hasParamId) {
-				navigate("/solve/results", { 
-					state: { test: test, answersChecked: answersChecked, hasParamId: hasParamId } 
+				navigate("/solve/results", {
+					state: { test: test, answersChecked: answersChecked, hasParamId: hasParamId },
 				});
 			} else {
 				navigate("/create/preview/results", {
@@ -111,29 +122,34 @@ const Preview = () => {
 						/>
 					</div>
 				)}
+				<div id="line" className="fill-line"></div>
 				<h1 className="text-2xl font-bold text-center">
 					{test?.questions[questionNumber].question}
 				</h1>
 				<div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
-					{(answersChecked.length > 1 && test.questions && test.questions.length > 0) && test?.questions[questionNumber].answers.map((answer, answerIndex) =>
-						answer.answer.length ? (
-							<QuizAnswer
-								key={answer.id}
-								answer={answer}
-								answerIndex={answerIndex}
-								isChecked={answersChecked[questionNumber][answerIndex]}
-								handleCheck={handleCheck}
-								questionNumber={questionNumber}
-								questionDone={questionDone}
-							/>
-						) : null
-					)}
+					{answersChecked.length > 1 &&
+						test.questions &&
+						test.questions.length > 0 &&
+						test?.questions[questionNumber].answers.map((answer, answerIndex) =>
+							answer.answer.length ? (
+								<QuizAnswer
+									key={answer.id}
+									answer={answer}
+									answerIndex={answerIndex}
+									isChecked={answersChecked[questionNumber][answerIndex]}
+									handleCheck={handleCheck}
+									questionNumber={questionNumber}
+									questionDone={questionDone}
+								/>
+							) : null
+						)}
 				</div>
 				<div className="flex w-full gap-3 mt-12">
 					{questionNumber !== 0 && (
 						<Button
 							className="flex-1 py-7 bg-blue-500 hover:bg-blue-600"
 							onClick={handleDecrementQuestion}
+							disabled={disableNavigation}
 						>
 							Previous question
 						</Button>
@@ -143,6 +159,7 @@ const Preview = () => {
 						<Button
 							className="flex-1 py-7 bg-blue-500 hover:bg-blue-600"
 							onClick={handleIncrementQuestion}
+							disabled={disableNavigation}
 						>
 							Next question
 						</Button>
@@ -153,6 +170,7 @@ const Preview = () => {
 						<Button
 							className="flex-1 py-7 text-lg bg-green-500 hover:bg-green-600"
 							onClick={handleFinishTest}
+							disabled={disableNavigation}
 						>
 							Finish test
 						</Button>
