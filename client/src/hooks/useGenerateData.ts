@@ -4,20 +4,23 @@ import {UserResource} from "@clerk/types"
 
 
 const useGenerateData = () => {
-	const generateAnswer = () => {
+	const generateAnswer = (): AnswerType => {
+
 		return {
 			id: uuidv4(),
 			answer: "",
 			isCorrect: false,
-		} as AnswerType;
+			createdAt: new Date(),
+		}
 	};
 
-	const generateQuestion = () => {
+	const generateQuestion = (): QuestionType => {
 		return {
 			id: uuidv4(),
 			question: "",
+			createdAt: new Date(),
 			answers: [generateAnswer()],
-		} as QuestionType;
+		} 
 	};
 
 	const generateTest = () => {

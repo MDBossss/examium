@@ -6,7 +6,10 @@ class UserController {
 	async getAllUsers(req: Request, res: Response) {
 		try {
 			const users = await prisma.user.findMany();
-			res.json(users);
+			if(!users){
+				return res.status(404).json({error: "No users found."})
+			}
+			res.status(200).json(users);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -18,10 +21,9 @@ class UserController {
 			const { id } = req.params;
 			const user = await prisma.user.findUnique({ where: { id } });
 			if (!user) {
-				res.status(404).json({ error: "User not found" });
-				return null;
+				return res.status(404).json({ error: "User not found" });
 			}
-			res.json(user);
+			res.status(200).json(user);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -36,7 +38,7 @@ class UserController {
 				res.status(404).json({ error: "User not found" });
 				return null;
 			}
-			res.json(user);
+			res.status(200).json(user);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -52,7 +54,7 @@ class UserController {
 			const newUser = await prisma.user.create({
 				data: { id, firstName, lastName, email, imageUrl },
 			});
-			res.json(newUser);
+			res.status(201).json(newUser);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -67,7 +69,7 @@ class UserController {
 				where: { id },
 				data: { ...userData },
 			});
-			res.json(updatedUser);
+			res.status(200).json(updatedUser);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -78,7 +80,7 @@ class UserController {
 		try {
 			const { id } = req.params;
 			await prisma.user.delete({ where: { id } });
-			res.json({ message: "User deleted successfully" });
+			res.status(204).json({ message: "User deleted successfully" });
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });

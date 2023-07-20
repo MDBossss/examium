@@ -63,5 +63,5 @@ export function randomizeTest(test: TestType) {
 
 export function renderTextWithLineBreaks(text: string){
     // Replace new line characters with <br> tags
-    return text.split('\n').map((line, index) => <React.Fragment key={index}>{line}<br/></React.Fragment>);
+    return text ? text.split('\n').map((line, index) => <React.Fragment key={index}>{line}<br/></React.Fragment>) : null;
   };

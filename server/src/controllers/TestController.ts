@@ -6,7 +6,10 @@ class TestController {
 	async getAllTests(req: Request, res: Response) {
 		try {
 			const tests = await prisma.test.findMany();
-			res.json(tests);
+			if(!tests || tests.length === 0){
+				return res.status(404).json({error: "No tests found."})
+			}
+			res.status(200).json(tests);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -30,7 +33,10 @@ class TestController {
 					author: true,
 				},
 			});
-			res.json(tests);
+			if(!tests || tests.length === 0){
+				return res.status(404).json({error: "No tests found."})
+			}
+			res.status(200).json(tests);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -48,7 +54,10 @@ class TestController {
 					author: true,
 				},
 			});
-			res.json(tests);
+			if(!tests || tests.length === 0){
+				return res.status(404).json({error: "No tests found."})
+			}
+			res.status(200).json(tests);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -62,8 +71,15 @@ class TestController {
 				where: { id },
 				include: {
 					questions: {
+						orderBy: {
+							createdAt: "asc"
+						},
 						include: {
-							answers: true,
+							answers: {
+								orderBy : {
+									createdAt: "asc"
+								}
+							}
 						},
 					},
 					collaborators: true,
@@ -72,8 +88,7 @@ class TestController {
 			});
 
 			if (!test) {
-				res.status(404).json({ error: "Test not found" });
-				return;
+				return res.status(404).json({ error: "Test not found" });
 			}
 
 			const testWithCollaborators = {
@@ -81,7 +96,7 @@ class TestController {
 				collaboratorEmails: test.collaborators.map((collaborator) => collaborator.email),
 			};
 
-			res.json(testWithCollaborators);
+			res.status(200).json(testWithCollaborators);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -104,6 +119,7 @@ class TestController {
 				authorId,
 			}: TestType = req.body;
 
+
 			const newTest = await prisma.test.create({
 				data: {
 					id,
@@ -122,11 +138,13 @@ class TestController {
 							id: question.id,
 							question: question.question,
 							imageUrl: question.imageUrl,
+							createdAt: question.createdAt,
 							answers: {
 								create: question.answers.map((answer) => ({
 									id: answer.id,
 									answer: answer.answer,
 									isCorrect: answer.isCorrect,
+									createdAt: answer.createdAt,
 								})),
 							},
 						})),
@@ -135,11 +153,6 @@ class TestController {
 						connect: collaboratorEmails?.map((email) => ({ email })),
 					},
 				},
-				// include: {
-				// 	author: true,
-				// 	questions: true,
-				// 	collaboratorEmails: true,
-				// },
 			});
 
 			res.status(201).json(newTest);
@@ -166,7 +179,7 @@ class TestController {
 			}: TestType = req.body;
 
 			//Delete outdated answers
-			const outdatedAnswerIds = await prisma.answer.deleteMany({
+			await prisma.answer.deleteMany({
 				where: {
 					question: {
 						testId: id,
@@ -182,7 +195,7 @@ class TestController {
 			});
 
 			// Delete outdated questions
-			const outdatedQuestionIds = await prisma.question.deleteMany({
+			await prisma.question.deleteMany({
 				where: {
 					testId: id,
 					NOT: {
@@ -212,11 +225,13 @@ class TestController {
 							create: {
 								question: question.question,
 								imageUrl: question.imageUrl,
+								createdAt: question.createdAt,
 								answers: {
 									createMany: {
 										data: question.answers.map((answer) => ({
 											answer: answer.answer,
 											isCorrect: answer.isCorrect,
+											createdAt: answer.createdAt
 										})),
 									},
 								},
@@ -224,16 +239,19 @@ class TestController {
 							update: {
 								question: question.question,
 								imageUrl: question.imageUrl,
+								createdAt: question.createdAt,
 								answers: {
 									upsert: question.answers.map((answer) => ({
 										where: { id: answer.id },
 										create: {
 											answer: answer.answer,
 											isCorrect: answer.isCorrect,
+											createdAt: answer.createdAt,
 										},
 										update: {
 											answer: answer.answer,
 											isCorrect: answer.isCorrect,
+											createdAt: answer.createdAt,
 										},
 									})),
 								},
@@ -278,7 +296,7 @@ class TestController {
 					collaborators: true,
 				},
 			});
-			res.json({ message: "Test deleted successfully" });
+			res.status(204).json({ message: "Test deleted successfully" });
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
