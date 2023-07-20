@@ -1,9 +1,10 @@
+import React from "react";
 import { TestType } from "../types/models";
 
-export const validateTest = (
+export function validateTest(
 	test: TestType,
 	setTest: React.Dispatch<React.SetStateAction<TestType>>
-) => {
+) {
 	let testValid: boolean = true;
 	let messages: string[] = [];
 
@@ -32,9 +33,9 @@ export const validateTest = (
 	}
 
 	return { testValid, messages };
-};
+}
 
-export const shuffleArray = <T>(array: T[]): T[] => {
+export function shuffleArray<T>(array: T[]): T[] {
 	const shuffledArray = [...array];
 
 	for (let i = shuffledArray.length - 1; i > 0; i--) {
@@ -43,9 +44,9 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 	}
 
 	return shuffledArray;
-};
+}
 
-export const randomizeTest = (test: TestType) => {
+export function randomizeTest(test: TestType) {
 	const randomizedTest = { ...test };
 	if (test.randomizeQuestions) {
 		randomizedTest.questions = shuffleArray(test.questions);
@@ -58,4 +59,9 @@ export const randomizeTest = (test: TestType) => {
 	}
 
 	return randomizedTest as TestType;
-};
+}
+
+export function renderTextWithLineBreaks(text: string){
+    // Replace new line characters with <br> tags
+    return text.split('\n').map((line, index) => <React.Fragment key={index}>{line}<br/></React.Fragment>);
+  };

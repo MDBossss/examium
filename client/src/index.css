@@ -96,7 +96,7 @@ body {
 .mesh-home {
 	position: relative;
 	z-index: 0;
-	background-image: url("../public/background-pattern-gray.svg");
+	background-image: url("/background-pattern-gray.svg");
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-color: rgb(226, 232, 240);

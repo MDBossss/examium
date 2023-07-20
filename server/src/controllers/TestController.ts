@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
-import { TestType } from "../types/model";
+import { TestType } from "../types/models";
 
 class TestController {
 	async getAllTests(req: Request, res: Response) {

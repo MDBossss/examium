@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnswerType } from "../types/models";
 import { Checkbox } from "./ui/Checkbox";
+import { renderTextWithLineBreaks } from "../utils/testUtils";
 
 interface Props {
 	answer: AnswerType;
@@ -50,7 +51,7 @@ const QuizAnswer = ({
 			onClick={() => handleClick()}
 		>
 			<Checkbox checked={isChecked} disabled={questionDone[questionNumber]} />
-			<p className="break-anywhere">{answer.answer}</p>
+			<p className="break-anywhere">{renderTextWithLineBreaks(answer.answer)}</p>
 		</div>
 	);
 };

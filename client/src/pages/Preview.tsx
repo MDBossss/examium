@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import QuizAnswer from "../components/QuizAnswer";
 import { Button } from "../components/ui/Button";
 import { fetchTestById } from "../utils/dbUtils";
-import { randomizeTest } from "../utils/testUtils";
+import { randomizeTest, renderTextWithLineBreaks } from "../utils/testUtils";
 
 const Preview = () => {
 	const { id } = useParams();
@@ -124,8 +124,8 @@ const Preview = () => {
 					</div>
 				)}
 				<div id="line" className="fill-line"></div>
-				<h1 className="text-2xl font-bold text-center">
-					{test?.questions[questionNumber].question}
+				<h1 className="text-2xl font-bold text-left">
+					{renderTextWithLineBreaks(test?.questions[questionNumber].question)}
 				</h1>
 				<div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
 					{answersChecked.length > 1 &&

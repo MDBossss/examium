@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
-import { UserType } from "../types/model";
+import { UserType } from "../types/models";
 
 class UserController {
 	async getAllUsers(req: Request, res: Response) {
