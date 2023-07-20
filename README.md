@@ -73,7 +73,7 @@ VITE_API_BASE_URL=http://localhost:3000/api
 ```
 
 ## Installation
-To get started with HotelHub, follow these steps:
+To get started with Examium, follow these steps:
 1. Clone the repository
 2. Install the dependencies for both the server and the client by running `yarn install` in their respective directories.
 3. Configure the environmental variables as described in the previous section.
