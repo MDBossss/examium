@@ -22,7 +22,7 @@ const Results = () => {
 	const answersChecked: boolean[][] = location.state?.answersChecked;
 	const hasParamId: boolean = location.state?.hasParamId;
 
-	const {toast} = useToast();
+	const { toast } = useToast();
 	const { userScore, maxScore } = useScore(test?.questions, answersChecked);
 
 	//protection against users wandering to this route without any data
@@ -41,10 +41,9 @@ const Results = () => {
 	};
 
 	const handleRestart = () => {
-		if(hasParamId){
+		if (hasParamId) {
 			navigate(`/solve/${test.id}`);
-		}
-		else{
+		} else {
 			navigate("/create/preview", { state: { test } });
 		}
 	};
@@ -52,8 +51,8 @@ const Results = () => {
 	const handlePrint = () => {
 		toast({
 			description: "Couldn't connect to printer.",
-			variant: "destructive"
-		})
+			variant: "destructive",
+		});
 	};
 
 	return (
@@ -81,7 +80,11 @@ const Results = () => {
 				</div>
 				<div className="w-full h-[100px] bg-slate-200"></div>
 				<div className="flex flex-col md:flex-row w-full border-b border-slate-200">
-					<ScoreDisplay userScore={userScore} passCriteria={test.passCriteria} className=" border-b md:border-r border-slate-200"/>
+					<ScoreDisplay
+						userScore={userScore}
+						passCriteria={test.passCriteria}
+						className=" border-b md:border-r border-slate-200"
+					/>
 					<SettingsDisplay test={test} />
 				</div>
 				<div className="flex flex-col w-full gap-3 mt-10">

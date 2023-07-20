@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/Button";
 import LoginButton from "./ui/LoginButton";
-import Logo from "./ui/Logo";
+import Logo from "./ui/logo";
 
 const Navbar = () => {
 	const navigate = useNavigate();

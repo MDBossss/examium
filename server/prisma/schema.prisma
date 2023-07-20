@@ -11,12 +11,12 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(uuid())
-  firstName String
-  lastName  String
-  email     String @unique
-  imageUrl  String
-  tests     Test[]
+  id                String @id @default(uuid())
+  firstName         String
+  lastName          String
+  email             String @unique
+  imageUrl          String
+  tests             Test[]
   collaboratedTests Test[] @relation("collaborator")
 }
 
@@ -31,24 +31,26 @@ model Test {
   createdAt              DateTime
   updatedAt              DateTime   @updatedAt
   questions              Question[]
-  authorId               String 
+  authorId               String
   author                 User       @relation(fields: [authorId], references: [id])
   collaborators          User[]     @relation("collaborator")
 }
 
 model Question {
-  id       String   @id @default(uuid())
-  question String
-  imageUrl String?
-  answers  Answer[]
-  testId   String
-  test     Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  id        String   @id @default(uuid())
+  question  String   @db.VarChar(512)
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  answers   Answer[]
+  testId    String
+  test      Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
 }
 
 model Answer {
   id         String   @id @default(uuid())
-  answer     String
+  answer     String   @db.VarChar(512)
   isCorrect  Boolean
+  createdAt  DateTime @default(now())
   questionId String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }

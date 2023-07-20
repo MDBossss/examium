@@ -1,4 +1,5 @@
 import { AnswerType } from "../../types/models";
+import { renderTextWithLineBreaks } from "../../utils/testUtils";
 
 interface Props {
 	answer: AnswerType;
@@ -27,7 +28,7 @@ const ResultAnswer = ({ answer, answerIndex, isChecked }: Props) => {
 				{String.fromCharCode(65 + answerIndex)}
 			</p>
 			<p className={`${conditionalColors()} col-span-10 sm:col-span-11 text-medium font-medium px-5 py-3`}>
-				{answer.answer}
+				{renderTextWithLineBreaks(answer.answer)}
 			</p>
 		</div>
 	);

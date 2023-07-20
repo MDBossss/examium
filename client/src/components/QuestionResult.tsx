@@ -1,4 +1,5 @@
 import { QuestionType } from "../types/models";
+import { renderTextWithLineBreaks } from "../utils/testUtils";
 import ResultAnswer from "./ui/ResultAnswer";
 
 interface Props {
@@ -12,7 +13,7 @@ const QuestionResult = ({ question, questionIndex, answersChecked }: Props) => {
 		<div className="flex flex-col sm:flex-row w-full border gap-5 border-slate-200 p-5">
 			<div className="flex flex-1 flex-col gap-2">
 				<h3 className="text-sm font-bold text-slate-300">Question {questionIndex + 1}</h3>
-				<p className="text-medium font-bold text-zinc-800">{question.question}</p>
+				<p className="text-medium font-bold text-zinc-800">{renderTextWithLineBreaks(question.question)}</p>
 				<div className="flex flex-col flex-1 p-3">
 					{question.answers.map((answer, answerIndex) =>
 						answer.answer.length ? (
