@@ -37,20 +37,38 @@ model Test {
 }
 
 model Question {
-  id        String   @id @default(uuid())
-  question  String   @db.VarChar(512)
-  imageUrl  String?
-  createdAt DateTime @default(now())
-  answers   Answer[]
-  testId    String
-  test      Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  id                       String                  @id @default(uuid())
+  type                     String
+  question                 String                  @db.VarChar(512)
+  imageUrl                 String?
+  createdAt                DateTime                @default(now())
+  testId                   String
+  test                     Test                    @relation(fields: [testId], references: [id], onDelete: Cascade)
+  multipleChoiceQuestion   MultipleChoiceQuestion? @relation(fields: [multipleChoiceQuestionId], references: [id])
+  codeQuestion             CodeQuestion?           @relation(fields: [codeQuestionId], references: [id])
+  multipleChoiceQuestionId String?
+  codeQuestionId           String?
+}
+
+model MultipleChoiceQuestion {
+  id       String     @id @default(uuid())
+  type     String
+  answers  Answer[]
+  Question Question[]
+}
+
+model CodeQuestion {
+  id          String     @id @default(uuid())
+  type        String
+  correctCode String     @db.VarChar(1024)
+  Question    Question[]
 }
 
 model Answer {
-  id         String   @id @default(uuid())
-  answer     String   @db.VarChar(512)
+  id         String                 @id @default(uuid())
+  answer     String                 @db.VarChar(512)
   isCorrect  Boolean
-  createdAt  DateTime @default(now())
+  createdAt  DateTime               @default(now())
   questionId String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  question   MultipleChoiceQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }

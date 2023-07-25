@@ -23,12 +23,26 @@ export interface TestType {
 	questions: QuestionType[];
 }
 
+export interface QuestionVariantsType{
+	type: "multiple-choice" | "code"
+}
+
 export interface QuestionType {
 	id: string;
+	type: QuestionVariantsType["type"]
 	question: string;
 	imageUrl?: string;
 	createdAt: Date;
+}
+
+export interface MultipleChoiceQuestionType extends QuestionType{
 	answers: AnswerType[];
+
+}
+
+export interface CodeQuestionType extends QuestionType{
+	correctCode: string,
+	description?: string
 }
 
 export interface AnswerType {
