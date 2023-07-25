@@ -24,7 +24,7 @@ export interface TestType {
 }
 
 export interface QuestionVariantsType{
-	type: "multiple-choice" | "code"
+	type: "MULTIPLE_CHOICE" | "CODE"
 }
 
 export interface QuestionType {
