@@ -260,6 +260,10 @@ class TestController {
 				},
 			});
 
+			const updatedQuestions = await Promise.all(
+				questions.map((question) => createOrUpdateQuestion(question))
+			);
+
 			const updatedTest = await prisma.test.update({
 				where: { id },
 				data: {
@@ -277,38 +281,70 @@ class TestController {
 						upsert: questions.map((question) => ({
 							where: { id: question.id },
 							create: {
+								type: question.type,
 								question: question.question,
 								imageUrl: question.imageUrl,
-								createdAt: question.createdAt,
-								answers: {
-									createMany: {
-										data: question.answers.map((answer) => ({
-											answer: answer.answer,
-											isCorrect: answer.isCorrect,
-											createdAt: answer.createdAt,
+								multipleChoiceQuestion: question.type === 'MULTIPLE_CHOICE' ? {
+									create: {
+									answers: {
+										create: (question as MultipleChoiceQuestionType).answers.map((answer) => ({
+										answer: answer.answer,
+										isCorrect: answer.isCorrect,
 										})),
 									},
-								},
+									},
+								} : undefined,
+								codeQuestion: question.type === 'CODE' ? {
+									create: {
+									correctCode: (question as CodeQuestionType).correctCode,
+									},
+								} : undefined,
 							},
 							update: {
+								type: question.type,
 								question: question.question,
 								imageUrl: question.imageUrl,
 								createdAt: question.createdAt,
-								answers: {
-									upsert: question.answers.map((answer) => ({
-										where: { id: answer.id },
-										create: {
-											answer: answer.answer,
-											isCorrect: answer.isCorrect,
-											createdAt: answer.createdAt,
+								multipleChoiceQuestion: question.type === "MULTIPLE_CHOICE" ? {
+									upsert:{
+										create:{
+											answers:{
+												create: (question as MultipleChoiceQuestionType).answers.map((answer) => ({
+													answer:answer.answer,
+													isCorrect: answer.isCorrect,
+													createdAt: answer.createdAt
+												}))
+											}
 										},
-										update: {
-											answer: answer.answer,
-											isCorrect: answer.isCorrect,
-											createdAt: answer.createdAt,
+										update:{
+											answers:{
+												upsert: (question as MultipleChoiceQuestionType).answers.map((answer) => ({
+													where: {id: answer.id},
+													create:{
+														answer:answer.answer,
+														isCorrect: answer.isCorrect,
+														createdAt: answer.createdAt
+													},
+													update:{
+														answer:answer.answer,
+														isCorrect: answer.isCorrect,
+														createdAt: answer.createdAt
+													}
+												}))
+											}
+										}
+									}
+								} : undefined,
+								codeQuestion: question.type === "CODE" ? {
+									upsert:{
+										create:{
+											correctCode: (question as CodeQuestionType).correctCode,
 										},
-									})),
-								},
+										update:{
+											correctCode: (question as CodeQuestionType).correctCode,
+										}
+									}
+								}: undefined
 							},
 						})),
 					},
@@ -321,7 +357,8 @@ class TestController {
 					author: true,
 					questions: {
 						include: {
-							answers: true,
+							multipleChoiceQuestion: true,
+							codeQuestion: true
 						},
 					},
 					collaborators: true,
@@ -358,7 +395,9 @@ class TestController {
 	}
 }
 
-async function createOrUpdateQuestion(question: MultipleChoiceQuestionType | CodeQuestionType) {
+async function createOrUpdateQuestion(
+	question: MultipleChoiceQuestionType | CodeQuestionType | QuestionType
+) {
 	if (question.type === "MULTIPLE_CHOICE") {
 		const {
 			id,
@@ -370,7 +409,7 @@ async function createOrUpdateQuestion(question: MultipleChoiceQuestionType | Cod
 		} = question as MultipleChoiceQuestionType;
 
 		return prisma.question.upsert({
-			where: { id},
+			where: { id },
 			create: {
 				type,
 				question: questionText,
@@ -379,90 +418,99 @@ async function createOrUpdateQuestion(question: MultipleChoiceQuestionType | Cod
 				multipleChoiceQuestion: {
 					create: {
 						answers: {
-							create: answers.map((answer) => ({
-								answer: answer.answer,
-								isCorrect: answer.isCorrect,
-								createdAt: answer.createdAt,
-							})),
+							createMany: {
+								data: answers.map((answer) => ({
+									answer: answer.answer,
+									isCorrect: answer.isCorrect,
+									createdAt: answer.createdAt,
+								})),
+							},
 						},
 					},
 				},
 			},
 			update: {
 				type,
-				question:questionText,
+				question: questionText,
 				imageUrl,
 				createdAt,
-				multipleChoiceQuestion:{
-					upsert:{
-						create:{
-							answers:{
-								createMany:{
+				multipleChoiceQuestion: {
+					upsert: {
+						create: {
+							answers: {
+								createMany: {
 									data: answers.map((answer) => ({
 										answer: answer.answer,
-										isCorrect:answer.isCorrect,
-										createdAt:answer.createdAt
-									}))
-								}
-							}
+										isCorrect: answer.isCorrect,
+										createdAt: answer.createdAt,
+									})),
+								},
+							},
 						},
-						update :{
-							answers:{
+						update: {
+							answers: {
 								upsert: answers.map((answer) => ({
-									where: {id: answer.id || ""},
-									create:{
+									where: { id: answer.id || "" },
+									create: {
 										answer: answer.answer,
-										isCorrect:answer.isCorrect,
-										createdAt:answer.createdAt
+										isCorrect: answer.isCorrect,
+										createdAt: answer.createdAt,
 									},
-									update:{
+									update: {
 										answer: answer.answer,
-										isCorrect:answer.isCorrect,
-										createdAt:answer.createdAt
-									}
-								}))
-							}
-						}
-					}
-				}
-			}
+										isCorrect: answer.isCorrect,
+										createdAt: answer.createdAt,
+									},
+								})),
+							},
+						},
+					},
+				},
+			},
 		});
-	}
-	else if(question.type === "CODE"){
-		const { id, type, question: questionText, imageUrl, createdAt, description, correctCode } = question as CodeQuestionType;
+	} else if (question.type === "CODE") {
+		const {
+			id,
+			type,
+			question: questionText,
+			imageUrl,
+			createdAt,
+			description,
+			correctCode,
+		} = question as CodeQuestionType;
 
 		return prisma.question.upsert({
-			where: {id},
+			where: { id },
 			create: {
 				type,
 				question: questionText,
 				imageUrl,
 				createdAt,
 				codeQuestion: {
-				  create: {
-					correctCode,
-				  },
+					create: {
+						correctCode,
+					},
 				},
-			  },
-			  update: {
+			},
+			update: {
 				type,
 				question: questionText,
 				imageUrl,
 				createdAt,
 				codeQuestion: {
-				  upsert: {
-					create: {
-					  correctCode,
+					upsert: {
+						create: {
+							correctCode,
+						},
+						update: {
+							correctCode,
+						},
 					},
-					update: {
-					  correctCode,
-					},
-				  },
 				},
-			  },
-			});
-	}else{
-		throw new Error(`Unrecognized question type: ${question.type}`)
+			},
+		});
+	} else {
+		throw new Error(`Unrecognized question type: ${question.type}`);
 	}
 }
 
