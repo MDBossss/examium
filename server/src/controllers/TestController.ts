@@ -260,9 +260,6 @@ class TestController {
 				},
 			});
 
-			const updatedQuestions = await Promise.all(
-				questions.map((question) => createOrUpdateQuestion(question))
-			);
 
 			const updatedTest = await prisma.test.update({
 				where: { id },
@@ -381,7 +378,12 @@ class TestController {
 					author: true,
 					questions: {
 						include: {
-							answers: true,
+							multipleChoiceQuestion :{
+								include :{
+									answers: true
+								}
+							},
+							codeQuestion: true
 						},
 					},
 					collaborators: true,
@@ -395,123 +397,5 @@ class TestController {
 	}
 }
 
-async function createOrUpdateQuestion(
-	question: MultipleChoiceQuestionType | CodeQuestionType | QuestionType
-) {
-	if (question.type === "MULTIPLE_CHOICE") {
-		const {
-			id,
-			type,
-			question: questionText,
-			imageUrl,
-			createdAt,
-			answers,
-		} = question as MultipleChoiceQuestionType;
-
-		return prisma.question.upsert({
-			where: { id },
-			create: {
-				type,
-				question: questionText,
-				imageUrl,
-				createdAt,
-				multipleChoiceQuestion: {
-					create: {
-						answers: {
-							createMany: {
-								data: answers.map((answer) => ({
-									answer: answer.answer,
-									isCorrect: answer.isCorrect,
-									createdAt: answer.createdAt,
-								})),
-							},
-						},
-					},
-				},
-			},
-			update: {
-				type,
-				question: questionText,
-				imageUrl,
-				createdAt,
-				multipleChoiceQuestion: {
-					upsert: {
-						create: {
-							answers: {
-								createMany: {
-									data: answers.map((answer) => ({
-										answer: answer.answer,
-										isCorrect: answer.isCorrect,
-										createdAt: answer.createdAt,
-									})),
-								},
-							},
-						},
-						update: {
-							answers: {
-								upsert: answers.map((answer) => ({
-									where: { id: answer.id || "" },
-									create: {
-										answer: answer.answer,
-										isCorrect: answer.isCorrect,
-										createdAt: answer.createdAt,
-									},
-									update: {
-										answer: answer.answer,
-										isCorrect: answer.isCorrect,
-										createdAt: answer.createdAt,
-									},
-								})),
-							},
-						},
-					},
-				},
-			},
-		});
-	} else if (question.type === "CODE") {
-		const {
-			id,
-			type,
-			question: questionText,
-			imageUrl,
-			createdAt,
-			description,
-			correctCode,
-		} = question as CodeQuestionType;
-
-		return prisma.question.upsert({
-			where: { id },
-			create: {
-				type,
-				question: questionText,
-				imageUrl,
-				createdAt,
-				codeQuestion: {
-					create: {
-						correctCode,
-					},
-				},
-			},
-			update: {
-				type,
-				question: questionText,
-				imageUrl,
-				createdAt,
-				codeQuestion: {
-					upsert: {
-						create: {
-							correctCode,
-						},
-						update: {
-							correctCode,
-						},
-					},
-				},
-			},
-		});
-	} else {
-		throw new Error(`Unrecognized question type: ${question.type}`);
-	}
-}
 
 export default TestController;
