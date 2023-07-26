@@ -10,8 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 model User {
   id                String @id @default(uuid())
   firstName         String
@@ -30,6 +28,7 @@ model Test {
   showQuestionsOnResults Boolean
   randomizeQuestions     Boolean
   randomizeAnswers       Boolean
+  defaultQuestionType    String
   createdAt              DateTime
   updatedAt              DateTime   @updatedAt
   questions              Question[]
@@ -63,10 +62,10 @@ model CodeQuestion {
 }
 
 model Answer {
-  id          String                 @id @default(uuid())
-  answer      String                 @db.VarChar(512)
-  isCorrect   Boolean
-  createdAt   DateTime               @default(now())
+  id         String                 @id @default(uuid())
+  answer     String                 @db.VarChar(512)
+  isCorrect  Boolean
+  createdAt  DateTime               @default(now())
   questionId String
-  question    MultipleChoiceQuestion @relation(fields: [questionId], references: [questionId], onDelete: Cascade)
+  question   MultipleChoiceQuestion @relation(fields: [questionId], references: [questionId], onDelete: Cascade)
 }

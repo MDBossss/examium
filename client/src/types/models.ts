@@ -14,6 +14,7 @@ export interface TestType {
 	showQuestionsOnResults: boolean;
 	randomizeQuestions: boolean;
 	randomizeAnswers: boolean;
+	defaultQuestionType: QuestionVariantsType["type"]
 	createdAt: Date;
 	updatedAt?: Date;
 	authorId?: string;

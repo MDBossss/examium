@@ -23,6 +23,7 @@ const Answer = ({
 	questionIndex,
 	answer,
 }: Props) => {
+
 	return (
 		<div className="flex items-center">
 			<h2 className="text-xl text-zinc-400 pr-2 sm:p-5 max-w-[21px] sm:max-w-[50px]">{label}</h2>

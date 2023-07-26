@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/Input";
-import { TestType } from "../types/models";
+import { MultipleChoiceQuestionType, TestType } from "../types/models";
 import { useNavigate, useParams } from "react-router-dom";
 import ResetDialog from "../components/ui/Dialogs/ResetDialog";
 import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
@@ -25,6 +25,8 @@ const Create = () => {
 	const navigate = useNavigate();
 	const { toast } = useToast();
 	const { session } = useSession();
+
+
 
 	useEffect(() => {
 		//test generation
@@ -197,7 +199,7 @@ const Create = () => {
 	const handleAddQuestion = () => {
 		setTest((prevTest) => ({
 			...prevTest,
-			questions: [...prevTest.questions, generateQuestion()],
+			questions: [...prevTest.questions, generateQuestion(prevTest.defaultQuestionType)],
 		}));
 	};
 
@@ -208,20 +210,24 @@ const Create = () => {
 		}));
 	};
 
+
 	const handleAnswerChange = (text: string, questionIndex: number, answerIndex: number) => {
-		if (answerIndex === test.questions[questionIndex].answers.length - 1) {
+		if(test.questions[questionIndex].type === "MULTIPLE_CHOICE"){
+			if (answerIndex === (test.questions[questionIndex] as MultipleChoiceQuestionType).answers.length - 1) {
+				setTest((prevTest) => {
+					let updatedTest = { ...prevTest };
+					(updatedTest.questions[questionIndex] as MultipleChoiceQuestionType).answers.push(generateAnswer());
+					return updatedTest;
+				});
+			}
+	
 			setTest((prevTest) => {
 				let updatedTest = { ...prevTest };
-				updatedTest.questions[questionIndex].answers.push(generateAnswer());
+				(updatedTest.questions[questionIndex] as MultipleChoiceQuestionType).answers[answerIndex].answer = text;
 				return updatedTest;
 			});
 		}
-
-		setTest((prevTest) => {
-			let updatedTest = { ...prevTest };
-			updatedTest.questions[questionIndex].answers[answerIndex].answer = text;
-			return updatedTest;
-		});
+		
 	};
 
 	const handleAnswerDelete = (questionID: string, answerID: string) => {
@@ -231,8 +237,8 @@ const Create = () => {
 				...question,
 				answers:
 					question.id === questionID
-						? question.answers.filter((ans) => ans.id !== answerID)
-						: question.answers,
+						? (question as MultipleChoiceQuestionType).answers.filter((ans) => ans.id !== answerID)
+						: (question as MultipleChoiceQuestionType).answers,
 			})),
 		}));
 	};
@@ -242,7 +248,7 @@ const Create = () => {
 			...prevTest,
 			questions: prevTest.questions.map((question) =>
 				question.id == questionID
-					? { ...question, answers: [...question.answers, generateAnswer()] }
+					? { ...question, answers: [...(question as MultipleChoiceQuestionType).answers, generateAnswer()] }
 					: question
 			),
 		}));
@@ -255,7 +261,7 @@ const Create = () => {
 				question.id === questionID
 					? {
 							...question,
-							answers: question.answers.map((answer) =>
+							answers: (question as MultipleChoiceQuestionType).answers.map((answer) =>
 								answer.id === answerID
 									? {
 											...answer,

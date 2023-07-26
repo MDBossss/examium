@@ -133,6 +133,7 @@ class TestController {
 				showQuestionsOnResults,
 				randomizeQuestions,
 				randomizeAnswers,
+				defaultQuestionType,
 				createdAt,
 				questions,
 				collaboratorEmails,
@@ -148,6 +149,7 @@ class TestController {
 					showQuestionsOnResults,
 					randomizeQuestions,
 					randomizeAnswers,
+					defaultQuestionType,
 					createdAt,
 					author: {
 						connect: { id: authorId! },
@@ -166,7 +168,7 @@ class TestController {
 									createdAt,
 									multipleChoiceQuestion: {
 										create: {
-											questionId: id,
+											// questionId: id,
 											answers: {
 												create: answers.map((answer) => ({
 													id: answer.id,
@@ -222,6 +224,7 @@ class TestController {
 				showQuestionsOnResults,
 				randomizeQuestions,
 				randomizeAnswers,
+				defaultQuestionType,
 				createdAt,
 				questions,
 				collaboratorEmails,
@@ -270,6 +273,7 @@ class TestController {
 					showQuestionsOnResults,
 					randomizeQuestions,
 					randomizeAnswers,
+					defaultQuestionType,
 					createdAt,
 					author: {
 						connect: { id: authorId! },
