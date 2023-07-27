@@ -18,6 +18,7 @@ import { z } from "zod";
 import { useEffect, useState } from "react";
 import { Percent, SettingsIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip";
+import { Combobox } from "../Combobox";
 
 const schema = z.object({
 	title: z.string().max(50, { message: "Title must be at most 50 characters" }),
@@ -25,6 +26,7 @@ const schema = z.object({
 	randomizeQuestions: z.boolean(),
 	randomizeAnswers: z.boolean(),
 	showQuestionsOnResults: z.boolean(),
+	defaultQuestionType: z.enum(["MULTIPLE_CHOICE","CODE"]),
 	passCriteria: z
 		.number()
 		.positive({ message: "Pass criteria must be positive" })
@@ -53,6 +55,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 			randomizeAnswers: test.randomizeAnswers,
 			showQuestionsOnResults: test.showQuestionsOnResults,
 			passCriteria: test.passCriteria,
+			defaultQuestionType: test.defaultQuestionType
 		},
 	});
 	const { toast } = useToast();
@@ -66,6 +69,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 			randomizeAnswers: data.randomizeAnswers,
 			showQuestionsOnResults: data.showQuestionsOnResults,
 			passCriteria: data.passCriteria,
+			defaultQuestionType: data.defaultQuestionType
 		}));
 		setDialogOpen(false);
 		toast({
@@ -90,18 +94,18 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			<Tooltip>
-			<DialogTrigger asChild>
-				<TooltipTrigger asChild>
-				<Button
-					variant="outline"
-					className="border-slate-200 hover:bg-slate-200 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4 flex-1"
-					onClick={() => setDialogOpen(true)}
-				>
-					<SettingsIcon className="text-slate-400 w-6 h-6"/>
-				</Button>
-				</TooltipTrigger>
-			</DialogTrigger>
-			<TooltipContent>
+				<DialogTrigger asChild>
+					<TooltipTrigger asChild>
+						<Button
+							variant="outline"
+							className="border-slate-200 hover:bg-slate-200 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4 flex-1"
+							onClick={() => setDialogOpen(true)}
+						>
+							<SettingsIcon className="text-slate-400 w-6 h-6" />
+						</Button>
+					</TooltipTrigger>
+				</DialogTrigger>
+				<TooltipContent>
 					<p>Settings</p>
 				</TooltipContent>
 			</Tooltip>
@@ -115,31 +119,33 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 					</DialogHeader>
 
 					<div className="grid gap-4 py-4">
-						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="title" className="text-right text-sm">
+						<div className="grid grid-cols-6 items-center gap-4">
+							<label htmlFor="title" className="text-right col-span-2 text-sm">
 								Title
 							</label>
 							<Input
 								id="title"
 								defaultValue={test.title}
 								{...register("title")}
-								className={`${errors.title && "focus-visible:ring-red-500"} col-span-3`}
+								className={`${errors.title && "focus-visible:ring-red-500"} col-span-4`}
 							/>
 						</div>
-						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="description" className="text-right text-sm">
+						<div className="grid grid-cols-6 items-center gap-4">
+							<label htmlFor="description" className="text-right col-span-2 text-sm">
 								Description
 							</label>
 							<Input
 								id="description"
 								defaultValue={test.description}
 								{...register("description")}
-								className={`${errors.description && "focus-visible:ring-red-500"} col-span-3`}
+								className={`${errors.description && "focus-visible:ring-red-500"} col-span-4`}
 							/>
 						</div>
-						<div className="grid grid-cols-4 items-center gap-4">
-							<div className="absolute right-8 p-1 border z-50 bg-primary border-slate-200 rounded-sm "><Percent className="w-4 h-4  "/></div>
-							<label htmlFor="pass" className="text-right text-sm">
+						<div className="grid grid-cols-6 items-center gap-4">
+							<div className="absolute right-8 p-1 border z-50 bg-primary border-slate-200 rounded-sm ">
+								<Percent className="w-4 h-4  " />
+							</div>
+							<label htmlFor="pass" className="text-right col-span-2 text-sm">
 								Pass criteria
 							</label>
 							<Input
@@ -147,7 +153,17 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 								type="number"
 								defaultValue={test.passCriteria}
 								{...register("passCriteria", { valueAsNumber: true })}
-								className={`${errors.passCriteria && "focus-visible:ring-red-500"} col-span-3`}
+								className={`${errors.passCriteria && "focus-visible:ring-red-500"} col-span-4`}
+							/>
+						</div>
+						<div className="grid grid-cols-6 items-center gap-4">
+							<label htmlFor="questionType" className="text-right col-span-2 text-sm">
+								Question Type
+							</label>
+							<Combobox
+								className="col-span-4 text-right ml-auto"
+								defaultValue={test.defaultQuestionType}
+								onChange={(value) => setValue("defaultQuestionType",value)}
 							/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
@@ -180,7 +196,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							</label>
 							<Switch
 								id="randomizeAnswers"
-								className="col-span-1"
+								className="col-span-1 "
 								defaultChecked={test.randomizeAnswers}
 								onCheckedChange={(v) => setValue("randomizeAnswers", v)}
 								{...register("randomizeAnswers")}

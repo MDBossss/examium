@@ -52,14 +52,14 @@ model Question {
 model MultipleChoiceQuestion {
   questionId String   @id
   answers    Answer[]
-  Question   Question @relation(fields: [questionId], references: [id])
+  Question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
 model CodeQuestion {
   questionId  String   @id
   correctCode String   @db.VarChar(1024)
   description String?  @db.VarChar(1024)
-  Question    Question @relation(fields: [questionId], references: [id])
+  Question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
 model Answer {
