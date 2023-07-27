@@ -58,6 +58,7 @@ model MultipleChoiceQuestion {
 model CodeQuestion {
   questionId  String   @id
   correctCode String   @db.VarChar(1024)
+  description String?  @db.VarChar(1024)
   Question    Question @relation(fields: [questionId], references: [id])
 }
 

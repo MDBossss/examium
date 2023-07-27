@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
-import { CodeQuestionType, MultipleChoiceQuestionType, TestType } from "../types/models";
+import { AnswerType, CodeQuestionType, MultipleChoiceQuestionType, QuestionType, QuestionVariantsType, TestType } from "../types/models";
 
 class TestController {
 	async getAllTests(req: Request, res: Response) {
@@ -111,12 +111,64 @@ class TestController {
 				}),
 			};
 
+			//this is the object which contains all the data needed, but just needs to be formatted to the `TestType` typescript model
 			const testWithCollaborators = {
 				...testWithQuestions,
 				collaboratorEmails: test.collaborators.map((collaborator) => collaborator.email),
 			};
+			
+			// formatting the questions and the tests by the typescript model
+			//because when fetching with prisma, the object structure obviously
+			//is not the same, since im splitting the questions into multiple
+			//tables, so here im creating the objects
+			let formattedQuestions: QuestionType[] = [];
+			testWithCollaborators.questions.map((question) => {
+				if(question.type === "MULTIPLE_CHOICE"){
+					let tempQuestion: MultipleChoiceQuestionType = {
+						id: question.id,
+						type: question.type,
+						question: question.question,
+						imageUrl: question.imageUrl as string | undefined,
+						createdAt: question.createdAt,
+						answers: question.multipleChoiceQuestion?.answers as AnswerType[]
+					} 
+					formattedQuestions.push(tempQuestion)
+				}
+				else if(question.type === "CODE"){
+					let tempQuestion: CodeQuestionType = {
+						id: question.id,
+						type: question.type,
+						question: question.question,
+						imageUrl: question.imageUrl as string | undefined,
+						createdAt: question.createdAt,
+						description: question.codeQuestion?.description as string | undefined,
+						correctCode: question.codeQuestion?.correctCode as string
+					}
+					formattedQuestions.push(tempQuestion)
+				}
+			})
 
-			res.status(200).json(testWithCollaborators);
+			//formatting test
+			const formattedTest: TestType = {
+				id: testWithCollaborators.id,
+				title: testWithCollaborators.title,
+				description: testWithCollaborators.description,
+				passCriteria: testWithCollaborators.passCriteria,
+				showQuestionsOnResults: testWithCollaborators.showQuestionsOnResults,
+				randomizeQuestions: testWithCollaborators.randomizeQuestions,
+				randomizeAnswers: testWithCollaborators.randomizeAnswers,
+				defaultQuestionType: testWithCollaborators.defaultQuestionType as QuestionVariantsType["type"],
+				createdAt: testWithCollaborators.createdAt,
+				updatedAt: testWithCollaborators.updatedAt,
+				authorId: testWithCollaborators.authorId,
+				author: testWithCollaborators.author,
+				collaboratorEmails: testWithCollaborators.collaboratorEmails,
+				collaborators: testWithCollaborators.collaborators,
+				questions: formattedQuestions
+			}
+
+
+			res.status(200).json(formattedTest);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
@@ -193,6 +245,7 @@ class TestController {
 									codeQuestion: {
 										create: {
 											correctCode,
+											description
 										},
 									},
 								};

@@ -127,7 +127,7 @@ const Question = ({
 					value={question.question}
 				/>
 				<div className="flex flex-col gap-2">
-					{(question as MultipleChoiceQuestionType)?.answers?.map((answer, answerIndex) => {
+					{(question as MultipleChoiceQuestionType).answers.map((answer, answerIndex) => {
 						let label = String.fromCharCode(65 + answerIndex);
 						return (
 							<Answer
