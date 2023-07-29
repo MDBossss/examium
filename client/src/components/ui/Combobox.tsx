@@ -42,7 +42,7 @@ export function Combobox({ className, defaultValue, onChange }: Props) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="outline" className={`w-full justify-between ${className}`}>
+				<Button variant="outline" className={`w-full justify-between font-normal ${className}`}>
 					{value ? options.find((option) => option.value === value)?.label : "Select question type"}
 					<ChevronsUpDown className="mr-2 h-4 w-4" />
 				</Button>

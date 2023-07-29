@@ -1,5 +1,5 @@
 import React from "react";
-import { TestType } from "../types/models";
+import { MultipleChoiceQuestionType, TestType } from "../types/models";
 
 export function validateTest(
 	test: TestType,
@@ -22,11 +22,16 @@ export function validateTest(
 		setTest((prevTest) => {
 			let updatedTest = { ...prevTest };
 			updatedTest.questions.forEach((question, questionIndex) => {
-				question.answers.forEach((answer, answerIndex) => {
-					if (answer.answer === "") {
-						updatedTest.questions[questionIndex].answers.splice(answerIndex, 1);
-					}
-				});
+				if (question.type === "MULTIPLE_CHOICE") {
+					(question as MultipleChoiceQuestionType).answers.forEach((answer, answerIndex) => {
+						if (answer.answer === "") {
+							(updatedTest.questions[questionIndex] as MultipleChoiceQuestionType).answers.splice(
+								answerIndex,
+								1
+							);
+						}
+					});
+				}
 			});
 			return updatedTest;
 		});
@@ -52,16 +57,29 @@ export function randomizeTest(test: TestType) {
 		randomizedTest.questions = shuffleArray(test.questions);
 	}
 	if (test.randomizeAnswers) {
-		randomizedTest.questions = randomizedTest.questions.map((prevQuestion) => ({
-			...prevQuestion,
-			answers: shuffleArray(prevQuestion.answers),
-		}));
+		randomizedTest.questions = randomizedTest.questions.map((prevQuestion) => {
+			if (prevQuestion.type === "MULTIPLE_CHOICE") {
+				return {
+					...prevQuestion,
+					answers: shuffleArray((prevQuestion as MultipleChoiceQuestionType).answers),
+				};
+			} else {
+				return prevQuestion;
+			}
+		});
 	}
 
 	return randomizedTest as TestType;
 }
 
-export function renderTextWithLineBreaks(text: string){
-    // Replace new line characters with <br> tags
-    return text ? text.split('\n').map((line, index) => <React.Fragment key={index}>{line}<br/></React.Fragment>) : null;
-  };
+export function renderTextWithLineBreaks(text: string) {
+	// Replace new line characters with <br> tags
+	return text
+		? text.split("\n").map((line, index) => (
+				<React.Fragment key={index}>
+					{line}
+					<br />
+				</React.Fragment>
+		  ))
+		: null;
+}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/Input";
-import { MultipleChoiceQuestionType, TestType } from "../types/models";
+import { MultipleChoiceQuestionType, QuestionVariantsType, TestType } from "../types/models";
 import { useNavigate, useParams } from "react-router-dom";
 import ResetDialog from "../components/ui/Dialogs/ResetDialog";
 import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
@@ -26,8 +26,6 @@ const Create = () => {
 	const { toast } = useToast();
 	const { session } = useSession();
 
-
-
 	useEffect(() => {
 		//test generation
 		const initialLoad = async () => {
@@ -47,7 +45,7 @@ const Create = () => {
 				} else {
 					navigate("/404");
 				}
-			//if theres nothing in sessionStorage and no id passed in params, generate an empty test
+				//if theres nothing in sessionStorage and no id passed in params, generate an empty test
 			} else {
 				setHasParamId(false);
 				setTest(generateTest());
@@ -55,7 +53,6 @@ const Create = () => {
 		};
 		initialLoad();
 	}, [id]);
-
 
 	useEffect(() => {
 		updateTestAuthor();
@@ -210,24 +207,44 @@ const Create = () => {
 		}));
 	};
 
+	const handleQuestionTypeChange = (value: QuestionVariantsType["type"], questionIndex: number) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question, index) => {
+				if (index === questionIndex) {
+					return generateQuestion(value);
+				} else {
+					return question;
+				}
+			}),
+		}));
+	};
+
+	console.log(test)
 
 	const handleAnswerChange = (text: string, questionIndex: number, answerIndex: number) => {
-		if(test.questions[questionIndex].type === "MULTIPLE_CHOICE"){
-			if (answerIndex === (test.questions[questionIndex] as MultipleChoiceQuestionType).answers.length - 1) {
+		if (test.questions[questionIndex].type === "MULTIPLE_CHOICE") {
+			if (
+				answerIndex ===
+				(test.questions[questionIndex] as MultipleChoiceQuestionType).answers.length - 1
+			) {
 				setTest((prevTest) => {
 					let updatedTest = { ...prevTest };
-					(updatedTest.questions[questionIndex] as MultipleChoiceQuestionType).answers.push(generateAnswer());
+					(updatedTest.questions[questionIndex] as MultipleChoiceQuestionType).answers.push(
+						generateAnswer()
+					);
 					return updatedTest;
 				});
 			}
-	
+
 			setTest((prevTest) => {
 				let updatedTest = { ...prevTest };
-				(updatedTest.questions[questionIndex] as MultipleChoiceQuestionType).answers[answerIndex].answer = text;
+				(updatedTest.questions[questionIndex] as MultipleChoiceQuestionType).answers[
+					answerIndex
+				].answer = text;
 				return updatedTest;
 			});
 		}
-		
 	};
 
 	const handleAnswerDelete = (questionID: string, answerID: string) => {
@@ -248,7 +265,10 @@ const Create = () => {
 			...prevTest,
 			questions: prevTest.questions.map((question) =>
 				question.id == questionID
-					? { ...question, answers: [...(question as MultipleChoiceQuestionType).answers, generateAnswer()] }
+					? {
+							...question,
+							answers: [...(question as MultipleChoiceQuestionType).answers, generateAnswer()],
+					  }
 					: question
 			),
 		}));
@@ -307,6 +327,7 @@ const Create = () => {
 						onSetQuestionImage={handleSetQuestionImage}
 						onQuestionChange={handleQuestionChange}
 						onQuestionDelete={handleQuestionDelete}
+						onQuestionTypeChange={handleQuestionTypeChange}
 						onAnswerChange={handleAnswerChange}
 						onAnswerDelete={handleAnswerDelete}
 						toggleAnswerCorrect={handleToggleCorrectAnswer}
