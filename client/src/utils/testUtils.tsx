@@ -1,4 +1,4 @@
-import React from "react";
+import { Fragment } from "react";
 import { MultipleChoiceQuestionType, TestType } from "../types/models";
 
 export function validateTest(
@@ -76,10 +76,10 @@ export function renderTextWithLineBreaks(text: string) {
 	// Replace new line characters with <br> tags
 	return text
 		? text.split("\n").map((line, index) => (
-				<React.Fragment key={index}>
+				<Fragment key={index}>
 					{line}
 					<br />
-				</React.Fragment>
+				</Fragment>
 		  ))
 		: null;
 }

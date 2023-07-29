@@ -34,6 +34,7 @@ const Question = ({
 				<QuestionHeader
 					question={question}
 					questionIndex={questionIndex}
+					onQuestionChange={onQuestionChange}
 					onQuestionDelete={onQuestionDelete}
 					onSetQuestionImage={onSetQuestionImage}
 					onQuestionTypeChange={onQuestionTypeChange}
