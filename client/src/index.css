@@ -140,6 +140,10 @@ body {
 
 }
 
+.cm-editor.cm-focused { outline: none }
+
+
+
 /* width */
 ::-webkit-scrollbar {
 	width: 8px;

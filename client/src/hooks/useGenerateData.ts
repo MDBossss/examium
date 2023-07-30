@@ -20,6 +20,7 @@ const useGenerateData = () => {
 			type: type,
 			question: "",
 			createdAt: new Date(),
+			correctCode: ""
 
 		} as CodeQuestionType : {
 			id: uuidv4(),

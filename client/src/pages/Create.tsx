@@ -161,7 +161,6 @@ const Create = () => {
 			}));
 		} catch (error) {
 			setTitleError(true);
-			console.log(error);
 			toast({
 				description: "Title is at most 50 characters",
 				variant: "destructive",
@@ -219,8 +218,6 @@ const Create = () => {
 			}),
 		}));
 	};
-
-	console.log(test)
 
 	const handleAnswerChange = (text: string, questionIndex: number, answerIndex: number) => {
 		if (test.questions[questionIndex].type === "MULTIPLE_CHOICE") {
@@ -295,6 +292,18 @@ const Create = () => {
 		}));
 	};
 
+	const handleCorrectCodeChange = (correctCode: string, questionID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question) =>
+				question.id === questionID
+					? { ...(question as MultipleChoiceQuestionType), correctCode: correctCode }
+					: question
+			),
+		}));
+	};
+
+
 	return (
 		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
 			<SearchBar test={test} setTest={setTest} />
@@ -332,6 +341,7 @@ const Create = () => {
 						onAnswerDelete={handleAnswerDelete}
 						toggleAnswerCorrect={handleToggleCorrectAnswer}
 						onAnswerAdd={handleAddAnswer}
+						onCorrectCodeChange={handleCorrectCodeChange}
 					/>
 				);
 			})}

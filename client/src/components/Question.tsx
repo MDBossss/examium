@@ -9,11 +9,12 @@ interface Props {
 	onSetQuestionImage: (imageUrl: string | undefined, questionID: string) => void;
 	onQuestionChange: (text: string, questionID: string) => void;
 	onQuestionDelete: (questionID: string) => void;
-	onQuestionTypeChange: (value: QuestionVariantsType["type"],questionIndex:number) => void
+	onQuestionTypeChange: (value: QuestionVariantsType["type"], questionIndex: number) => void;
 	onAnswerAdd: (questionID: string) => void;
 	onAnswerChange: (text: string, questionIndex: number, answerIndex: number) => void;
 	onAnswerDelete: (questionID: string, answerID: string) => void;
 	toggleAnswerCorrect: (questionID: string, answerID: string) => void;
+	onCorrectCodeChange: (correctCode: string, questionID: string) => void;
 }
 
 const Question = ({
@@ -27,6 +28,7 @@ const Question = ({
 	onAnswerDelete,
 	onAnswerAdd,
 	toggleAnswerCorrect,
+	onCorrectCodeChange,
 }: Props) => {
 	return (
 		<div className=" bg-slate-200 w-full p-3 sm:p-5 rounded-sm">
@@ -43,14 +45,13 @@ const Question = ({
 					<MultipleChoiceQuestionContent
 						question={question}
 						questionIndex={questionIndex}
-						onQuestionChange={onQuestionChange}
 						onAnswerAdd={onAnswerAdd}
 						onAnswerChange={onAnswerChange}
 						onAnswerDelete={onAnswerDelete}
 						toggleAnswerCorrect={toggleAnswerCorrect}
 					/>
 				) : (
-					<CodeQuestion />
+					<CodeQuestion question={question} onCorrectCodeChange={onCorrectCodeChange} />
 				)}
 			</div>
 		</div>

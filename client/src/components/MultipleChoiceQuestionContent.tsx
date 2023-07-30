@@ -5,7 +5,6 @@ import { Button } from "./ui/Button";
 interface Props {
 	question: QuestionType;
 	questionIndex: number;
-	onQuestionChange: (text: string, questionID: string) => void;
 	onAnswerAdd: (questionID: string) => void;
 	onAnswerChange: (text: string, questionIndex: number, answerIndex: number) => void;
 	onAnswerDelete: (questionID: string, answerID: string) => void;
