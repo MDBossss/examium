@@ -319,7 +319,6 @@ const Create = () => {
 		}));
 	};
 
-	console.log(test)
 
 	return (
 		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">

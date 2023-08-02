@@ -1,11 +1,14 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import { TestType } from "../types/models";
+import { CodeQuestionType, MultipleChoiceQuestionType, TestType } from "../types/models";
 import { useEffect, useState } from "react";
 import QuizAnswer from "../components/QuizAnswer";
 import { Button } from "../components/ui/Button";
 import { fetchTestById } from "../utils/dbUtils";
 import { randomizeTest, renderTextWithLineBreaks } from "../utils/testUtils";
+import { notEmpty } from "../utils/genericUtils";
+import MDEditor from "@uiw/react-md-editor";
+import CodeMirror from "@uiw/react-codemirror";
 
 const Preview = () => {
 	const { id } = useParams();
@@ -15,11 +18,12 @@ const Preview = () => {
 	const [test, setTest] = useState<TestType>(location.state?.test);
 	const [questionNumber, setQuestionNumber] = useState<number>(0);
 	const [questionDone, setQuestionDone] = useState<boolean[]>([]);
-	const [answersChecked, setAnswersChecked] = useState<boolean[][]>([]);
-	const [disableNavigation,setDisableNavigation] = useState<boolean>(false);
+	// const [answersChecked, setAnswersChecked] = useState<boolean[][]>([]);
+	const [disableNavigation, setDisableNavigation] = useState<boolean>(false);
+
+	const [userAnswers, setUserAnswers] = useState<(boolean[] | string)[]>([]);
 
 	const line = document.getElementById("line");
-
 
 	useEffect(() => {
 		const initialLoad = async () => {
@@ -34,7 +38,7 @@ const Preview = () => {
 						navigate("/404");
 					});
 			} else if (test) {
-				setTest(randomizeTest(test))
+				setTest(randomizeTest(test));
 				setInitialData(randomizeTest(test));
 				setHasParamId(false);
 			} else {
@@ -45,19 +49,30 @@ const Preview = () => {
 		initialLoad();
 	}, [id]);
 
-
-
 	const setInitialData = (test: TestType) => {
 		setQuestionDone(Array(test.questions.length).fill(false));
-		setAnswersChecked(
-			test?.questions.map(() => Array(test?.questions[0].answers.length).fill(false))
+		// setAnswersChecked(
+		// 	test?.questions.map(() => Array(test?.questions[0].answers.length).fill(false))
+		// );
+		setUserAnswers(
+			test?.questions.map((question) =>
+				question.type === "MULTIPLE_CHOICE"
+					? Array<boolean>((question as MultipleChoiceQuestionType).answers.length).fill(false)
+					: ""
+			)
 		);
 	};
 
 	const handleCheck = (questionIndex: number, answerIndex: number) => {
-		setAnswersChecked((prev) => {
+		// setAnswersChecked((prev) => {
+		// 	const updatedAnswers = [...prev];
+		// 	updatedAnswers[questionIndex][answerIndex] = !updatedAnswers[questionIndex][answerIndex];
+		// 	return updatedAnswers;
+		// });
+		setUserAnswers((prev) => {
 			const updatedAnswers = [...prev];
-			updatedAnswers[questionIndex][answerIndex] = !updatedAnswers[questionIndex][answerIndex];
+			(updatedAnswers[questionIndex][answerIndex] as boolean) =
+				!updatedAnswers[questionIndex][answerIndex];
 			return updatedAnswers;
 		});
 	};
@@ -94,15 +109,15 @@ const Preview = () => {
 		});
 		line?.classList.add("filled");
 		setTimeout(() => {
-			setDisableNavigation(false)
+			setDisableNavigation(false);
 			line?.classList.remove("filled");
 			if (hasParamId) {
 				navigate("/solve/results", {
-					state: { test: test, answersChecked: answersChecked, hasParamId: hasParamId },
+					state: { test: test, userAnswers: userAnswers, hasParamId: hasParamId },
 				});
 			} else {
 				navigate("/create/preview/results", {
-					state: { test: test, answersChecked: answersChecked, hasParamId: hasParamId },
+					state: { test: test, userAnswers: userAnswers, hasParamId: hasParamId },
 				});
 			}
 		}, 3000);
@@ -127,24 +142,37 @@ const Preview = () => {
 				<h1 className="text-2xl font-bold text-left">
 					{renderTextWithLineBreaks(test?.questions[questionNumber].question)}
 				</h1>
-				<div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
-					{answersChecked.length > 1 &&
-						test.questions &&
-						test.questions.length > 0 &&
-						test?.questions[questionNumber].answers.map((answer, answerIndex) =>
-							answer.answer.length ? (
-								<QuizAnswer
-									key={answer.id}
-									answer={answer}
-									answerIndex={answerIndex}
-									isChecked={answersChecked[questionNumber][answerIndex]}
-									handleCheck={handleCheck}
-									questionNumber={questionNumber}
-									questionDone={questionDone}
-								/>
-							) : null
+				{notEmpty(userAnswers) &&
+				notEmpty(test.questions) &&
+				test.questions[questionNumber].type === "MULTIPLE_CHOICE" ? (
+					<div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
+						{(test?.questions[questionNumber] as MultipleChoiceQuestionType).answers.map(
+							(answer, answerIndex) =>
+								answer.answer && (
+									<QuizAnswer
+										key={answer.id}
+										answer={answer}
+										answerIndex={answerIndex}
+										isChecked={userAnswers[questionNumber][answerIndex] as boolean}
+										handleCheck={handleCheck}
+										questionNumber={questionNumber}
+										questionDone={questionDone}
+									/>
+								)
 						)}
-				</div>
+					</div>
+				) : (
+					<div className="flex flex-col gap-2 w-full">
+						{(test.questions[questionNumber] as CodeQuestionType).description && (
+							<MDEditor.Markdown
+								source={(test.questions[questionNumber] as CodeQuestionType).description}
+								className="p-2"
+							/>
+						)}
+
+						<CodeMirror minHeight="200px" width="100%" theme="light" />
+					</div>
+				)}
 				<div className="flex w-full gap-3 mt-12">
 					{questionNumber !== 0 && (
 						<Button

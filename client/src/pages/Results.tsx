@@ -19,15 +19,15 @@ const Results = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const test: TestType = location.state?.test;
-	const answersChecked: boolean[][] = location.state?.answersChecked;
+	const userAnswers: boolean[][] = location.state?.userAnswers;
 	const hasParamId: boolean = location.state?.hasParamId;
 
 	const { toast } = useToast();
-	const { userScore, maxScore } = useScore(test?.questions, answersChecked);
+	const { userScore, maxScore } = useScore(test?.questions, userAnswers);
 
 	//protection against users wandering to this route without any data
 	useEffect(() => {
-		if (!test || !answersChecked) {
+		if (!test || !userAnswers) {
 			navigate("/", { replace: true });
 		}
 	}, []);
@@ -97,7 +97,7 @@ const Results = () => {
 								<QuestionResult
 									key={question.id}
 									question={question}
-									answersChecked={answersChecked[questionIndex]}
+									answersChecked={userAnswers[questionIndex]}
 									questionIndex={questionIndex}
 								/>
 							);
