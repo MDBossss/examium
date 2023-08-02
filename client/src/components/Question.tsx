@@ -15,6 +15,7 @@ interface Props {
 	onAnswerDelete: (questionID: string, answerID: string) => void;
 	toggleAnswerCorrect: (questionID: string, answerID: string) => void;
 	onCorrectCodeChange: (correctCode: string, questionID: string) => void;
+	onMarkdownChange: (description:string,questionID: string) => void;
 }
 
 const Question = ({
@@ -29,6 +30,7 @@ const Question = ({
 	onAnswerAdd,
 	toggleAnswerCorrect,
 	onCorrectCodeChange,
+	onMarkdownChange
 }: Props) => {
 	return (
 		<div className=" bg-slate-200 w-full p-3 sm:p-5 rounded-sm">
@@ -51,7 +53,7 @@ const Question = ({
 						toggleAnswerCorrect={toggleAnswerCorrect}
 					/>
 				) : (
-					<CodeQuestion question={question} onCorrectCodeChange={onCorrectCodeChange} />
+					<CodeQuestion question={question} onCorrectCodeChange={onCorrectCodeChange} onMarkdownChange={onMarkdownChange}/>
 				)}
 			</div>
 		</div>

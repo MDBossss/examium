@@ -1,32 +1,26 @@
 import CodeMirror from "@uiw/react-codemirror";
 import MDEditor from "@uiw/react-md-editor";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { CodeQuestionType, QuestionType } from "../types/models";
 
 interface Props {
 	question: QuestionType;
 	onCorrectCodeChange: (correctCode: string, questionID: string) => void;
+	onMarkdownChange: (description:string,questionID: string) => void;
 }
 
-const CodeQuestion = ({ question, onCorrectCodeChange }: Props) => {
-	const [md, setMd] = useState<string>();
-	const onChange = useCallback((value: string) => {
-		onCorrectCodeChange(value, question.id);
-	}, []);
+const CodeQuestion = ({ question, onCorrectCodeChange, onMarkdownChange }: Props) => {
+	const [darkMode] = useState<boolean>(false);
 
-	const onMdChange = useCallback((value: string) => {
-		setMd(value);
-	}, []);
 
-	//there is no state to update to make it dark mode so will have to make something
-	document.documentElement.setAttribute('data-color-mode', 'light')
+	//there iis no built it state to handle the dark/light mode in the actual component
+	darkMode ? document.documentElement.setAttribute('data-color-mode', 'dark') : document.documentElement.setAttribute('data-color-mode', 'light')
 
 	return (
 		<div className="flex flex-col ">
 			<p className=" bg-primary px-5 pt-2 rounded-t-sm font-bold text-xs">DESCRIPTION</p>
 			<div className="bg-primary px-5 pb-5">
-				<MDEditor value={md} onChange={setMd} />
-				<MDEditor.Markdown source={md} style={{ whiteSpace: "pre-wrap" }} />
+				<MDEditor value={(question as CodeQuestionType).description} onChange={(value) => onMarkdownChange(value!,question.id)} />
 			</div>
 			<p className=" bg-primary px-5 pt-2  rounded-t-sm font-bold text-xs">CORRECT CODE</p>
 			<CodeMirror
@@ -34,7 +28,7 @@ const CodeQuestion = ({ question, onCorrectCodeChange }: Props) => {
 				width="100%"
 				theme="light"
 				className="bg-primary p-5 pt-0 rounded-t-none rounded-sm outline-none border-none"
-				onChange={onChange}
+				onChange={(value) => onCorrectCodeChange(value,question.id)}
 				value={(question as CodeQuestionType).correctCode}
 			/>
 		</div>

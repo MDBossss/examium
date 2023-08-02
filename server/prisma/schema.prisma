@@ -58,7 +58,7 @@ model MultipleChoiceQuestion {
 model CodeQuestion {
   questionId  String   @id
   correctCode String   @db.Text
-  description String?  @db.VarChar(1024)
+  description String?  @db.Text
   Question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 

@@ -4,7 +4,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/Input";
-import { MultipleChoiceQuestionType, QuestionVariantsType, TestType } from "../types/models";
+import {
+	CodeQuestionType,
+	MultipleChoiceQuestionType,
+	QuestionVariantsType,
+	TestType,
+} from "../types/models";
 import ResetDialog from "../components/ui/Dialogs/ResetDialog";
 import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
 import { z } from "zod";
@@ -297,12 +302,24 @@ const Create = () => {
 			...prevTest,
 			questions: prevTest.questions.map((question) =>
 				question.id === questionID
-					? { ...(question as MultipleChoiceQuestionType), correctCode: correctCode }
+					? { ...(question as CodeQuestionType), correctCode: correctCode }
 					: question
 			),
 		}));
 	};
 
+	const handleMarkdownChange = (description: string, questionID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question) =>
+				question.id === questionID
+					? { ...(question as CodeQuestionType), description: description }
+					: question
+			),
+		}));
+	};
+
+	console.log(test)
 
 	return (
 		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
@@ -342,6 +359,7 @@ const Create = () => {
 						toggleAnswerCorrect={handleToggleCorrectAnswer}
 						onAnswerAdd={handleAddAnswer}
 						onCorrectCodeChange={handleCorrectCodeChange}
+						onMarkdownChange={handleMarkdownChange}
 					/>
 				);
 			})}
