@@ -1,14 +1,13 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import { CodeQuestionType, MultipleChoiceQuestionType, TestType } from "../types/models";
+import { MultipleChoiceQuestionType, TestType } from "../types/models";
 import { useEffect, useState } from "react";
-import QuizAnswer from "../components/QuizAnswer";
 import { Button } from "../components/ui/Button";
 import { fetchTestById } from "../utils/dbUtils";
 import { randomizeTest, renderTextWithLineBreaks } from "../utils/testUtils";
 import { notEmpty } from "../utils/genericUtils";
-import MDEditor from "@uiw/react-md-editor";
-import CodeMirror from "@uiw/react-codemirror";
+import MultipleChoiceQuestionSolve from "../components/MultipleChoiceQuestionSolve";
+import CodeQuestionSolve from "../components/CodeQuestionSolve";
 
 const Preview = () => {
 	const { id } = useParams();
@@ -31,15 +30,17 @@ const Preview = () => {
 				setHasParamId(true);
 				await fetchTestById(id)
 					.then((response) => {
-						setTest(randomizeTest(response));
-						setInitialData(randomizeTest(response));
+						const randomizedTest = randomizeTest(response);
+						setTest(randomizedTest);
+						setInitialData(randomizedTest);
 					})
 					.catch(() => {
 						navigate("/404");
 					});
 			} else if (test) {
-				setTest(randomizeTest(test));
-				setInitialData(randomizeTest(test));
+				const randomizedTest = randomizeTest(test);
+				setTest(randomizedTest);
+				setInitialData(randomizedTest);
 				setHasParamId(false);
 			} else {
 				setHasParamId(false);
@@ -123,6 +124,14 @@ const Preview = () => {
 		}, 3000);
 	};
 
+	const handleCodeChange = (value: string) => {
+		setUserAnswers((prev) => {
+			const updatedUserAnswers = [...prev];
+			updatedUserAnswers[questionNumber] = value;
+			return updatedUserAnswers;
+		});
+	};
+
 	return (
 		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
 			<SearchBar />
@@ -145,33 +154,19 @@ const Preview = () => {
 				{notEmpty(userAnswers) &&
 				notEmpty(test.questions) &&
 				test.questions[questionNumber].type === "MULTIPLE_CHOICE" ? (
-					<div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3">
-						{(test?.questions[questionNumber] as MultipleChoiceQuestionType).answers.map(
-							(answer, answerIndex) =>
-								answer.answer && (
-									<QuizAnswer
-										key={answer.id}
-										answer={answer}
-										answerIndex={answerIndex}
-										isChecked={userAnswers[questionNumber][answerIndex] as boolean}
-										handleCheck={handleCheck}
-										questionNumber={questionNumber}
-										questionDone={questionDone}
-									/>
-								)
-						)}
-					</div>
+					<MultipleChoiceQuestionSolve
+						test={test}
+						userAnswers={userAnswers}
+						questionNumber={questionNumber}
+						questionDone={questionDone}
+						handleCheck={handleCheck}
+					/>
 				) : (
-					<div className="flex flex-col gap-2 w-full">
-						{(test.questions[questionNumber] as CodeQuestionType).description && (
-							<MDEditor.Markdown
-								source={(test.questions[questionNumber] as CodeQuestionType).description}
-								className="p-2"
-							/>
-						)}
-
-						<CodeMirror minHeight="200px" width="100%" theme="light" />
-					</div>
+					<CodeQuestionSolve
+						test={test}
+						questionNumber={questionNumber}
+						handleCodeChange={handleCodeChange}
+					/>
 				)}
 				<div className="flex w-full gap-3 mt-12">
 					{questionNumber !== 0 && (
