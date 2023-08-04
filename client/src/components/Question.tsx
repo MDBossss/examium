@@ -1,7 +1,7 @@
 import { QuestionType, QuestionVariantsType } from "../types/models";
 import QuestionHeader from "./QuestionHeader";
-import MultipleChoiceQuestionContent from "./MultipleChoiceQuestionContent";
-import CodeQuestion from "./CodeQuestion";
+import MultipleChoiceQuestionContent from "./MultipleChoiceQuestion/MultipleChoiceQuestionContent";
+import CodeQuestion from "./CodeQuestion/CodeQuestion";
 
 interface Props {
 	question: QuestionType;

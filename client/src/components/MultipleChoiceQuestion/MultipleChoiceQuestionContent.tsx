@@ -1,6 +1,6 @@
-import { MultipleChoiceQuestionType, QuestionType } from "../types/models";
-import Answer from "./Answer";
-import { Button } from "./ui/Button";
+import { MultipleChoiceQuestionType, QuestionType } from "../../types/models";
+import Answer from "../Answer";
+import { Button } from "../ui/Button";
 
 interface Props {
 	question: QuestionType;

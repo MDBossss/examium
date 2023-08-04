@@ -351,6 +351,7 @@ class TestController {
 								codeQuestion: question.type === 'CODE' ? {
 									create: {
 									correctCode: (question as CodeQuestionType).correctCode,
+									description: (question as CodeQuestionType).description
 									},
 								} : undefined,
 							},
@@ -393,9 +394,11 @@ class TestController {
 									upsert:{
 										create:{
 											correctCode: (question as CodeQuestionType).correctCode,
+											description: (question as CodeQuestionType).description
 										},
 										update:{
 											correctCode: (question as CodeQuestionType).correctCode,
+											description: (question as CodeQuestionType).description
 										}
 									}
 								}: undefined

@@ -1,5 +1,5 @@
-import { MultipleChoiceQuestionType, TestType } from "../types/models";
-import QuizAnswer from "./QuizAnswer";
+import { MultipleChoiceQuestionType, TestType } from "../../types/models";
+import QuizAnswer from "../QuizAnswer";
 
 interface Props {
 	test: TestType;

@@ -1,6 +1,6 @@
-import { MultipleChoiceQuestionType, QuestionType } from "../types/models";
-import { renderTextWithLineBreaks } from "../utils/testUtils";
-import ResultAnswer from "./ui/ResultAnswer";
+import { MultipleChoiceQuestionType, QuestionType } from "../../types/models";
+import { renderTextWithLineBreaks } from "../../utils/testUtils";
+import ResultAnswer from "../ui/ResultAnswer";
 
 interface Props {
 	question: QuestionType;
@@ -8,7 +8,7 @@ interface Props {
 	questionIndex: number;
 }
 
-const QuestionResult = ({ question, questionIndex, answersChecked }: Props) => {
+const MultipleChoiceQuestionResult = ({ question, questionIndex, answersChecked }: Props) => {
 	return (
 		<div className="flex flex-col sm:flex-row w-full border gap-5 border-slate-200 p-5">
 			<div className="flex flex-1 flex-col gap-2">
@@ -42,4 +42,4 @@ const QuestionResult = ({ question, questionIndex, answersChecked }: Props) => {
 	);
 };
 
-export default QuestionResult;
+export default MultipleChoiceQuestionResult;

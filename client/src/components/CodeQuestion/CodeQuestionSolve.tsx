@@ -1,19 +1,20 @@
-import { CodeQuestionType, TestType } from "../types/models";
+import { CodeQuestionType, TestType } from "../../types/models";
 import MDEditor from "@uiw/react-md-editor";
 import CodeMirror from "@uiw/react-codemirror";
 
 interface Props {
 	test: TestType;
 	questionNumber: number;
+	userCode: string;
 	handleCodeChange: (value: string) => void;
 }
 
-const CodeQuestionSolve = ({ test, questionNumber, handleCodeChange }: Props) => {
+const CodeQuestionSolve = ({ test, questionNumber, userCode, handleCodeChange }: Props) => {
 	return (
 		<div className="flex flex-col gap-2 w-full">
-			{(test.questions[questionNumber] as CodeQuestionType).description && (
+			{(test?.questions[questionNumber] as CodeQuestionType)?.description && (
 				<MDEditor.Markdown
-					source={(test.questions[questionNumber] as CodeQuestionType).description}
+					source={(test?.questions[questionNumber] as CodeQuestionType).description}
 					className="p-2"
 				/>
 			)}
@@ -23,6 +24,7 @@ const CodeQuestionSolve = ({ test, questionNumber, handleCodeChange }: Props) =>
 				width="100%"
 				theme="light"
 				onChange={(value) => handleCodeChange(value)}
+				value={userCode}
 			/>
 		</div>
 	);

@@ -6,8 +6,8 @@ import { Button } from "../components/ui/Button";
 import { fetchTestById } from "../utils/dbUtils";
 import { randomizeTest, renderTextWithLineBreaks } from "../utils/testUtils";
 import { notEmpty } from "../utils/genericUtils";
-import MultipleChoiceQuestionSolve from "../components/MultipleChoiceQuestionSolve";
-import CodeQuestionSolve from "../components/CodeQuestionSolve";
+import MultipleChoiceQuestionSolve from "../components/MultipleChoiceQuestion/MultipleChoiceQuestionSolve";
+import CodeQuestionSolve from "../components/CodeQuestion/CodeQuestionSolve";
 
 const Preview = () => {
 	const { id } = useParams();
@@ -165,6 +165,7 @@ const Preview = () => {
 					<CodeQuestionSolve
 						test={test}
 						questionNumber={questionNumber}
+						userCode={userAnswers[questionNumber] as string}
 						handleCodeChange={handleCodeChange}
 					/>
 				)}

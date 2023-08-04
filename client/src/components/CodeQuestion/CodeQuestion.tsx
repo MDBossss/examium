@@ -1,7 +1,7 @@
 import CodeMirror from "@uiw/react-codemirror";
 import MDEditor from "@uiw/react-md-editor";
 import { useState } from "react";
-import { CodeQuestionType, QuestionType } from "../types/models";
+import { CodeQuestionType, QuestionType } from "../../types/models";
 
 interface Props {
 	question: QuestionType;

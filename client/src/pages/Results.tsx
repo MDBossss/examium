@@ -12,14 +12,15 @@ import {
 import { useScore } from "../hooks/useScore";
 import SettingsDisplay from "../components/ui/SettingsDisplay";
 import ScoreDisplay from "../components/ui/ScoreDisplay";
-import QuestionResult from "../components/QuestionResult";
+import MultipleChoiceQuestionResult from "../components/MultipleChoiceQuestion/MultipleChoiceQuestionResult";
 import { useToast } from "../hooks/useToast";
+import CodeQuestionResult from "../components/CodeQuestion/CodeQuestionResult";
 
 const Results = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const test: TestType = location.state?.test;
-	const userAnswers: boolean[][] = location.state?.userAnswers;
+	const userAnswers: (boolean[] | string)[] = location.state?.userAnswers;
 	const hasParamId: boolean = location.state?.hasParamId;
 
 	const { toast } = useToast();
@@ -91,17 +92,25 @@ const Results = () => {
 					<p className="self-start font-medium">
 						Your answers: ({userScore.value}/{maxScore} correct)
 					</p>
+
 					{test.showQuestionsOnResults &&
-						test?.questions.map((question, questionIndex) => {
-							return (
-								<QuestionResult
+						test.questions.map((question, questionIndex) =>
+							question.type === "MULTIPLE_CHOICE" ? (
+								<MultipleChoiceQuestionResult
 									key={question.id}
 									question={question}
-									answersChecked={userAnswers[questionIndex]}
+									answersChecked={userAnswers[questionIndex] as boolean[]}
 									questionIndex={questionIndex}
 								/>
-							);
-						})}
+							) : (
+								<CodeQuestionResult
+									key={question.id}
+									question={question}
+									userCode={userAnswers[questionIndex] as string}
+									questionIndex={questionIndex}
+								/>
+							)
+						)}
 				</div>
 			</div>
 			<div
