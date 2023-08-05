@@ -140,11 +140,10 @@ export async function deleteTest(test: TestType) {
 	}
 }
 
-export async function checkCode(firstCode: string, secondCode: string) {
-	const code = { firstCode, secondCode };
+export async function checkCode(task:string,firstCode: string, secondCode: string) {
+	const code = { task, firstCode, secondCode };
 	try {
 		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/code`, code);
-		console.log(response)
 		return response.data;
 	} catch (error) {
 		throw new Error("Failed to check code.");

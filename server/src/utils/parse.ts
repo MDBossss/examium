@@ -1,4 +1,4 @@
 export function parseBoolean(value: string) {
-	if (value === "true") return true;
-	else if (value === "false") return false;
+	if (value.toLowerCase() === "true") return true;
+	else if (value.toLowerCase() === "false") return false;
 }

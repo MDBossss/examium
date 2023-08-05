@@ -9,16 +9,16 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const systemMessage: string =
-	'Your will be provided with 2 code snippets, your task will be to say "true" if the 2 code snippets have the same function/achieve the same result, or "false" if they do not.';
+	'Your will be provided a task along with 2 code snippets, your task will be to say "true" if the 2 code snippets achieve the task, or "false" if they do not.';
 
 /**
  * Currently the openai api cannot be tested due to api limit exceeded
  */
 class CodeController {
 	async compare(req: Request, res: Response) {
-		const { firstCode, secondCode } = req.body;
+		const { task, firstCode, secondCode } = req.body;
 
-		const userMessage = `first code: ${firstCode} \n second code: ${secondCode}`;
+		const userMessage = `Task: ${task}first code: ${firstCode} \n second code: ${secondCode}`;
 
 		try {
 			const response = await openai.createChatCompletion({
@@ -33,14 +33,14 @@ class CodeController {
 						content: userMessage,
 					},
 				],
-				temperature: 1,
+				temperature: 0.1,
 				max_tokens: 256,
 				top_p: 1,
 				frequency_penalty: 0,
 				presence_penalty: 0,
 			});
 			/**Have to parse the reponse to a boolean value */
-			console.log(parseBoolean(response.data.choices[0].message?.content!))
+			console.log(response.data.choices[0].message?.content)
             res.status(200).json(parseBoolean(response.data.choices[0].message?.content!))
 		} catch (error: any) {
 			if(error.response && error.response.status === 429){

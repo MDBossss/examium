@@ -18,7 +18,7 @@ const CodeQuestionResult = ({ question, userCode, questionIndex, onSetCodeCorrec
 
 	useEffect(() => {
 		const initialLoad = async () => {
-			const res = await checkCode(userCode.userCode, (question as CodeQuestionType).correctCode);
+			const res = await checkCode(question.question,userCode.userCode, (question as CodeQuestionType).correctCode);
 			onSetCodeCorrect(res, questionIndex);
 		};
 		initialLoad();
