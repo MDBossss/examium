@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CodeQuestionType, MultipleChoiceQuestionType, QuestionType } from "../types/models";
+import { CodeAnswer, MultipleChoiceQuestionType, QuestionType } from "../types/models";
 
 interface UserScore {
 	value: number;
@@ -11,7 +11,7 @@ const initialUserScore:UserScore = {
     percentage: 0
 }
 
-export const useScore = (questions:QuestionType[], userAnswers:(boolean[] | string)[]) => {
+export const useScore = (questions:QuestionType[], userAnswers:(boolean[] | CodeAnswer)[]) => {
 	const [userScore, setUserScore] = useState<UserScore>(initialUserScore);
 	const [maxScore, setMaxScore] = useState<number>(0);
 
@@ -25,18 +25,14 @@ export const useScore = (questions:QuestionType[], userAnswers:(boolean[] | stri
 						maxScore++;
 					}
 	
-					if (answer.isCorrect && userAnswers[questionIndex][answerIndex]) {
+					if (answer.isCorrect && (userAnswers[questionIndex] as boolean[])[answerIndex]) {
 						answeredCorrect++;
 					}
 				});
 			}
 			else if(question.type === "CODE"){
 				maxScore++;
-				/**
-				 * This logic needs to implement openai' api to have chatgpt compare the 2 code samples and based on the result give points,
-				 * currently it only checks if the code is identical
-				 */
-				if((question as CodeQuestionType).correctCode === userAnswers[questionIndex]){
+				if((userAnswers[questionIndex] as CodeAnswer).isCorrect){
 					answeredCorrect++;
 				}
 			}
@@ -48,7 +44,7 @@ export const useScore = (questions:QuestionType[], userAnswers:(boolean[] | stri
 			percentage: Math.floor((answeredCorrect / maxScore) * 100),
 		});
 		setMaxScore(maxScore);
-	}, []);
+	}, [userAnswers]);
 
     return {userScore, maxScore}
 };

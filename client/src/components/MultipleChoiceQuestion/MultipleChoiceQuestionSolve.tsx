@@ -1,10 +1,10 @@
-import { MultipleChoiceQuestionType, TestType } from "../../types/models";
+import { CodeAnswer, MultipleChoiceQuestionType, TestType } from "../../types/models";
 import QuizAnswer from "../QuizAnswer";
 
 interface Props {
 	test: TestType;
 	questionNumber: number;
-	userAnswers: (string | boolean[])[];
+	userAnswers: (CodeAnswer | boolean[])[];
 	questionDone: boolean[];
 	handleCheck: (questionIndex: number, answerIndex: number) => void;
 }
@@ -25,7 +25,7 @@ const MultipleChoiceQuestionSolve = ({
 							key={answer.id}
 							answer={answer}
 							answerIndex={answerIndex}
-							isChecked={userAnswers[questionNumber][answerIndex] as boolean}
+							isChecked={(userAnswers[questionNumber] as boolean[] )[answerIndex] as boolean}
 							handleCheck={handleCheck}
 							questionNumber={questionNumber}
 							questionDone={questionDone}

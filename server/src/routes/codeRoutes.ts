@@ -6,6 +6,6 @@ const codeController = new CodeController();
 
 router.use(express.json());
 
-router.get("/",codeController.compare);
+router.post("/",codeController.compare);
 
 export default router;

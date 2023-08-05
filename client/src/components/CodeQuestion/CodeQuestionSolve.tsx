@@ -1,11 +1,11 @@
-import { CodeQuestionType, TestType } from "../../types/models";
+import { CodeAnswer, CodeQuestionType, TestType } from "../../types/models";
 import MDEditor from "@uiw/react-md-editor";
 import CodeMirror from "@uiw/react-codemirror";
 
 interface Props {
 	test: TestType;
 	questionNumber: number;
-	userCode: string;
+	userCode: CodeAnswer;
 	handleCodeChange: (value: string) => void;
 }
 
@@ -24,7 +24,7 @@ const CodeQuestionSolve = ({ test, questionNumber, userCode, handleCodeChange }:
 				width="100%"
 				theme="light"
 				onChange={(value) => handleCodeChange(value)}
-				value={userCode}
+				value={userCode?.userCode}
 			/>
 		</div>
 	);

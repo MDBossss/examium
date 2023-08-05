@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import { MultipleChoiceQuestionType, TestType } from "../types/models";
+import { CodeAnswer, MultipleChoiceQuestionType, TestType } from "../types/models";
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { fetchTestById } from "../utils/dbUtils";
@@ -20,7 +20,7 @@ const Preview = () => {
 	// const [answersChecked, setAnswersChecked] = useState<boolean[][]>([]);
 	const [disableNavigation, setDisableNavigation] = useState<boolean>(false);
 
-	const [userAnswers, setUserAnswers] = useState<(boolean[] | string)[]>([]);
+	const [userAnswers, setUserAnswers] = useState<(boolean[] | CodeAnswer)[]>([]);
 
 	const line = document.getElementById("line");
 
@@ -59,21 +59,16 @@ const Preview = () => {
 			test?.questions.map((question) =>
 				question.type === "MULTIPLE_CHOICE"
 					? Array<boolean>((question as MultipleChoiceQuestionType).answers.length).fill(false)
-					: ""
+					: { isCorrect: false, userCode: "" }
 			)
 		);
 	};
 
 	const handleCheck = (questionIndex: number, answerIndex: number) => {
-		// setAnswersChecked((prev) => {
-		// 	const updatedAnswers = [...prev];
-		// 	updatedAnswers[questionIndex][answerIndex] = !updatedAnswers[questionIndex][answerIndex];
-		// 	return updatedAnswers;
-		// });
 		setUserAnswers((prev) => {
 			const updatedAnswers = [...prev];
-			(updatedAnswers[questionIndex][answerIndex] as boolean) =
-				!updatedAnswers[questionIndex][answerIndex];
+			const answer = updatedAnswers[questionIndex] as boolean[];
+			answer[answerIndex] = !answer[answerIndex];
 			return updatedAnswers;
 		});
 	};
@@ -127,7 +122,7 @@ const Preview = () => {
 	const handleCodeChange = (value: string) => {
 		setUserAnswers((prev) => {
 			const updatedUserAnswers = [...prev];
-			updatedUserAnswers[questionNumber] = value;
+			(updatedUserAnswers[questionNumber] as CodeAnswer).userCode = value;
 			return updatedUserAnswers;
 		});
 	};
@@ -165,7 +160,7 @@ const Preview = () => {
 					<CodeQuestionSolve
 						test={test}
 						questionNumber={questionNumber}
-						userCode={userAnswers[questionNumber] as string}
+						userCode={userAnswers[questionNumber] as CodeAnswer}
 						handleCodeChange={handleCodeChange}
 					/>
 				)}

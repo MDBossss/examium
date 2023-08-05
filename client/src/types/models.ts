@@ -52,3 +52,8 @@ export interface AnswerType {
 	isCorrect: boolean;
 	createdAt: Date;
 }
+
+export interface CodeAnswer{
+	userCode: string,
+	isCorrect: boolean
+}

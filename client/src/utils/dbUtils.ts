@@ -29,8 +29,8 @@ export async function fetchUserById(userId: string) {
 	}
 }
 
-export async function fetchUserByEmail(email:string){
-	try{
+export async function fetchUserByEmail(email: string) {
+	try {
 		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/email/${email}`);
 		if (response.status === 200) {
 			// User exists, return the data
@@ -119,11 +119,13 @@ export async function fetchTestById(testId: string) {
 	}
 }
 
-export async function fetchCollaborationTestsByUserId(userId: string){
-	try{
-		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/tests/collaborations/${userId}`);
+export async function fetchCollaborationTestsByUserId(userId: string) {
+	try {
+		const response = await axios.get(
+			`${import.meta.env.VITE_API_BASE_URL}/tests/collaborations/${userId}`
+		);
 		return response.data as TestType[];
-	}catch(error){
+	} catch (error) {
 		throw new Error("Failed to fetch user collaborations");
 	}
 }
@@ -134,6 +136,17 @@ export async function deleteTest(test: TestType) {
 		removeAllTestImagesFromBucket(test);
 		return response.data;
 	} catch (error) {
-		throw new Error("Failed to  test");
+		throw new Error("Failed to delete test");
+	}
+}
+
+export async function checkCode(firstCode: string, secondCode: string) {
+	const code = { firstCode, secondCode };
+	try {
+		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/code`, code);
+		console.log(response)
+		return response.data;
+	} catch (error) {
+		throw new Error("Failed to check code.");
 	}
 }

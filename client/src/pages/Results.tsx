@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { TestType } from "../types/models";
-import { useEffect } from "react";
+import { CodeAnswer, TestType } from "../types/models";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import { ArrowLeft, MoreVertical, Printer, RotateCcw } from "lucide-react";
 import {
@@ -20,9 +20,11 @@ const Results = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const test: TestType = location.state?.test;
-	const userAnswers: (boolean[] | string)[] = location.state?.userAnswers;
 	const hasParamId: boolean = location.state?.hasParamId;
 
+	const [userAnswers, setUserAnswers] = useState<(boolean[] | CodeAnswer)[]>(
+		location.state.userAnswers
+	);
 	const { toast } = useToast();
 	const { userScore, maxScore } = useScore(test?.questions, userAnswers);
 
@@ -53,6 +55,14 @@ const Results = () => {
 		toast({
 			description: "Couldn't connect to printer.",
 			variant: "destructive",
+		});
+	};
+
+	const handleSetCodeCorrect = (value: boolean, questionIndex: number) => {
+		setUserAnswers((prev) => {
+			const updatedUserAnswers = [...prev];
+			(updatedUserAnswers[questionIndex] as CodeAnswer).isCorrect = value;
+			return updatedUserAnswers;
 		});
 	};
 
@@ -106,8 +116,9 @@ const Results = () => {
 								<CodeQuestionResult
 									key={question.id}
 									question={question}
-									userCode={userAnswers[questionIndex] as string}
+									userCode={userAnswers[questionIndex] as CodeAnswer}
 									questionIndex={questionIndex}
+									onSetCodeCorrect={handleSetCodeCorrect}
 								/>
 							)
 						)}

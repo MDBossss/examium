@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Configuration, OpenAIApi } from "openai";
+import { parseBoolean } from "../utils/parse";
 
 const configuration = new Configuration({
 	apiKey: process.env.OPENAI_API_KEY,
@@ -39,7 +40,8 @@ class CodeController {
 				presence_penalty: 0,
 			});
 			/**Have to parse the reponse to a boolean value */
-            res.status(200).json(response)
+			console.log(parseBoolean(response.data.choices[0].message?.content!))
+            res.status(200).json(parseBoolean(response.data.choices[0].message?.content!))
 		} catch (error: any) {
 			if(error.response && error.response.status === 429){
 				res.status(429).json({error: "OpenAI API rate limit exceeded."})
