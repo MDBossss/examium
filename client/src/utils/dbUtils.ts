@@ -144,7 +144,7 @@ export async function checkCode(task:string,firstCode: string, secondCode: strin
 	const code = { task, firstCode, secondCode };
 	try {
 		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/code`, code);
-		return response.data;
+		return response.data as {isCorrect: boolean, description: string | undefined};
 	} catch (error) {
 		throw new Error("Failed to check code.");
 	}
