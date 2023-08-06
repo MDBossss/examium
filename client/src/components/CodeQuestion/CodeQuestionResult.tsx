@@ -1,10 +1,12 @@
-import { useEffect} from "react";
+import { useEffect, useState } from "react";
 import { cn } from "../../lib/utils";
 import { CodeAnswer, CodeQuestionType, QuestionType } from "../../types/models";
 import { renderTextWithLineBreaks } from "../../utils/testUtils";
 import CodeMirror from "@uiw/react-codemirror";
 import MDEditor from "@uiw/react-md-editor";
 import { checkCode } from "../../utils/dbUtils";
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "../ui/Spinner";
 
 interface Props {
 	question: QuestionType;
@@ -16,13 +18,24 @@ interface Props {
 const CodeQuestionResult = ({ question, userCode, questionIndex, onSetCodeCorrect }: Props) => {
 	/**boolean value that will be returned from the chatgpt api's code comparison */
 
-	useEffect(() => {
-		const initialLoad = async () => {
-			const res = await checkCode(question.question,userCode.userCode, (question as CodeQuestionType).correctCode);
-			onSetCodeCorrect(res, questionIndex);
-		};
-		initialLoad();
-	}, []);
+	// useEffect(() => {
+	// 	const initialLoad = async () => {
+	// 		const {isCorrect,description} = await checkCode(question.question,userCode.userCode, (question as CodeQuestionType).correctCode);
+	// 		onSetCodeCorrect(isCorrect, questionIndex);
+	// 		setDescription(description)
+	// 	};
+	// 	initialLoad();
+	// }, []);
+
+	const { data, isLoading } = useQuery({
+		queryKey: ["code", userCode],
+		queryFn: () =>
+			checkCode(question.question, userCode.userCode, (question as CodeQuestionType).correctCode),
+		onSuccess: (data) => {
+			onSetCodeCorrect(data.isCorrect, questionIndex);
+		},
+		refetchOnWindowFocus: false,
+	});
 
 	return (
 		<div className="flex flex-col-reverse w-full border gap-5 border-slate-200 p-5">
@@ -55,6 +68,13 @@ const CodeQuestionResult = ({ question, userCode, questionIndex, onSetCodeCorrec
 						<CodeMirror value={userCode.userCode} readOnly />
 					</div>
 				</div>
+				{isLoading ? (
+					<Spinner />
+				) : (
+					<div>
+						<MDEditor.Markdown source={data?.description} className="p-2" />
+					</div>
+				)}
 			</div>
 			<div className="flex flex-1 items-center justify-center aspect-w-2 aspect-h-1 ">
 				{question.imageUrl && (
