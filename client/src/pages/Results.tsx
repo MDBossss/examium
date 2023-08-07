@@ -25,8 +25,10 @@ const Results = () => {
 	const test: TestType = location.state?.test;
 	const hasParamId: boolean = location.state?.hasParamId;
 
-	const {isDarkmode} = useDarkmodeStore();
-	isDarkmode ? document.documentElement.setAttribute('data-color-mode', 'dark') : document.documentElement.setAttribute('data-color-mode', 'light')
+	const { isDarkmode } = useDarkmodeStore();
+	isDarkmode
+		? document.documentElement.setAttribute("data-color-mode", "dark")
+		: document.documentElement.setAttribute("data-color-mode", "light");
 
 	const [userAnswers, setUserAnswers] = useState<(boolean[] | CodeAnswer)[]>(
 		location.state.userAnswers
@@ -61,10 +63,14 @@ const Results = () => {
 	};
 
 	const handlePrint = () => {
-		toast({
-			description: "Couldn't connect to printer.",
-			variant: "destructive",
-		});
+		try {
+			window.print();
+		} catch (error) {
+			toast({
+				description: "Couldn't connect to printer.",
+				variant: "destructive",
+			});
+		}
 	};
 
 	const handleSetCodeCorrect = (value: boolean, questionIndex: number) => {
@@ -117,8 +123,8 @@ const Results = () => {
 						/>
 						<SettingsDisplay test={test} />
 					</div>
-					<div className="flex flex-col w-full gap-3 mt-10">
-						<p className="self-start font-medium">
+					<div className="flex flex-col w-full gap-3 mt-10 ">
+						<p className="self-start font-medium printable">
 							Your answers: ({userScore.value}/{maxScore} correct)
 						</p>
 
