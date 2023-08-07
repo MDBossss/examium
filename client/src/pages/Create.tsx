@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
+import { useSession } from "@clerk/clerk-react";
+import { useNavigate, useParams } from "react-router-dom";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/Input";
-import { TestType } from "../types/models";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+	CodeQuestionType,
+	MultipleChoiceQuestionType,
+	QuestionVariantsType,
+	TestType,
+} from "../types/models";
 import ResetDialog from "../components/ui/Dialogs/ResetDialog";
 import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
 import { z } from "zod";
 import { useToast } from "../hooks/useToast";
 import useGenerateData from "../hooks/useGenerateData";
 import { validateTest } from "../utils/testUtils";
-import { useSession } from "@clerk/clerk-react";
 import { createTest, deleteTest, fetchTestById, updateTest } from "../utils/dbUtils";
 import CollaborationsDialog from "../components/ui/Dialogs/CollaborationsDialog";
+import { useDarkmodeStore } from "../store/darkmodeStore";
 
 const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
 
@@ -25,6 +31,11 @@ const Create = () => {
 	const navigate = useNavigate();
 	const { toast } = useToast();
 	const { session } = useSession();
+
+	const {isDarkmode} = useDarkmodeStore();
+
+	isDarkmode ? document.documentElement.setAttribute('data-color-mode', 'dark') : document.documentElement.setAttribute('data-color-mode', 'light')
+
 
 	useEffect(() => {
 		//test generation
@@ -45,7 +56,7 @@ const Create = () => {
 				} else {
 					navigate("/404");
 				}
-			//if theres nothing in sessionStorage and no id passed in params, generate an empty test
+				//if theres nothing in sessionStorage and no id passed in params, generate an empty test
 			} else {
 				setHasParamId(false);
 				setTest(generateTest());
@@ -53,7 +64,6 @@ const Create = () => {
 		};
 		initialLoad();
 	}, [id]);
-
 
 	useEffect(() => {
 		updateTestAuthor();
@@ -162,7 +172,6 @@ const Create = () => {
 			}));
 		} catch (error) {
 			setTitleError(true);
-			console.log(error);
 			toast({
 				description: "Title is at most 50 characters",
 				variant: "destructive",
@@ -197,7 +206,7 @@ const Create = () => {
 	const handleAddQuestion = () => {
 		setTest((prevTest) => ({
 			...prevTest,
-			questions: [...prevTest.questions, generateQuestion()],
+			questions: [...prevTest.questions, generateQuestion(prevTest.defaultQuestionType)],
 		}));
 	};
 
@@ -208,20 +217,42 @@ const Create = () => {
 		}));
 	};
 
+	const handleQuestionTypeChange = (value: QuestionVariantsType["type"], questionIndex: number) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question, index) => {
+				if (index === questionIndex) {
+					return generateQuestion(value);
+				} else {
+					return question;
+				}
+			}),
+		}));
+	};
+
 	const handleAnswerChange = (text: string, questionIndex: number, answerIndex: number) => {
-		if (answerIndex === test.questions[questionIndex].answers.length - 1) {
+		if (test.questions[questionIndex].type === "MULTIPLE_CHOICE") {
+			if (
+				answerIndex ===
+				(test.questions[questionIndex] as MultipleChoiceQuestionType).answers.length - 1
+			) {
+				setTest((prevTest) => {
+					let updatedTest = { ...prevTest };
+					(updatedTest.questions[questionIndex] as MultipleChoiceQuestionType).answers.push(
+						generateAnswer()
+					);
+					return updatedTest;
+				});
+			}
+
 			setTest((prevTest) => {
 				let updatedTest = { ...prevTest };
-				updatedTest.questions[questionIndex].answers.push(generateAnswer());
+				(updatedTest.questions[questionIndex] as MultipleChoiceQuestionType).answers[
+					answerIndex
+				].answer = text;
 				return updatedTest;
 			});
 		}
-
-		setTest((prevTest) => {
-			let updatedTest = { ...prevTest };
-			updatedTest.questions[questionIndex].answers[answerIndex].answer = text;
-			return updatedTest;
-		});
 	};
 
 	const handleAnswerDelete = (questionID: string, answerID: string) => {
@@ -231,8 +262,8 @@ const Create = () => {
 				...question,
 				answers:
 					question.id === questionID
-						? question.answers.filter((ans) => ans.id !== answerID)
-						: question.answers,
+						? (question as MultipleChoiceQuestionType).answers.filter((ans) => ans.id !== answerID)
+						: (question as MultipleChoiceQuestionType).answers,
 			})),
 		}));
 	};
@@ -242,7 +273,10 @@ const Create = () => {
 			...prevTest,
 			questions: prevTest.questions.map((question) =>
 				question.id == questionID
-					? { ...question, answers: [...question.answers, generateAnswer()] }
+					? {
+							...question,
+							answers: [...(question as MultipleChoiceQuestionType).answers, generateAnswer()],
+					  }
 					: question
 			),
 		}));
@@ -255,7 +289,7 @@ const Create = () => {
 				question.id === questionID
 					? {
 							...question,
-							answers: question.answers.map((answer) =>
+							answers: (question as MultipleChoiceQuestionType).answers.map((answer) =>
 								answer.id === answerID
 									? {
 											...answer,
@@ -268,6 +302,29 @@ const Create = () => {
 			),
 		}));
 	};
+
+	const handleCorrectCodeChange = (correctCode: string, questionID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question) =>
+				question.id === questionID
+					? { ...(question as CodeQuestionType), correctCode: correctCode }
+					: question
+			),
+		}));
+	};
+
+	const handleMarkdownChange = (description: string, questionID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question) =>
+				question.id === questionID
+					? { ...(question as CodeQuestionType), description: description }
+					: question
+			),
+		}));
+	};
+
 
 	return (
 		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
@@ -301,10 +358,13 @@ const Create = () => {
 						onSetQuestionImage={handleSetQuestionImage}
 						onQuestionChange={handleQuestionChange}
 						onQuestionDelete={handleQuestionDelete}
+						onQuestionTypeChange={handleQuestionTypeChange}
 						onAnswerChange={handleAnswerChange}
 						onAnswerDelete={handleAnswerDelete}
 						toggleAnswerCorrect={handleToggleCorrectAnswer}
 						onAnswerAdd={handleAddAnswer}
+						onCorrectCodeChange={handleCorrectCodeChange}
+						onMarkdownChange={handleMarkdownChange}
 					/>
 				);
 			})}

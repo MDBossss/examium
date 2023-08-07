@@ -1,5 +1,5 @@
-import React from "react";
-import { TestType } from "../types/models";
+import { Fragment } from "react";
+import { CodeQuestionType, MultipleChoiceQuestionType, TestType } from "../types/models";
 
 export function validateTest(
 	test: TestType,
@@ -18,15 +18,47 @@ export function validateTest(
 		messages.push("Test needs to have at least 2 questions!");
 	}
 
+	test.questions.map((question) => {
+		if (!question.question) {
+			testValid = false;
+			messages.push("Question cannot be empty!");
+		}
+
+		if (question.type === "MULTIPLE_CHOICE") {
+			if ((question as MultipleChoiceQuestionType).answers.length < 2) {
+				testValid = false;
+				messages.push("Question must have at least 2 answers!");
+			}
+
+			(question as MultipleChoiceQuestionType).answers.map((answer) => {
+				if ((!answer.answer) && ((question as MultipleChoiceQuestionType).answers.length < 3)) {
+					testValid = false;
+					messages.push("Answer cannot be empty!");
+					return;
+				}
+			});
+		} else if (question.type === "CODE") {
+			if (!(question as CodeQuestionType).correctCode) {
+				testValid = false;
+				messages.push("Question must have correct code!");
+			}
+		}
+	});
+
 	if (testValid) {
 		setTest((prevTest) => {
 			let updatedTest = { ...prevTest };
 			updatedTest.questions.forEach((question, questionIndex) => {
-				question.answers.forEach((answer, answerIndex) => {
-					if (answer.answer === "") {
-						updatedTest.questions[questionIndex].answers.splice(answerIndex, 1);
-					}
-				});
+				if (question.type === "MULTIPLE_CHOICE") {
+					(question as MultipleChoiceQuestionType).answers.forEach((answer, answerIndex) => {
+						if (answer.answer === "") {
+							(updatedTest.questions[questionIndex] as MultipleChoiceQuestionType).answers.splice(
+								answerIndex,
+								1
+							);
+						}
+					});
+				}
 			});
 			return updatedTest;
 		});
@@ -52,16 +84,29 @@ export function randomizeTest(test: TestType) {
 		randomizedTest.questions = shuffleArray(test.questions);
 	}
 	if (test.randomizeAnswers) {
-		randomizedTest.questions = randomizedTest.questions.map((prevQuestion) => ({
-			...prevQuestion,
-			answers: shuffleArray(prevQuestion.answers),
-		}));
+		randomizedTest.questions = randomizedTest.questions.map((prevQuestion) => {
+			if (prevQuestion.type === "MULTIPLE_CHOICE") {
+				return {
+					...prevQuestion,
+					answers: shuffleArray((prevQuestion as MultipleChoiceQuestionType).answers),
+				};
+			} else {
+				return prevQuestion;
+			}
+		});
 	}
 
 	return randomizedTest as TestType;
 }
 
-export function renderTextWithLineBreaks(text: string){
-    // Replace new line characters with <br> tags
-    return text ? text.split('\n').map((line, index) => <React.Fragment key={index}>{line}<br/></React.Fragment>) : null;
-  };
+export function renderTextWithLineBreaks(text: string) {
+	// Replace new line characters with <br> tags
+	return text
+		? text.split("\n").map((line, index) => (
+				<Fragment key={index}>
+					{line}
+					<br />
+				</Fragment>
+		  ))
+		: null;
+}

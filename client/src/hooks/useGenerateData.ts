@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { AnswerType, QuestionType, TestType, UserType } from "../types/models";
+import { AnswerType, CodeQuestionType, MultipleChoiceQuestionType, QuestionVariantsType, TestType, UserType } from "../types/models";
 import {UserResource} from "@clerk/types"
 
 
@@ -14,13 +14,21 @@ const useGenerateData = () => {
 		}
 	};
 
-	const generateQuestion = (): QuestionType => {
-		return {
+	const generateQuestion = (type: QuestionVariantsType["type"]): CodeQuestionType | MultipleChoiceQuestionType => {
+		return (type === "CODE") ? {
 			id: uuidv4(),
+			type: type,
 			question: "",
 			createdAt: new Date(),
-			answers: [generateAnswer()],
-		} 
+			correctCode: ""
+
+		} as CodeQuestionType : {
+			id: uuidv4(),
+			type: type,
+			question: "",
+			createdAt: new Date(),
+			answers: [generateAnswer()]
+		} as MultipleChoiceQuestionType
 	};
 
 	const generateTest = () => {
@@ -32,8 +40,9 @@ const useGenerateData = () => {
 			showQuestionsOnResults: true,
 			randomizeQuestions: false,
 			randomizeAnswers: false,
+			defaultQuestionType: "MULTIPLE_CHOICE",
 			createdAt: new Date(),
-			questions: [generateQuestion()],
+			questions: [generateQuestion("MULTIPLE_CHOICE")],
 		} as TestType;
 	};
 

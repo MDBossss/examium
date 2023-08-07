@@ -14,6 +14,7 @@ export interface TestType {
 	showQuestionsOnResults: boolean;
 	randomizeQuestions: boolean;
 	randomizeAnswers: boolean;
+	defaultQuestionType: QuestionVariantsType["type"]
 	createdAt: Date;
 	updatedAt?: Date;
 	authorId?: string;
@@ -23,12 +24,26 @@ export interface TestType {
 	questions: QuestionType[];
 }
 
+export interface QuestionVariantsType{
+	type: "MULTIPLE_CHOICE" | "CODE"
+}
+
 export interface QuestionType {
 	id: string;
+	type: QuestionVariantsType["type"]
 	question: string;
 	imageUrl?: string;
 	createdAt: Date;
+}
+
+export interface MultipleChoiceQuestionType extends QuestionType{
 	answers: AnswerType[];
+
+}
+
+export interface CodeQuestionType extends QuestionType{
+	correctCode: string,
+	description?: string
 }
 
 export interface AnswerType {
@@ -36,4 +51,9 @@ export interface AnswerType {
 	answer: string;
 	isCorrect: boolean;
 	createdAt: Date;
+}
+
+export interface CodeAnswer{
+	userCode: string,
+	isCorrect: boolean
 }
