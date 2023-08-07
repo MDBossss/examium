@@ -1,7 +1,7 @@
 import CodeMirror from "@uiw/react-codemirror";
 import MDEditor from "@uiw/react-md-editor";
-import { useState } from "react";
 import { CodeQuestionType, QuestionType } from "../../types/models";
+import { useDarkmodeStore } from "../../store/darkmodeStore";
 
 interface Props {
 	question: QuestionType;
@@ -10,11 +10,11 @@ interface Props {
 }
 
 const CodeQuestion = ({ question, onCorrectCodeChange, onMarkdownChange }: Props) => {
-	const [darkMode] = useState<boolean>(false);
+	const {isDarkmode} = useDarkmodeStore();
 
 
 	//there iis no built it state to handle the dark/light mode in the actual component
-	darkMode ? document.documentElement.setAttribute('data-color-mode', 'dark') : document.documentElement.setAttribute('data-color-mode', 'light')
+	isDarkmode ? document.documentElement.setAttribute('data-color-mode', 'dark') : document.documentElement.setAttribute('data-color-mode', 'light')
 
 	return (
 		<div className="flex flex-col ">

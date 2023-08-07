@@ -12,16 +12,23 @@ interface Props {
 	userCode: CodeAnswer;
 	questionIndex: number;
 	onSetCodeCorrect: (value: boolean, questionIndex: number) => void;
+	onLoaded: () => void;
 }
 
-const CodeQuestionResult = ({ question, userCode, questionIndex, onSetCodeCorrect }: Props) => {
-
+const CodeQuestionResult = ({
+	question,
+	userCode,
+	questionIndex,
+	onSetCodeCorrect,
+	onLoaded,
+}: Props) => {
 	const { data, isLoading } = useQuery({
 		queryKey: ["code", userCode],
 		queryFn: () =>
 			checkCode(question.question, userCode.userCode, (question as CodeQuestionType).correctCode),
 		onSuccess: (data) => {
 			onSetCodeCorrect(data.isCorrect, questionIndex);
+			onLoaded();
 		},
 		refetchOnWindowFocus: false,
 	});
@@ -33,6 +40,15 @@ const CodeQuestionResult = ({ question, userCode, questionIndex, onSetCodeCorrec
 				<p className="text-medium font-bold text-zinc-800">
 					{renderTextWithLineBreaks(question.question)}
 				</p>
+				<div className="flex flex-1 items-center justify-center aspect-w-2 aspect-h-1 ">
+					{question.imageUrl && (
+						<img
+							className="object-cover border border-slate-200"
+							src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${question.imageUrl}`}
+							alt="img"
+						/>
+					)}
+				</div>
 				<div>
 					<MDEditor.Markdown source={(question as CodeQuestionType).description} className="p-2" />
 				</div>
@@ -63,15 +79,6 @@ const CodeQuestionResult = ({ question, userCode, questionIndex, onSetCodeCorrec
 					<div>
 						<MDEditor.Markdown source={data?.description} className="p-2" />
 					</div>
-				)}
-			</div>
-			<div className="flex flex-1 items-center justify-center aspect-w-2 aspect-h-1 ">
-				{question.imageUrl && (
-					<img
-						className="object-cover border border-slate-200"
-						src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${question.imageUrl}`}
-						alt="img"
-					/>
 				)}
 			</div>
 		</div>

@@ -18,6 +18,7 @@ import useGenerateData from "../hooks/useGenerateData";
 import { validateTest } from "../utils/testUtils";
 import { createTest, deleteTest, fetchTestById, updateTest } from "../utils/dbUtils";
 import CollaborationsDialog from "../components/ui/Dialogs/CollaborationsDialog";
+import { useDarkmodeStore } from "../store/darkmodeStore";
 
 const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
 
@@ -30,6 +31,11 @@ const Create = () => {
 	const navigate = useNavigate();
 	const { toast } = useToast();
 	const { session } = useSession();
+
+	const {isDarkmode} = useDarkmodeStore();
+
+	isDarkmode ? document.documentElement.setAttribute('data-color-mode', 'dark') : document.documentElement.setAttribute('data-color-mode', 'light')
+
 
 	useEffect(() => {
 		//test generation
