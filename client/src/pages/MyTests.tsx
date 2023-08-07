@@ -8,6 +8,7 @@ import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import { useCallback, useState } from "react";
 import { TestType } from "../types/models";
+import { notEmpty } from "../utils/genericUtils";
 
 const MyTests = () => {
 	const {session} = useSession()
@@ -54,11 +55,14 @@ const MyTests = () => {
 						</Button>
 					</div>
 					{isLoading && !isError ? (
-						<Spinner />
+						<Spinner className="flex justify-center p-5"/>
 					) : (
 						data?.map((test) => <TestItem key={test.id} test={test}/>)
 					)}
-					{!isLoading && isError && <div>Error loading tests</div>}
+					{isError && <div className="flex justify-center p-5">Error loading tests 😓</div>}
+					{data && !notEmpty(data) && (
+						<div className="flex justify-center p-5">You have no tests 😅</div>
+					)}
 				</div>
 			</div>
 		</div>

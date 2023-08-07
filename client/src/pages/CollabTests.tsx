@@ -8,6 +8,7 @@ import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import Spinner from "../components/ui/Spinner";
 import TestItem from "../components/TestItem";
+import { notEmpty } from "../utils/genericUtils";
 
 const CollabTests = () => {
 	const { session } = useSession();
@@ -30,6 +31,9 @@ const CollabTests = () => {
 		enabled: !!userId,
 	});
 
+	console.log(data);
+	console.log(isLoading);
+	console.log(isError);
 
 	return (
 		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
@@ -53,11 +57,14 @@ const CollabTests = () => {
 						</Button>
 					</div>
 					{isLoading && !isError ? (
-						<Spinner />
+						<Spinner className="flex justify-center p-5" />
 					) : (
-						data?.map((test) => <TestItem key={test.id} test={test}/>)
+						data?.map((test) => <TestItem key={test.id} test={test} />)
 					)}
-					{!isLoading && isError && <div>Error loading tests</div>}
+					{isError && <div className="flex justify-center p-5">Error loading tests 😓</div>}
+					{data && !notEmpty(data) && (
+						<div className="flex justify-center p-5">You have no collaborations 😅</div>
+					)}
 				</div>
 			</div>
 		</div>

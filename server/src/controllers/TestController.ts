@@ -34,7 +34,7 @@ class TestController {
 				},
 			});
 			if (!tests || tests.length === 0) {
-				return res.status(404).json({ error: "No tests found." });
+				return res.status(200).json([]);
 			}
 			res.status(200).json(tests);
 		} catch (error) {
@@ -55,7 +55,7 @@ class TestController {
 				},
 			});
 			if (!tests || tests.length === 0) {
-				return res.status(404).json({ error: "No tests found." });
+				return res.status(200).json([]);
 			}
 			res.status(200).json(tests);
 		} catch (error) {
