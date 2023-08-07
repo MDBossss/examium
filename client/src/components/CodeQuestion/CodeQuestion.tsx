@@ -18,7 +18,7 @@ const CodeQuestion = ({ question, onCorrectCodeChange, onMarkdownChange }: Props
 
 	return (
 		<div className="flex flex-col ">
-			<p className=" bg-primary px-5 pt-2 rounded-t-sm font-bold text-xs">DESCRIPTION</p>
+			<p className=" bg-primary px-5 pt-2 rounded-t-sm font-bold text-xs">DESCRIPTION (OPTIONAL)</p>
 			<div className="bg-primary px-5 pb-5">
 				<MDEditor value={(question as CodeQuestionType).description} onChange={(value) => onMarkdownChange(value!,question.id)} />
 			</div>

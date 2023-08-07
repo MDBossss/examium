@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { MultipleChoiceQuestionType, TestType } from "../types/models";
+import { CodeQuestionType, MultipleChoiceQuestionType, TestType } from "../types/models";
 
 export function validateTest(
 	test: TestType,
@@ -17,6 +17,33 @@ export function validateTest(
 		testValid = false;
 		messages.push("Test needs to have at least 2 questions!");
 	}
+
+	test.questions.map((question) => {
+		if (!question.question) {
+			testValid = false;
+			messages.push("Question cannot be empty!");
+		}
+
+		if (question.type === "MULTIPLE_CHOICE") {
+			if ((question as MultipleChoiceQuestionType).answers.length < 2) {
+				testValid = false;
+				messages.push("Question must have at least 2 answers!");
+			}
+
+			(question as MultipleChoiceQuestionType).answers.map((answer) => {
+				if ((!answer.answer) && ((question as MultipleChoiceQuestionType).answers.length < 3)) {
+					testValid = false;
+					messages.push("Answer cannot be empty!");
+					return;
+				}
+			});
+		} else if (question.type === "CODE") {
+			if (!(question as CodeQuestionType).correctCode) {
+				testValid = false;
+				messages.push("Question must have correct code!");
+			}
+		}
+	});
 
 	if (testValid) {
 		setTest((prevTest) => {
@@ -83,5 +110,3 @@ export function renderTextWithLineBreaks(text: string) {
 		  ))
 		: null;
 }
-
-
