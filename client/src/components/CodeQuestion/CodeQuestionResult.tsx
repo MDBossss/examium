@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { cn } from "../../lib/utils";
 import { CodeAnswer, CodeQuestionType, QuestionType } from "../../types/models";
 import { renderTextWithLineBreaks } from "../../utils/testUtils";
@@ -16,16 +15,6 @@ interface Props {
 }
 
 const CodeQuestionResult = ({ question, userCode, questionIndex, onSetCodeCorrect }: Props) => {
-	/**boolean value that will be returned from the chatgpt api's code comparison */
-
-	// useEffect(() => {
-	// 	const initialLoad = async () => {
-	// 		const {isCorrect,description} = await checkCode(question.question,userCode.userCode, (question as CodeQuestionType).correctCode);
-	// 		onSetCodeCorrect(isCorrect, questionIndex);
-	// 		setDescription(description)
-	// 	};
-	// 	initialLoad();
-	// }, []);
 
 	const { data, isLoading } = useQuery({
 		queryKey: ["code", userCode],
