@@ -128,10 +128,10 @@ const Preview = () => {
 	};
 
 	return (
-		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
+		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
 			<SearchBar />
-			<div className=" max-w-5xl mx-auto flex gap-5 flex-col w-full items-center bg-slate-200 p-7">
-				<h2 className="text-md font-medium text-blue-500">{test?.title}</h2>
+			<div className="flex flex-col items-center w-full max-w-5xl gap-5 mx-auto bg-slate-200 dark:bg-gray-800 p-7">
+				<h2 className="font-medium text-blue-500 dark:text-blue-600 text-md">{test?.title}</h2>
 				{test?.questions[questionNumber].imageUrl && (
 					<div className="w-full">
 						<img
@@ -167,7 +167,7 @@ const Preview = () => {
 				<div className="flex w-full gap-3 mt-12">
 					{questionNumber !== 0 && (
 						<Button
-							className="flex-1 py-7 bg-blue-500 hover:bg-blue-600"
+							className="flex-1 bg-blue-500 py-7 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
 							onClick={handleDecrementQuestion}
 							disabled={disableNavigation}
 						>
@@ -177,7 +177,7 @@ const Preview = () => {
 
 					{questionNumber !== test?.questions.length - 1 && (
 						<Button
-							className="flex-1 py-7 bg-blue-500 hover:bg-blue-600"
+							className="flex-1 bg-blue-500 py-7 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
 							onClick={handleIncrementQuestion}
 							disabled={disableNavigation}
 						>
@@ -188,7 +188,7 @@ const Preview = () => {
 				<div className="flex w-full gap-3">
 					{questionNumber == test?.questions.length - 1 && (
 						<Button
-							className="flex-1 py-7 text-lg bg-green-500 hover:bg-green-600"
+							className="flex-1 text-lg bg-green-500 py-7 hover:bg-green-600 dark:hover:bg-green-600"
 							onClick={handleFinishTest}
 							disabled={disableNavigation}
 						>

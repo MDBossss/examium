@@ -5,11 +5,25 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuLabel,
+	DropdownMenuPortal,
 	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "./Dropdown";
 import { Button } from "./Button";
-import { FileIcon, LogOutIcon, PlusIcon, UserIcon, UsersIcon } from "lucide-react";
+import {
+	FileIcon,
+	LaptopIcon,
+	LogOutIcon,
+	MoonIcon,
+	PaletteIcon,
+	PlusIcon,
+	SunIcon,
+	UserIcon,
+	UsersIcon,
+} from "lucide-react";
 import ProgressDialog from "./Dialogs/ProgressDialog";
 import useNavigationDialog from "../../hooks/useNavigationDialog";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,6 +34,7 @@ import useGenerateData from "../../hooks/useGenerateData";
 import { createUser, fetchUserById } from "../../utils/dbUtils";
 import Spinner from "./Spinner";
 import ProfileDialog from "./Dialogs/ProfileDialog";
+import { useThemeStore } from "../../store/themeStore";
 
 interface Props {
 	setTest?: (test: TestType) => void;
@@ -36,6 +51,7 @@ const LoginButton = ({ test }: Props) => {
 	const [userChecked, setUserChecked] = useState<boolean>(false);
 	const [showProfileDialog, setShowProfileDialog] = useState<boolean>(false);
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
+	const {clearTheme,setTheme} = useThemeStore();
 
 	useEffect(() => {
 		const checkUser = async () => {
@@ -57,13 +73,12 @@ const LoginButton = ({ test }: Props) => {
 		checkUser();
 	}, [session]);
 
-	const handleToggleProfile = (value:boolean) => {
-		if(value == true){
+	const handleToggleProfile = (value: boolean) => {
+		if (value == true) {
 			setShowProfileDialog(value);
 			document.body.style.overflow = "hidden";
-		}
-		else{
-			setShowProfileDialog(value)
+		} else {
+			setShowProfileDialog(value);
 			document.body.style.overflow = "";
 		}
 	};
@@ -72,7 +87,7 @@ const LoginButton = ({ test }: Props) => {
 		await signOut();
 		session?.end;
 		setUserChecked(false);
-		sessionStorage.removeItem("test")
+		sessionStorage.removeItem("test");
 		navigate("/");
 		toast({
 			title: "👋 Successfully logged out.",
@@ -80,7 +95,7 @@ const LoginButton = ({ test }: Props) => {
 	};
 
 	const handleSignIn = () => {
-		if(test){
+		if (test) {
 			sessionStorage.setItem("test", JSON.stringify(test));
 		}
 		openSignIn({ redirectUrl: location.pathname });
@@ -108,7 +123,8 @@ const LoginButton = ({ test }: Props) => {
 							</AvatarFallback>
 						</Avatar>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent className="bg-primary">
+					<DropdownMenuContent className="">
+						
 						<DropdownMenuLabel>My Account</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem className="flex gap-1" onClick={() => handleToggleProfile(true)}>
@@ -129,6 +145,29 @@ const LoginButton = ({ test }: Props) => {
 						>
 							<UsersIcon className="h-4 w-4" /> Collaborations
 						</DropdownMenuItem>
+						<DropdownMenuSub>
+							<DropdownMenuSubTrigger className="flex gap-1">
+								<PaletteIcon  className="h-4 w-4" />
+								<span>Theme</span>
+							</DropdownMenuSubTrigger>
+							<DropdownMenuPortal>
+								<DropdownMenuSubContent>
+									<DropdownMenuItem className="flex gap-1" onClick={() => setTheme("light")}>
+										<SunIcon className="h-4 w-4" />
+										<span>Light</span>
+									</DropdownMenuItem>
+									<DropdownMenuItem className="flex gap-1"  onClick={() => setTheme("dark")}>
+										<MoonIcon className="h-4 w-4" />
+										<span>Dark</span>
+									</DropdownMenuItem>
+									<DropdownMenuSeparator />
+									<DropdownMenuItem className="flex gap-1" onClick={() => clearTheme()}>
+										<LaptopIcon className="h-4 w-4" />
+										<span>System</span>
+									</DropdownMenuItem>
+								</DropdownMenuSubContent>
+							</DropdownMenuPortal>
+						</DropdownMenuSub>
 						<DropdownMenuItem className="flex gap-1" onClick={handleLogout}>
 							<LogOutIcon className="h-4 w-4" /> Logout
 						</DropdownMenuItem>

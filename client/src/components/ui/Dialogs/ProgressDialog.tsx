@@ -27,7 +27,7 @@ const ProgressDialog = ({ onContinue,onCancel,dialogOpen }: Props) => {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-					<AlertDialogAction className="bg-red-500 hover:bg-red-600" onClick={onContinue}>
+					<AlertDialogAction className="bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700" onClick={onContinue}>
 						Continue
 					</AlertDialogAction>
 				</AlertDialogFooter>

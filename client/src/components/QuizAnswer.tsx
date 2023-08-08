@@ -46,7 +46,7 @@ const QuizAnswer = ({
 	return (
 		<div
 			className={`${
-				selectedCorrect ? "bg-green-300" : selectedWrong ? "bg-red-500" : "bg-primary"
+				selectedCorrect ? "bg-green-300 dark:bg-green-500" : selectedWrong ? "bg-red-500" : "bg-my_primary dark:bg-gray-950"
 			} flex items-center gap-2 p-4 rounded-sm transition-all cursor-pointer`}
 			onClick={() => handleClick()}
 		>

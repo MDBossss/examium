@@ -7,8 +7,24 @@ import Layout from "./pages/Layout";
 import Results from "./pages/Results";
 import MyTests from "./pages/MyTests";
 import CollabTests from "./pages/CollabTests";
+import { useEffect } from "react";
+import { useThemeStore } from "./store/themeStore";
+
+
+
 
 function App() {
+  const {theme} = useThemeStore();
+
+  useEffect(() => {
+    // On page load or when changing themes, add inline in `head` to avoid FOUC
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
   return (
     <div>
       <Routes>

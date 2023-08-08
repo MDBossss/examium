@@ -3,7 +3,7 @@ import { Button } from "./ui/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProgressDialog from "./ui/Dialogs/ProgressDialog";
 import useNavigationDialog from "../hooks/useNavigationDialog";
-import Logo from "./ui/Logo";
+import Logo from "./ui/logo";
 import { useSession } from "@clerk/clerk-react";
 
 const Navbar = () => {
@@ -11,6 +11,19 @@ const Navbar = () => {
 	const navigate = useNavigate();
 	const { session } = useSession();
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
+
+	const navItems = [
+		{
+			location: `/tests/${session?.user.id}`,
+			title: "My tests",
+			icon: <FileIcon className="w-5 h-5" />,
+		},
+		{
+			location: `/collaborations/${session?.user.id}`,
+			title: "Collaborations",
+			icon: <UsersIcon className="w-5 h-5" />,
+		},
+	];
 
 	const handlePreviewTest = () => {
 		window.scrollTo({
@@ -37,7 +50,7 @@ const Navbar = () => {
 				/>
 			)}
 			<div className="flex-col justify-between min-w-[204px] h-screen hidden md:flex">
-				<div className="flex flex-col justify-between fixed p-3 h-screen bg-slate-200">
+				<div className="flex flex-col justify-between fixed p-3 h-screen bg-slate-200 dark:bg-gray-900">
 					<div className="flex flex-col h-full gap-5">
 						<div
 							className="flex gap-1 items-center text-xl cursor-pointer"
@@ -49,7 +62,7 @@ const Navbar = () => {
 						{location.pathname === "/create/preview" ||
 						location.pathname === "/create/preview/results" ? (
 							<Button
-								className="bg-blue-500 hover:bg-blue-600 flex items-center gap-2"
+								className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600  dark:hover:bg-blue-700 flex items-center gap-2"
 								onClick={() => handleBack()}
 							>
 								Back to editor <EditIcon className="w-5 h-5" />
@@ -57,7 +70,7 @@ const Navbar = () => {
 						) : null}
 
 						<Button
-							className="bg-blue-500 hover:bg-blue-600 flex items-center gap-2"
+							className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600  dark:hover:bg-blue-700 flex items-center gap-2"
 							onClick={() => handleNavigate("/create")}
 						>
 							New test <PlusIcon className="w-6 h-6" />
@@ -66,24 +79,17 @@ const Navbar = () => {
 							<div className="h-full">
 								<h4 className=" text-sm border-gray-300 border-b">Menu</h4>
 								<ul className="py-2 text-md flex flex-col gap-1">
-									<li>
-										<div
-											className="flex items-center gap-1 cursor-pointer p-1 rounded-sm transition-all hover:bg-slate-300"
-											onClick={() => handleNavigate(`/tests/${session.user.id}`)}
-										>
-											<FileIcon className="w-5 h-5" />
-											My tests
-										</div>
-									</li>
-									<li>
-										<div
-											className="flex items-center gap-1 cursor-pointer p-1 rounded-sm transition-all hover:bg-slate-300"
-											onClick={() => handleNavigate(`/collaborations/${session.user.id}`)}
-										>
-											<UsersIcon className="w-5 h-5" />
-											Collaborations
-										</div>
-									</li>
+									{navItems.map((item) => (
+										<li>
+											<div
+												className="flex items-center gap-1 cursor-pointer p-1 rounded-sm transition-all hover:bg-slate-300 dark:hover:bg-gray-800"
+												onClick={() => handleNavigate(item.location)}
+											>
+												{item.icon}
+												{item.title}
+											</div>
+										</li>
+									))}
 								</ul>
 							</div>
 						) : (
@@ -98,7 +104,10 @@ const Navbar = () => {
 					</div>
 					{location.pathname.startsWith("/create") && location.pathname !== "/create/preview" && (
 						<div className="flex">
-							<Button className="bg-blue-500 hover:bg-blue-600 flex-1" onClick={handlePreviewTest}>
+							<Button
+								className="bg-blue-500 hover:bg-blue-600  dark:bg-blue-600  dark:hover:bg-blue-700 flex-1"
+								onClick={handlePreviewTest}
+							>
 								Preview test
 							</Button>
 						</div>

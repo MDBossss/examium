@@ -43,7 +43,7 @@ const MultipleChoiceQuestionContent = ({
 			<div className="flex justify-end">
 				<Button
 					variant="ghost"
-					className="text-blue-500 font-bold text-lg hover:bg-transparent hover:text-blue-600"
+					className="text-lg font-bold text-blue-500 dark:text-blue-600 dark:hover:text-blue-700 hover:bg-transparent hover:text-blue-600"
 					onClick={() => onAnswerAdd(question.id)}
 				>
 					Add answer +

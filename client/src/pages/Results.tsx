@@ -17,7 +17,7 @@ import { useToast } from "../hooks/useToast";
 import CodeQuestionResult from "../components/CodeQuestion/CodeQuestionResult";
 import { useQuestionCount } from "../hooks/useQuestionCount";
 import Spinner from "../components/ui/Spinner";
-import { useDarkmodeStore } from "../store/darkmodeStore";
+import { useThemeStore } from "../store/themeStore";
 
 const Results = () => {
 	const location = useLocation();
@@ -25,8 +25,8 @@ const Results = () => {
 	const test: TestType = location.state?.test;
 	const hasParamId: boolean = location.state?.hasParamId;
 
-	const { isDarkmode } = useDarkmodeStore();
-	isDarkmode
+	const { theme } = useThemeStore();
+	theme === "dark"
 		? document.documentElement.setAttribute("data-color-mode", "dark")
 		: document.documentElement.setAttribute("data-color-mode", "light");
 
@@ -92,34 +92,34 @@ const Results = () => {
 					<span className="text-lg font-bold">Calculating results...</span> <Spinner />
 				</div>
 			)}
-			<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
+			<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
 				<SearchBar />
-				<div className="max-w-7xl mx-auto flex flex-col w-full items-center">
-					<div className="flex w-full justify-between items-center py-5">
-						<div className="flex gap-5 items-center">
-							<ArrowLeft className="w-7 h-7 text-blue-500 cursor-pointer" onClick={handleReturn} />
+				<div className="flex flex-col items-center w-full mx-auto max-w-7xl">
+					<div className="flex items-center justify-between w-full py-5">
+						<div className="flex items-center gap-5">
+							<ArrowLeft className="text-blue-500 cursor-pointer w-7 h-7" onClick={handleReturn} />
 							<h1 className="text-2xl font-">{test?.title}</h1>
 						</div>
 						<DropdownMenu>
-							<DropdownMenuTrigger className="outline-none border text-slate-400 border-slate-200 p-2 rounded-sm hover:bg-slate-200 transition-all">
+							<DropdownMenuTrigger className="p-2 transition-all border rounded-sm outline-none ">
 								<MoreVertical />
 							</DropdownMenuTrigger>
-							<DropdownMenuContent className="bg-primary">
+							<DropdownMenuContent className="bg-my_primary dark:bg-gray-950">
 								<DropdownMenuItem className="flex gap-1" onClick={handleRestart}>
-									<RotateCcw className="h-4 w-4" /> Restart
+									<RotateCcw className="w-4 h-4" /> Restart
 								</DropdownMenuItem>
 								<DropdownMenuItem className="flex gap-1" onClick={handlePrint}>
-									<Printer className="h-4 w-4" /> Print
+									<Printer className="w-4 h-4" /> Print
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
-					<div className="w-full h-[100px] bg-slate-200"></div>
-					<div className="flex flex-col md:flex-row w-full border-b border-slate-200">
+					<div className="w-full h-[100px] bg-slate-200 dark:bg-gray-800"></div>
+					<div className="flex flex-col w-full border-b md:flex-row border-slate-200 dark:border-slate-800">
 						<ScoreDisplay
 							userScore={userScore}
 							passCriteria={test.passCriteria}
-							className=" border-b md:border-r border-slate-200"
+							className="border-b md:border-r border-slate-200 dark:border-slate-800"
 						/>
 						<SettingsDisplay test={test} />
 					</div>
@@ -151,7 +151,7 @@ const Results = () => {
 					</div>
 				</div>
 				<div
-					className="flex bg-blue-200 h-min text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
+					className="flex justify-center flex-1 p-5 text-xl font-bold text-blue-500 bg-blue-200 cursor-pointer dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-gray-950 hover:bg-blue-500 hover:text-white dark:hover:text-white"
 					onClick={handleReturn}
 				>
 					Return

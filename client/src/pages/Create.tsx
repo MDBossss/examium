@@ -18,7 +18,7 @@ import useGenerateData from "../hooks/useGenerateData";
 import { validateTest } from "../utils/testUtils";
 import { createTest, deleteTest, fetchTestById, updateTest } from "../utils/dbUtils";
 import CollaborationsDialog from "../components/ui/Dialogs/CollaborationsDialog";
-import { useDarkmodeStore } from "../store/darkmodeStore";
+import { useThemeStore } from "../store/themeStore";
 
 const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
 
@@ -32,10 +32,11 @@ const Create = () => {
 	const { toast } = useToast();
 	const { session } = useSession();
 
-	const {isDarkmode} = useDarkmodeStore();
+	const { theme } = useThemeStore();
 
-	isDarkmode ? document.documentElement.setAttribute('data-color-mode', 'dark') : document.documentElement.setAttribute('data-color-mode', 'light')
-
+	theme === "dark"
+		? document.documentElement.setAttribute("data-color-mode", "dark")
+		: document.documentElement.setAttribute("data-color-mode", "light");
 
 	useEffect(() => {
 		//test generation
@@ -325,12 +326,11 @@ const Create = () => {
 		}));
 	};
 
-
 	return (
 		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
 			<SearchBar test={test} setTest={setTest} />
-			<div className="flex flex-col border-slate-200 border-b text-center sm:text-left">
-				<h1 className="text-2xl font-bold text-zinc-800">Create a test</h1>
+			<div className="flex flex-col border-slate-200 border-b dark:border-gray-800 text-center sm:text-left">
+				<h1 className="text-2xl font-bold ">Create a test</h1>
 				<p className="text-slate-400 text-sm pt-3 pb-3">
 					Great! Now compose your test - add questions answers to each of them. Each question must
 					have at least one correct answer.
@@ -339,7 +339,7 @@ const Create = () => {
 					<Input
 						placeholder="Insert test name..."
 						onChange={(e) => handleSetTestTitle(e.target.value)}
-						className={`${titleError && "focus-visible:ring-red-500"} bg-slate-200`}
+						className={`${titleError && "focus-visible:ring-red-500"} `}
 						value={test.title}
 					/>
 					<div className="flex gap-3">
@@ -371,19 +371,19 @@ const Create = () => {
 
 			<div className="flex flex-col md:flex-row gap-3 justify-center text-center">
 				<div
-					className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
+					className="flex flex-1 bg-blue-200 dark:bg-blue-600  dark:hover:bg-blue-700 text-blue-500 dark:text-gray-950  font-bold p-5 text-xl justify-center hover:bg-blue-500  hover:text-white dark:hover:text-white  cursor-pointer"
 					onClick={handleAddQuestion}
 				>
 					Add question +
 				</div>
 				<div
-					className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
+					className="flex flex-1 bg-blue-200 dark:bg-blue-600  dark:hover:bg-blue-700 text-blue-500 dark:text-gray-950  font-bold p-5 text-xl justify-center hover:bg-blue-500  hover:text-white dark:hover:text-white  cursor-pointer"
 					onClick={handlePreviewTest}
 				>
 					Preview test
 				</div>
 				<div
-					className="flex flex-1 bg-blue-200 text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
+					className="flex flex-1 bg-blue-200 dark:bg-blue-600  dark:hover:bg-blue-700 text-blue-500 dark:text-gray-950  font-bold p-5 text-xl justify-center hover:bg-blue-500  hover:text-white dark:hover:text-white  cursor-pointer"
 					onClick={handleSaveTest}
 				>
 					{hasParamId ? "Save test" : "Create test"}

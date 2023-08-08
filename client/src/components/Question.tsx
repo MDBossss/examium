@@ -33,7 +33,7 @@ const Question = ({
 	onMarkdownChange
 }: Props) => {
 	return (
-		<div className=" bg-slate-200 w-full p-3 sm:p-5 rounded-sm">
+		<div className=" bg-slate-200 dark:bg-gray-800 w-full p-3 sm:p-5 rounded-sm">
 			<div className="flex flex-col gap-5 max-w-4xl mx-auto pt-10 pb-10">
 				<QuestionHeader
 					question={question}

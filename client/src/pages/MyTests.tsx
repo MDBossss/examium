@@ -34,12 +34,12 @@ const MyTests = () => {
 
 
 	return (
-		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
+		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
 			<SearchBar />
-			<div className="max-w-7xl mx-auto w-full">
-				<div className="flex flex-col  border-b border-slate-200 mb-10 text-center sm:text-left">
-					<h1 className="text-2xl font-bold text-zinc-800">My tests</h1>
-					<p className="text-slate-400 text-sm pt-3 pb-3">
+			<div className="w-full mx-auto max-w-7xl">
+				<div className="flex flex-col mb-10 text-center border-b border-slate-200 dark:border-gray-800 sm:text-left">
+					<h1 className="text-2xl font-bold">My tests</h1>
+					<p className="pt-3 pb-3 text-sm text-slate-400">
 						Here you can manage all tests created by you.
 					</p>
 				</div>
@@ -47,7 +47,6 @@ const MyTests = () => {
 					<div className="flex gap-2">
 						<Input
 							placeholder="Filter tests by title..."
-							className="bg-slate-200"
 							onChange={(e) => setFilterTitle(e.target.value)}
 						/>
 						<Button variant="outline" className="hover:bg-slate-200">

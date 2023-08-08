@@ -10,10 +10,10 @@ interface Props {
 
 const MultipleChoiceQuestionResult = ({ question, questionIndex, answersChecked }: Props) => {
 	return (
-		<div className="flex flex-col sm:flex-row w-full border gap-5 border-slate-200 p-5">
-			<div className="flex flex-1 flex-col gap-2">
+		<div className="flex flex-col w-full gap-5 p-5 border sm:flex-row border-slate-200 dark:border-slate-800">
+			<div className="flex flex-col flex-1 gap-2">
 				<h3 className="text-sm font-bold text-slate-300">Question {questionIndex + 1}</h3>
-				<p className="text-medium font-bold text-zinc-800">
+				<p className="font-bold text-medium ">
 					{renderTextWithLineBreaks(question.question)}
 				</p>
 				<div className="flex flex-col flex-1 p-3">
@@ -29,7 +29,7 @@ const MultipleChoiceQuestionResult = ({ question, questionIndex, answersChecked 
 					)}
 				</div>
 			</div>
-			<div className="flex flex-1 items-center justify-center aspect-w-2 aspect-h-1 ">
+			<div className="flex items-center justify-center flex-1 aspect-w-2 aspect-h-1 ">
 				{question.imageUrl && (
 					<img
 						className="object-cover border border-slate-200"

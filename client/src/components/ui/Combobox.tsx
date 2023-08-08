@@ -44,17 +44,17 @@ export function Combobox({ className, defaultValue, onChange }: Props) {
 			<DropdownMenuTrigger asChild>
 				<Button variant="outline" className={`w-full justify-between font-normal ${className}`}>
 					{value ? options.find((option) => option.value === value)?.label : "Select question type"}
-					<ChevronsUpDown className="mr-2 h-4 w-4" />
+					<ChevronsUpDown className="w-4 h-4 mr-2" />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent className="w-[200px] -right-20">
+			<DropdownMenuContent className="w-[200px] -right-20 flex flex-col gap-1">
 				{options.map((option) => (
 					<DropdownMenuItem
 						key={option.value}
-						className={`${option.value === value && "bg-slate-100 mb-1"} hover:bg-slate-200`}
+						className={`${option.value === value && " mb-1"}`}
 						onClick={() => handleChange(option.value)}
 					>
-						{option.value === value && <Check className="h-4 w-4 mr-2" />} {option.label}
+						{option.value === value && <Check className="w-4 h-4 mr-2" />} {option.label}
 					</DropdownMenuItem>
 				))}
 			</DropdownMenuContent>

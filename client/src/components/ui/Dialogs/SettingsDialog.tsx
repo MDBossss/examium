@@ -98,10 +98,10 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 					<TooltipTrigger asChild>
 						<Button
 							variant="outline"
-							className="border-slate-200 hover:bg-slate-200 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background h-10 py-2 px-4 flex-1"
+							className="inline-flex items-center justify-center flex-1 h-10 px-4 py-2 text-sm font-medium transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background"
 							onClick={() => setDialogOpen(true)}
 						>
-							<SettingsIcon className="text-slate-400 w-6 h-6" />
+							<SettingsIcon className="w-6 h-6 text-slate-400 dark:text-gray-600" />
 						</Button>
 					</TooltipTrigger>
 				</DialogTrigger>
@@ -119,8 +119,8 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 					</DialogHeader>
 
 					<div className="grid gap-4 py-4">
-						<div className="grid grid-cols-6 items-center gap-4">
-							<label htmlFor="title" className="text-right col-span-2 text-sm">
+						<div className="grid items-center grid-cols-6 gap-4">
+							<label htmlFor="title" className="col-span-2 text-sm text-right">
 								Title
 							</label>
 							<Input
@@ -130,8 +130,8 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 								className={`${errors.title && "focus-visible:ring-red-500"} col-span-4`}
 							/>
 						</div>
-						<div className="grid grid-cols-6 items-center gap-4">
-							<label htmlFor="description" className="text-right col-span-2 text-sm">
+						<div className="grid items-center grid-cols-6 gap-4">
+							<label htmlFor="description" className="col-span-2 text-sm text-right">
 								Description
 							</label>
 							<Input
@@ -141,11 +141,11 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 								className={`${errors.description && "focus-visible:ring-red-500"} col-span-4`}
 							/>
 						</div>
-						<div className="grid grid-cols-6 items-center gap-4">
-							<div className="absolute right-8 p-1 border z-50 bg-primary border-slate-200 rounded-sm ">
-								<Percent className="w-4 h-4  " />
+						<div className="grid items-center grid-cols-6 gap-4">
+							<div className="absolute z-50 p-1 border rounded-sm bg-my_primary dark:bg-gray-800 dark:border-gray-950 dark:text-gray-950 right-8 border-slate-200 ">
+								<Percent className="w-4 h-4 " />
 							</div>
-							<label htmlFor="pass" className="text-right col-span-2 text-sm">
+							<label htmlFor="pass" className="col-span-2 text-sm text-right">
 								Pass criteria
 							</label>
 							<Input
@@ -156,18 +156,18 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 								className={`${errors.passCriteria && "focus-visible:ring-red-500"} col-span-4`}
 							/>
 						</div>
-						<div className="grid grid-cols-6 items-center gap-4">
-							<label htmlFor="questionType" className="text-right col-span-2 text-sm">
+						<div className="grid items-center grid-cols-6 gap-4">
+							<label htmlFor="questionType" className="col-span-2 text-sm text-right">
 								Question Type
 							</label>
 							<Combobox
-								className="col-span-4 text-right ml-auto"
+								className="col-span-4 ml-auto text-right"
 								defaultValue={test.defaultQuestionType}
 								onChange={(value) => setValue("defaultQuestionType",value)}
 							/>
 						</div>
-						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="questions-visible" className="text-left col-span-3 text-sm">
+						<div className="grid items-center grid-cols-4 gap-4">
+							<label htmlFor="questions-visible" className="col-span-3 text-sm text-left">
 								Questions visible after results
 							</label>
 							<Switch
@@ -178,8 +178,8 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 								{...register("showQuestionsOnResults")}
 							/>
 						</div>
-						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="randomize-questions" className="text-left col-span-3 text-sm">
+						<div className="grid items-center grid-cols-4 gap-4">
+							<label htmlFor="randomize-questions" className="col-span-3 text-sm text-left">
 								Randomize questions
 							</label>
 							<Switch
@@ -190,8 +190,8 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 								{...register("randomizeQuestions")}
 							/>
 						</div>
-						<div className="grid grid-cols-4 items-center gap-4">
-							<label htmlFor="randomizeAnswers" className="text-left col-span-3 text-sm">
+						<div className="grid items-center grid-cols-4 gap-4">
+							<label htmlFor="randomizeAnswers" className="col-span-3 text-sm text-left">
 								Randomize answers
 							</label>
 							<Switch

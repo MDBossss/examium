@@ -6,7 +6,7 @@
 
 @layer base {
 	:root {
-		--background: 0 0% 100%;
+		--background: 180 37% 97%;
 		--foreground: 222.2 47.4% 11.2%;
 
 		--muted: 210 40% 96.1%;
@@ -90,7 +90,6 @@
 
 body {
 	font-family: "Poppins", sans-serif;
-	background-color: #f4fafa;
 }
 
 .mesh-home {
@@ -116,9 +115,9 @@ body {
 		radial-gradient(at 6% 55%, rgb(255, 255, 255) 0, transparent 100%);
 }
 
-.bg-primary {
+/* .bg-primary {
 	background-color: #f4fafa;
-}
+} */
 
 .break-anywhere {
 	overflow-wrap: anywhere;

@@ -134,15 +134,15 @@ const QuestionHeader = ({
 						<DropdownMenuTrigger>
 							<SettingsIcon className="text-slate-400 h-7 w-7 cursor-pointer hover:text-blue-500" />
 						</DropdownMenuTrigger>
-						<DropdownMenuContent className="w-[200px]">
+						<DropdownMenuContent className="w-[200px] flex flex-col gap-1">
 							<DropdownMenuLabel>Question Type</DropdownMenuLabel>
 							<DropdownMenuSeparator />
 							{options.map((option) => (
 								<DropdownMenuItem
 									key={option.value}
 									className={`${
-										option.value === question.type && "bg-slate-100 mb-1"
-									} hover:bg-slate-200`}
+										option.value === question.type && "bg-slate-100 dark:bg-slate-800 mb-1"
+									} hover:bg-slate-200 dark:hover:bg-gray-800`}
 									onClick={() => onQuestionTypeChange(option.value, questionIndex)}
 								>
 									{option.value === question.type && <Check className="h-4 w-4 mr-2" />}{" "}
@@ -160,7 +160,7 @@ const QuestionHeader = ({
 			</div>
 			<Textarea
 				ref={textareaRef}
-				className="bg-primary text-lg p-5 overflow-hidden resize-none"
+				className=" text-lg p-5 overflow-hidden resize-none"
 				onChange={(e) => onQuestionChange(e.target.value, question.id)}
 				placeholder="Insert question..."
 				value={question.question}
