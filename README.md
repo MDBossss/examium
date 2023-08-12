@@ -54,21 +54,24 @@ Feel free to contribute to the project as this is just a beginning, and has plen
 
 To run the project, you will need to set up environmental variables. Follow the instructions below:
 
+For both client and server folders there is a provided `.env.example`.
+
 
 ### server
 Create a `.env` file inside the server directory and define the following variables:
 ```
-DATABASE_URL=your_mysql_database_url
+DATABASE_URL=mysql://USER:PASSWORD@HOST:PORT/DATABASE
+OPENAI_API_KEY=your_openai_api_key
 PORT=3000
 ```
 
 ### client
 Create a `.env` file inside the client directory and define the following variables:
 ```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_KEY=your_supabase_key
-VITE_SUPABASE_BUCKET_LINK=your_supabase_bucket_link
-VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+VITE_SUPABASE_URL=supabase_url
+VITE_SUPABASE_KEY=supabase_key
+VITE_SUPABASE_BUCKET_LINK=https://[your_supabase_url]/storage/v1/object/public/[bucket_name]/
+VITE_CLERK_PUBLISHABLE_KEY=clerk_publishable_key
 VITE_API_BASE_URL=http://localhost:3000/api
 ```
 
@@ -78,7 +81,7 @@ To get started with Examium, follow these steps:
 2. Install the dependencies for both the server and the client by running `yarn install` in their respective directories.
 3. Configure the environmental variables as described in the previous section.
 4. Generate the Prisma Client by running `yarn generate` or `npx prisma generate` inside the `server` directory.
-5. Run the migrations with `yarn migrate` or `npx prisma migrate dev` inside the `server` directory.
+5. Run the db push with `npx prisma db push` inside the `server` directory.
 6. Start the server by running `yarn run dev` in the server directory.
 7. Start the client by running `yarn run dev` in the client directory.
 
