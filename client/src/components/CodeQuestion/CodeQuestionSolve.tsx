@@ -1,6 +1,7 @@
 import { CodeAnswer, CodeQuestionType, TestType } from "../../types/models";
 import MDEditor from "@uiw/react-md-editor";
 import CodeMirror from "@uiw/react-codemirror";
+import { useThemeStore } from "../../store/themeStore";
 
 interface Props {
 	test: TestType;
@@ -10,8 +11,10 @@ interface Props {
 }
 
 const CodeQuestionSolve = ({ test, questionNumber, userCode, handleCodeChange }: Props) => {
+	const { theme } = useThemeStore();
+	
 	return (
-		<div className="flex flex-col gap-2 w-full">
+		<div className="flex flex-col w-full gap-2">
 			{(test?.questions[questionNumber] as CodeQuestionType)?.description && (
 				<MDEditor.Markdown
 					source={(test?.questions[questionNumber] as CodeQuestionType).description}
@@ -22,7 +25,7 @@ const CodeQuestionSolve = ({ test, questionNumber, userCode, handleCodeChange }:
 			<CodeMirror
 				minHeight="200px"
 				width="100%"
-				theme="light"
+				theme={theme}
 				onChange={(value) => handleCodeChange(value)}
 				value={userCode?.userCode}
 			/>

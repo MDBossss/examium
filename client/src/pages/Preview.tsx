@@ -17,8 +17,8 @@ const Preview = () => {
 	const [test, setTest] = useState<TestType>(location.state?.test);
 	const [questionNumber, setQuestionNumber] = useState<number>(0);
 	const [questionDone, setQuestionDone] = useState<boolean[]>([]);
-	// const [answersChecked, setAnswersChecked] = useState<boolean[][]>([]);
 	const [disableNavigation, setDisableNavigation] = useState<boolean>(false);
+
 
 	const [userAnswers, setUserAnswers] = useState<(boolean[] | CodeAnswer)[]>([]);
 
@@ -52,9 +52,6 @@ const Preview = () => {
 
 	const setInitialData = (test: TestType) => {
 		setQuestionDone(Array(test.questions.length).fill(false));
-		// setAnswersChecked(
-		// 	test?.questions.map(() => Array(test?.questions[0].answers.length).fill(false))
-		// );
 		setUserAnswers(
 			test?.questions.map((question) =>
 				question.type === "MULTIPLE_CHOICE"
