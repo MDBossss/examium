@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # Install Yarn globally (optional but recommended for consistency)
-RUN npm install -g yarn
+RUN npm install -g yarn --force
 
 # Install project dependencies
 RUN yarn install

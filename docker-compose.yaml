@@ -5,6 +5,8 @@ services:
     container_name: examium-frontend
     ports:
       - "5173:5173"
+    env_file:
+      - ./client/.env
     stdin_open: true
     tty: true
   backend:
@@ -12,15 +14,17 @@ services:
     container_name: examium-backend
     ports:
       - "3000:3000"
+    env_file:
+      - ./server/.env
   database:
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: your-root-password
-      MYSQL_DATABASE: your-database-name
-      MYSQL_USER: your-username
-      MYSQL_PASSWORD: your-password
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: examium
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "3307:3307"
     volumes:
       - mysql-data:/var/lib/mysql
 volumes:
