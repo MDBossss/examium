@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { TestType } from "../types/models";
-import { useEffect } from "react";
+import { CodeAnswer, TestType } from "../types/models";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import { ArrowLeft, MoreVertical, Printer, RotateCcw } from "lucide-react";
 import {
@@ -12,22 +12,36 @@ import {
 import { useScore } from "../hooks/useScore";
 import SettingsDisplay from "../components/ui/SettingsDisplay";
 import ScoreDisplay from "../components/ui/ScoreDisplay";
-import QuestionResult from "../components/QuestionResult";
+import MultipleChoiceQuestionResult from "../components/MultipleChoiceQuestion/MultipleChoiceQuestionResult";
 import { useToast } from "../hooks/useToast";
+import CodeQuestionResult from "../components/CodeQuestion/CodeQuestionResult";
+import { useQuestionCount } from "../hooks/useQuestionCount";
+import Spinner from "../components/ui/Spinner";
+import { useThemeStore } from "../store/themeStore";
 
 const Results = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const test: TestType = location.state?.test;
-	const answersChecked: boolean[][] = location.state?.answersChecked;
 	const hasParamId: boolean = location.state?.hasParamId;
 
+	const { theme } = useThemeStore();
+	theme === "dark"
+		? document.documentElement.setAttribute("data-color-mode", "dark")
+		: document.documentElement.setAttribute("data-color-mode", "light");
+
+	const [userAnswers, setUserAnswers] = useState<(boolean[] | CodeAnswer)[]>(
+		location.state.userAnswers
+	);
+	const [fetchedCodeQuestionsCount, setFetchedCodeQuestionsCount] = useState<number>(0);
+
 	const { toast } = useToast();
-	const { userScore, maxScore } = useScore(test?.questions, answersChecked);
+	const { userScore, maxScore } = useScore(test?.questions, userAnswers);
+	const { codeQuestionCount } = useQuestionCount(test?.questions);
 
 	//protection against users wandering to this route without any data
 	useEffect(() => {
-		if (!test || !answersChecked) {
+		if (!test || !userAnswers) {
 			navigate("/", { replace: true });
 		}
 	}, []);
@@ -49,68 +63,101 @@ const Results = () => {
 	};
 
 	const handlePrint = () => {
-		toast({
-			description: "Couldn't connect to printer.",
-			variant: "destructive",
+		try {
+			window.print();
+		} catch (error) {
+			toast({
+				description: "Couldn't connect to printer.",
+				variant: "destructive",
+			});
+		}
+	};
+
+	const handleSetCodeCorrect = (value: boolean, questionIndex: number) => {
+		setUserAnswers((prev) => {
+			const updatedUserAnswers = [...prev];
+			(updatedUserAnswers[questionIndex] as CodeAnswer).isCorrect = value;
+			return updatedUserAnswers;
 		});
 	};
 
+	const handleFetchedCodeQuestion = () => {
+		setFetchedCodeQuestionsCount((prev) => prev + 1);
+	};
+
 	return (
-		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
-			<SearchBar />
-			<div className="max-w-7xl mx-auto flex flex-col w-full items-center">
-				<div className="flex w-full justify-between items-center py-5">
-					<div className="flex gap-5 items-center">
-						<ArrowLeft className="w-7 h-7 text-blue-500 cursor-pointer" onClick={handleReturn} />
-						<h1 className="text-2xl font-">{test?.title}</h1>
+		<>
+			{fetchedCodeQuestionsCount < codeQuestionCount && (
+				<div className=" fixed flex flex-col items-center justify-center gap-4  bg-white bg-opacity-50 backdrop-blur-sm  transition-all w-full h-screen z-[100]">
+					<span className="text-lg font-bold">Calculating results...</span> <Spinner />
+				</div>
+			)}
+			<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
+				<SearchBar />
+				<div className="flex flex-col items-center w-full mx-auto max-w-7xl">
+					<div className="flex items-center justify-between w-full py-5">
+						<div className="flex items-center gap-5">
+							<ArrowLeft className="text-blue-500 cursor-pointer w-7 h-7" onClick={handleReturn} />
+							<h1 className="text-2xl font-">{test?.title}</h1>
+						</div>
+						<DropdownMenu>
+							<DropdownMenuTrigger className="p-2 transition-all border rounded-sm outline-none ">
+								<MoreVertical />
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="bg-my_primary dark:bg-gray-950">
+								<DropdownMenuItem className="flex gap-1" onClick={handleRestart}>
+									<RotateCcw className="w-4 h-4" /> Restart
+								</DropdownMenuItem>
+								<DropdownMenuItem className="flex gap-1" onClick={handlePrint}>
+									<Printer className="w-4 h-4" /> Print
+								</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
-					<DropdownMenu>
-						<DropdownMenuTrigger className="outline-none border text-slate-400 border-slate-200 p-2 rounded-sm hover:bg-slate-200 transition-all">
-							<MoreVertical />
-						</DropdownMenuTrigger>
-						<DropdownMenuContent className="bg-primary">
-							<DropdownMenuItem className="flex gap-1" onClick={handleRestart}>
-								<RotateCcw className="h-4 w-4" /> Restart
-							</DropdownMenuItem>
-							<DropdownMenuItem className="flex gap-1" onClick={handlePrint}>
-								<Printer className="h-4 w-4" /> Print
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
+					<div className="w-full h-[100px] bg-slate-200 dark:bg-gray-800"></div>
+					<div className="flex flex-col w-full border-b md:flex-row border-slate-200 dark:border-slate-800">
+						<ScoreDisplay
+							userScore={userScore}
+							passCriteria={test.passCriteria}
+							className="border-b md:border-r border-slate-200 dark:border-slate-800"
+						/>
+						<SettingsDisplay test={test} />
+					</div>
+					<div className="flex flex-col w-full gap-3 mt-10 ">
+						<p className="self-start font-medium printable">
+							Your answers: ({userScore.value}/{maxScore} correct)
+						</p>
+
+						{test.showQuestionsOnResults &&
+							test.questions.map((question, questionIndex) =>
+								question.type === "MULTIPLE_CHOICE" ? (
+									<MultipleChoiceQuestionResult
+										key={question.id}
+										question={question}
+										answersChecked={userAnswers[questionIndex] as boolean[]}
+										questionIndex={questionIndex}
+									/>
+								) : (
+									<CodeQuestionResult
+										key={question.id}
+										question={question}
+										userCode={userAnswers[questionIndex] as CodeAnswer}
+										questionIndex={questionIndex}
+										onSetCodeCorrect={handleSetCodeCorrect}
+										onLoaded={handleFetchedCodeQuestion}
+									/>
+								)
+							)}
+					</div>
 				</div>
-				<div className="w-full h-[100px] bg-slate-200"></div>
-				<div className="flex flex-col md:flex-row w-full border-b border-slate-200">
-					<ScoreDisplay
-						userScore={userScore}
-						passCriteria={test.passCriteria}
-						className=" border-b md:border-r border-slate-200"
-					/>
-					<SettingsDisplay test={test} />
-				</div>
-				<div className="flex flex-col w-full gap-3 mt-10">
-					<p className="self-start font-medium">
-						Your answers: ({userScore.value}/{maxScore} correct)
-					</p>
-					{test.showQuestionsOnResults &&
-						test?.questions.map((question, questionIndex) => {
-							return (
-								<QuestionResult
-									key={question.id}
-									question={question}
-									answersChecked={answersChecked[questionIndex]}
-									questionIndex={questionIndex}
-								/>
-							);
-						})}
+				<div
+					className="flex justify-center flex-1 p-5 text-xl font-bold text-blue-500 bg-blue-200 cursor-pointer dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-gray-950 hover:bg-blue-500 hover:text-white dark:hover:text-white"
+					onClick={handleReturn}
+				>
+					Return
 				</div>
 			</div>
-			<div
-				className="flex bg-blue-200 h-min text-blue-500 font-bold p-5 text-xl justify-center hover:bg-blue-500 hover:text-white cursor-pointer"
-				onClick={handleReturn}
-			>
-				Return
-			</div>
-		</div>
+		</>
 	);
 };
 

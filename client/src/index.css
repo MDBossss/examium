@@ -6,7 +6,7 @@
 
 @layer base {
 	:root {
-		--background: 0 0% 100%;
+		--background: 180 37% 97%;
 		--foreground: 222.2 47.4% 11.2%;
 
 		--muted: 210 40% 96.1%;
@@ -90,7 +90,6 @@
 
 body {
 	font-family: "Poppins", sans-serif;
-	background-color: #f4fafa;
 }
 
 .mesh-home {
@@ -116,28 +115,30 @@ body {
 		radial-gradient(at 6% 55%, rgb(255, 255, 255) 0, transparent 100%);
 }
 
-.bg-primary {
+/* .bg-primary {
 	background-color: #f4fafa;
-}
+} */
 
 .break-anywhere {
 	overflow-wrap: anywhere;
 }
 
 .fill-line {
-  width: 0%;
-  height: 4px; /* Height of the line */
-  align-self: flex-start;
-  background-color: transparent; /* Color of the line */
-  transition: width 0s linear;
-
+	width: 0%;
+	height: 4px; /* Height of the line */
+	align-self: flex-start;
+	background-color: transparent; /* Color of the line */
+	transition: width 0s linear;
 }
 
-.filled{
-  width: 100%;
-  background-color: #64748b;
-  transition: width 3s linear; /* Transition property with the desired duration (5 seconds in this case) and linear timing function */
+.filled {
+	width: 100%;
+	background-color: #64748b;
+	transition: width 3s linear; /* Transition property with the desired duration (5 seconds in this case) and linear timing function */
+}
 
+.cm-editor.cm-focused {
+	outline: none;
 }
 
 /* width */
@@ -160,3 +161,5 @@ body {
 ::-webkit-scrollbar-thumb:hover {
 	background: #3b82f6;
 }
+
+

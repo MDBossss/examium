@@ -7,11 +7,11 @@ interface Props {
 
 const CollaboratorsTable = ({ collaborators, onDelete }: Props) => {
 	return (
-		<div className="flex flex-col border border-slate-200 rounded-sm text-sm">
+		<div className="flex flex-col text-sm border rounded-sm border-slate-200 dark:border-gray-600">
 			<div className="grid grid-cols-12">
-				<div className=" col-span-12 font-bold text-slate-500 p-3">Email</div>
+				<div className="col-span-12 p-3 font-bold text-slate-500">Email</div>
 				{!collaborators && (
-					<p className="col-span-12 p-3 border-t border-slate-200 text-center italic text-slate-400">
+					<p className="col-span-12 p-3 italic text-center border-t border-slate-200 dark:border-gray-600 text-slate-400">
 						Empty
 					</p>
 				)}

@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes";
 import testRoutes from "./routes/testRoutes";
+import codeRoutes from "./routes/codeRoutes";
 
 config();
 
@@ -15,6 +16,7 @@ app.use(cors());
 //Routes
 app.use("/api/users",userRoutes);
 app.use("/api/tests",testRoutes);
+app.use("/api/code",codeRoutes)
 
 //Error handling middleware
 app.use((err:Error,req:Request,res:Response, next: NextFunction) => {

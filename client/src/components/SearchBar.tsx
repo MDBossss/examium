@@ -43,7 +43,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<PanelLeftCloseIcon
-										className=" w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm hidden md:block"
+										className=" w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-sm hidden md:block"
 										onClick={handleToggleSidebar}
 									/>
 								</TooltipTrigger>
@@ -55,7 +55,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<PanelLeftOpenIcon
-										className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm hidden md:block"
+										className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-sm hidden md:block"
 										onClick={handleToggleSidebar}
 									/>
 								</TooltipTrigger>
@@ -68,7 +68,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<ChevronLeftIcon
-									className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
+									className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-sm"
 									onClick={handleNext}
 								/>
 							</TooltipTrigger>
@@ -80,7 +80,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<ChevronRightIcon
-									className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 rounded-sm"
+									className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-sm"
 									onClick={handlePrevious}
 								/>
 							</TooltipTrigger>

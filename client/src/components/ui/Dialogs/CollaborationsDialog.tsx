@@ -112,7 +112,7 @@ const CollaborationsDialog = ({ test, setTest, session }: Props) => {
 			<Tooltip>
 				<DialogTrigger asChild>
 					<TooltipTrigger asChild>
-						<Button className="bg-blue-500 hover:bg-blue-600">
+						<Button className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
 							<UsersIcon className="w-5 h-5" />
 						</Button>
 					</TooltipTrigger>
@@ -135,7 +135,7 @@ const CollaborationsDialog = ({ test, setTest, session }: Props) => {
 						onChange={(e) => setEmailInput(e.target.value)}
 						value={emailInput}
 					/>
-					<Button className="bg-blue-500 hover:bg-blue-600" onClick={handleAdd}>
+					<Button className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700" onClick={handleAdd}>
 						Add
 					</Button>
 				</div>

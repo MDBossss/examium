@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  frontend:
+    build: ./client
+    container_name: examium-frontend
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./client/.env
+    stdin_open: true
+    tty: true
+  backend:
+    build: ./server
+    container_name: examium-backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/.env
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: examium
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3307:3307"
+    volumes:
+      - mysql-data:/var/lib/mysql
+volumes:
+  mysql-data:  # Define a named volume for MySQL data persistence

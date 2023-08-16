@@ -8,6 +8,7 @@ import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import Spinner from "../components/ui/Spinner";
 import TestItem from "../components/TestItem";
+import { notEmpty } from "../utils/genericUtils";
 
 const CollabTests = () => {
 	const { session } = useSession();
@@ -30,14 +31,17 @@ const CollabTests = () => {
 		enabled: !!userId,
 	});
 
+	console.log(data);
+	console.log(isLoading);
+	console.log(isError);
 
 	return (
-		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
+		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
 			<SearchBar />
-			<div className="max-w-7xl mx-auto w-full">
-				<div className="flex flex-col  border-b border-slate-200 mb-10 text-center sm:text-left">
-					<h1 className="text-2xl font-bold text-zinc-800">Collaborations</h1>
-					<p className="text-slate-400 text-sm pt-3 pb-3">
+			<div className="w-full mx-auto max-w-7xl">
+				<div className="flex flex-col mb-10 text-center border-b border-slate-200 dark:border-gray-800 sm:text-left">
+					<h1 className="text-2xl font-bold text-zinc-800 dark:text-white">Collaborations</h1>
+					<p className="pt-3 pb-3 text-sm text-slate-400">
 						Here you can see all tests where you are a collaborator.
 					</p>
 				</div>
@@ -53,11 +57,14 @@ const CollabTests = () => {
 						</Button>
 					</div>
 					{isLoading && !isError ? (
-						<Spinner />
+						<Spinner className="flex justify-center p-5" />
 					) : (
-						data?.map((test) => <TestItem key={test.id} test={test}/>)
+						data?.map((test) => <TestItem key={test.id} test={test} />)
 					)}
-					{!isLoading && isError && <div>Error loading tests</div>}
+					{isError && <div className="flex justify-center p-5">Error loading tests 😓</div>}
+					{data && !notEmpty(data) && (
+						<div className="flex justify-center p-5">You have no collaborations 😅</div>
+					)}
 				</div>
 			</div>
 		</div>

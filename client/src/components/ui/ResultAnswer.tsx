@@ -21,9 +21,9 @@ const ResultAnswer = ({ answer, answerIndex, isChecked }: Props) => {
 	};
 
 	return (
-		<div className="grid grid-cols-12 items-center">
+		<div className="grid items-center grid-cols-12">
 			<p
-				className={`${conditionalColors()} col-span-2 sm:col-span-1 p-3 text-medium font-medium border-r border-slate-200 `}
+				className={`${conditionalColors()} col-span-2 sm:col-span-1 p-3 text-medium font-medium border-r border-slate-200 dark:border-slate-800`}
 			>
 				{String.fromCharCode(65 + answerIndex)}
 			</p>
