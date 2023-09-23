@@ -59,6 +59,7 @@ model CodeQuestion {
   questionId  String   @id
   correctCode String   @db.Text
   description String?  @db.Text
+  showCorrectCodeOnResults Boolean
   Question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 

@@ -142,7 +142,8 @@ class TestController {
 						imageUrl: question.imageUrl as string | undefined,
 						createdAt: question.createdAt,
 						description: question.codeQuestion?.description as string | undefined,
-						correctCode: question.codeQuestion?.correctCode as string
+						correctCode: question.codeQuestion?.correctCode as string,
+						showCorrectCodeOnResults: question.codeQuestion?.showCorrectCodeOnResults as boolean
 					}
 					formattedQuestions.push(tempQuestion)
 				}
@@ -233,7 +234,7 @@ class TestController {
 									},
 								};
 							} else if (q.type === "CODE") {
-								const { id, type, question, imageUrl, createdAt, description, correctCode } =
+								const { id, type, question, imageUrl, createdAt, description, correctCode, showCorrectCodeOnResults } =
 									q as CodeQuestionType;
 
 								return {
@@ -245,7 +246,8 @@ class TestController {
 									codeQuestion: {
 										create: {
 											correctCode,
-											description
+											description,
+											showCorrectCodeOnResults
 										},
 									},
 								};
@@ -351,7 +353,8 @@ class TestController {
 								codeQuestion: question.type === 'CODE' ? {
 									create: {
 									correctCode: (question as CodeQuestionType).correctCode,
-									description: (question as CodeQuestionType).description
+									description: (question as CodeQuestionType).description,
+									showCorrectCodeOnResults: (question as CodeQuestionType).showCorrectCodeOnResults
 									},
 								} : undefined,
 							},
@@ -378,7 +381,7 @@ class TestController {
 													create:{
 														answer:answer.answer,
 														isCorrect: answer.isCorrect,
-														createdAt: answer.createdAt
+														createdAt: answer.createdAt,
 													},
 													update:{
 														answer:answer.answer,
@@ -394,11 +397,13 @@ class TestController {
 									upsert:{
 										create:{
 											correctCode: (question as CodeQuestionType).correctCode,
-											description: (question as CodeQuestionType).description
+											description: (question as CodeQuestionType).description,
+											showCorrectCodeOnResults: (question as CodeQuestionType).showCorrectCodeOnResults
 										},
 										update:{
 											correctCode: (question as CodeQuestionType).correctCode,
-											description: (question as CodeQuestionType).description
+											description: (question as CodeQuestionType).description,
+											showCorrectCodeOnResults: (question as CodeQuestionType).showCorrectCodeOnResults
 										}
 									}
 								}: undefined

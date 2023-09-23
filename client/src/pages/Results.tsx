@@ -74,7 +74,6 @@ const Results = () => {
 	};
 
 	const handleSetIsCodeCorrect = (value: boolean, questionIndex: number) => {
-		console.log("setting isCodeCorrect");
 		setUserAnswers((prev) => {
 			const updatedUserAnswers = [...prev];
 			(updatedUserAnswers[questionIndex] as CodeAnswer).isCorrect = value;
