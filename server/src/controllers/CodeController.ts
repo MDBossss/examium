@@ -39,6 +39,7 @@ class CodeController {
 				presence_penalty: 0,
 			});
 			/**Have to parse the reponse to a boolean value */
+			console.log(parseAnswer(response.data.choices[0].message?.content!))
 			const { isCorrect, description } = parseAnswer(response.data.choices[0].message?.content!);
 			// console.log(isCorrect, description);
 			res.status(200).json({ isCorrect, description });

@@ -11,7 +11,7 @@ import { TestType } from "../types/models";
 import { notEmpty } from "../utils/genericUtils";
 
 const MyTests = () => {
-	const {session} = useSession()
+	const { session } = useSession();
 	const userId = session?.user.id;
 	const [filterTitle, setFilterTitle] = useState<string>("");
 
@@ -23,13 +23,12 @@ const MyTests = () => {
 		[filterTitle]
 	);
 
-
-	const { data, isLoading, isError} = useQuery({
+	const { data, isLoading, isError } = useQuery({
 		queryKey: ["tests", userId],
 		queryFn: () => fetchTestsByUserId(userId!),
 		select: filterTestsByTitle,
 		refetchOnWindowFocus: false,
-		enabled: !!userId
+		enabled: !!userId,
 	});
 
 
@@ -54,9 +53,9 @@ const MyTests = () => {
 						</Button>
 					</div>
 					{isLoading && !isError ? (
-						<Spinner className="flex justify-center p-5"/>
+						<Spinner className="flex justify-center p-5" />
 					) : (
-						data?.map((test) => <TestItem key={test.id} test={test}/>)
+						data?.map((test) => <TestItem key={test.id} test={test} />)
 					)}
 					{isError && <div className="flex justify-center p-5">Error loading tests 😓</div>}
 					{data && !notEmpty(data) && (

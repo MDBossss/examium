@@ -73,7 +73,8 @@ const Results = () => {
 		}
 	};
 
-	const handleSetCodeCorrect = (value: boolean, questionIndex: number) => {
+	const handleSetIsCodeCorrect = (value: boolean, questionIndex: number) => {
+		console.log("setting isCodeCorrect")
 		setUserAnswers((prev) => {
 			const updatedUserAnswers = [...prev];
 			(updatedUserAnswers[questionIndex] as CodeAnswer).isCorrect = value;
@@ -87,11 +88,11 @@ const Results = () => {
 
 	return (
 		<>
-			{fetchedCodeQuestionsCount < codeQuestionCount && (
+			{/* {fetchedCodeQuestionsCount < codeQuestionCount && (
 				<div className=" fixed flex flex-col items-center justify-center gap-4  bg-white bg-opacity-50 backdrop-blur-sm  transition-all w-full h-screen z-[100]">
 					<span className="text-lg font-bold">Calculating results...</span> <Spinner />
 				</div>
-			)}
+			)} */}
 			<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
 				<SearchBar />
 				<div className="flex flex-col items-center w-full mx-auto max-w-7xl">
@@ -136,6 +137,7 @@ const Results = () => {
 										question={question}
 										answersChecked={userAnswers[questionIndex] as boolean[]}
 										questionIndex={questionIndex}
+										showQuestion={test.showQuestionsOnResults}
 									/>
 								) : (
 									<CodeQuestionResult
@@ -143,8 +145,10 @@ const Results = () => {
 										question={question}
 										userCode={userAnswers[questionIndex] as CodeAnswer}
 										questionIndex={questionIndex}
-										onSetCodeCorrect={handleSetCodeCorrect}
+										onSetIsCodeCorrect={handleSetIsCodeCorrect}
 										onLoaded={handleFetchedCodeQuestion}
+										showQuestion={test.showQuestionsOnResults}
+
 									/>
 								)
 							)}

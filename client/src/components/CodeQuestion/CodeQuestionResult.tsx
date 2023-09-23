@@ -6,41 +6,53 @@ import MDEditor from "@uiw/react-md-editor";
 import { checkCode } from "../../utils/dbUtils";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "../ui/Spinner";
+import { useThemeStore } from "../../store/themeStore";
 
 interface Props {
 	question: QuestionType;
 	userCode: CodeAnswer;
 	questionIndex: number;
-	onSetCodeCorrect: (value: boolean, questionIndex: number) => void;
+	onSetIsCodeCorrect: (value: boolean, questionIndex: number) => void;
 	onLoaded: () => void;
+	showQuestion: boolean
 }
 
 const CodeQuestionResult = ({
 	question,
 	userCode,
 	questionIndex,
-	onSetCodeCorrect,
+	onSetIsCodeCorrect,
 	onLoaded,
+	showQuestion
 }: Props) => {
 	const { data, isLoading } = useQuery({
 		queryKey: ["code", userCode],
 		queryFn: () =>
 			checkCode(question.question, userCode.userCode, (question as CodeQuestionType).correctCode),
 		onSuccess: (data) => {
-			onSetCodeCorrect(data.isCorrect, questionIndex);
+			onSetIsCodeCorrect(data.isCorrect, questionIndex);
 			onLoaded();
 		},
 		refetchOnWindowFocus: false,
 	});
 
+	const { theme } = useThemeStore();
+	theme === "dark"
+		? document.documentElement.setAttribute("data-color-mode", "dark")
+		: document.documentElement.setAttribute("data-color-mode", "light");
+
+	if(showQuestion){
+		return
+	}
+
 	return (
-		<div className="flex flex-col-reverse w-full border gap-5 border-slate-200 p-5">
-			<div className="flex flex-1 flex-col gap-2">
+		<div className="flex flex-col-reverse w-full gap-5 p-5 border border-slate-200">
+			<div className="flex flex-col flex-1 gap-2">
 				<h3 className="text-sm font-bold text-slate-300">Question {questionIndex + 1}</h3>
-				<p className="text-medium font-bold text-zinc-800">
+				<p className="font-bold text-medium text-zinc-800">
 					{renderTextWithLineBreaks(question.question)}
 				</p>
-				<div className="flex flex-1 items-center justify-center aspect-w-2 aspect-h-1 ">
+				<div className="flex items-center justify-center flex-1 aspect-w-2 aspect-h-1 ">
 					{question.imageUrl && (
 						<img
 							className="object-cover border border-slate-200"
@@ -52,9 +64,9 @@ const CodeQuestionResult = ({
 				<div>
 					<MDEditor.Markdown source={(question as CodeQuestionType).description} className="p-2" />
 				</div>
-				<div className="flex flex-col md:flex-row flex-1 p-3 gap-3 w-full">
-					<div className="flex-1 overflow-auto border-blue-500 border rounded-sm">
-						<p className=" bg-primary px-5 pt-2  rounded-t-sm font-bold text-xs">CORRECT CODE</p>
+				<div className="flex flex-col flex-1 w-full gap-3 p-3 md:flex-row">
+					<div className="flex-1 overflow-auto border border-blue-500 rounded-sm">
+						<p className="px-5 pt-2 text-xs font-bold rounded-t-sm bg-primary">CORRECT CODE</p>
 						<CodeMirror value={(question as CodeQuestionType).correctCode} readOnly />
 					</div>
 					<div
@@ -64,7 +76,7 @@ const CodeQuestionResult = ({
 							}`
 						)}
 					>
-						<p className=" bg-primary px-5 pt-2  rounded-t-sm font-bold text-xs">
+						<p className="px-5 pt-2 text-xs font-bold rounded-t-sm bg-primary">
 							YOUR CODE:{" "}
 							<span className={`${userCode.isCorrect ? "text-green-500" : "text-red-500"}`}>
 								{userCode.isCorrect ? "CORRECT" : "WRONG"}

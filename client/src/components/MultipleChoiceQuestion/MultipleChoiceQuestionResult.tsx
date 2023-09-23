@@ -6,9 +6,16 @@ interface Props {
 	question: QuestionType;
 	answersChecked: boolean[];
 	questionIndex: number;
+	showQuestion: boolean
 }
 
-const MultipleChoiceQuestionResult = ({ question, questionIndex, answersChecked }: Props) => {
+const MultipleChoiceQuestionResult = ({ question, questionIndex, answersChecked, showQuestion }: Props) => {
+
+
+	if(!showQuestion){
+		return
+	}
+
 	return (
 		<div className="flex flex-col w-full gap-5 p-5 border sm:flex-row border-slate-200 dark:border-slate-800">
 			<div className="flex flex-col flex-1 gap-2">

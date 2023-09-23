@@ -31,9 +31,6 @@ const CollabTests = () => {
 		enabled: !!userId,
 	});
 
-	console.log(data);
-	console.log(isLoading);
-	console.log(isError);
 
 	return (
 		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
