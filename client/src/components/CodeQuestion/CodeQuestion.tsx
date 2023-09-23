@@ -31,7 +31,7 @@ const CodeQuestion = ({
 			</p>
 			<div className="px-5 pb-5 bg-my_primary dark:bg-gray-800">
 				<MDEditor
-					value={(question as CodeQuestionType).description}
+					value={(question as CodeQuestionType).description || ""}
 					onChange={(value) => onMarkdownChange(value!, question.id)}
 				/>
 			</div>
