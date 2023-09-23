@@ -69,10 +69,17 @@ const CodeQuestionResult = ({
 				)}
 
 				<div className="flex flex-col flex-1 w-full gap-3 p-3 md:flex-row">
-					<div className="flex-1 overflow-auto border border-blue-500 rounded-sm">
-						<p className="px-5 pt-2 text-xs font-bold rounded-t-sm">CORRECT CODE</p>
-						<CodeMirror value={(question as CodeQuestionType).correctCode} readOnly theme={theme} />
-					</div>
+					{(question as CodeQuestionType).showCorrectCodeOnResults && (
+						<div className="flex-1 overflow-auto border border-blue-500 rounded-sm">
+							<p className="px-5 pt-2 text-xs font-bold rounded-t-sm">CORRECT CODE</p>
+							<CodeMirror
+								value={(question as CodeQuestionType).correctCode}
+								readOnly
+								theme={theme}
+							/>
+						</div>
+					)}
+
 					<div
 						className={cn(
 							`flex-1 overflow-auto border-blue-500 border rounded-sm ${

@@ -3,7 +3,7 @@ import { useSession } from "@clerk/clerk-react";
 import { useNavigate, useParams } from "react-router-dom";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
-import { Input } from "../components/ui/input";
+import { Input } from "../components/ui/Input";
 import {
 	CodeQuestionType,
 	MultipleChoiceQuestionType,
@@ -326,6 +326,20 @@ const Create = () => {
 		}));
 	};
 
+	const handleToggleShowCorrectCodeOnResults = (questionID: string) => {
+		setTest((prevTest) => ({
+			...prevTest,
+			questions: prevTest.questions.map((question) =>
+				question.id === questionID
+					? {
+							...(question as CodeQuestionType),
+							showCorrectCodeOnResults: !(question as CodeQuestionType).showCorrectCodeOnResults,
+					  }
+					: question
+			),
+		}));
+	};
+
 	return (
 		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
 			<SearchBar test={test} setTest={setTest} />
@@ -365,6 +379,7 @@ const Create = () => {
 						onAnswerAdd={handleAddAnswer}
 						onCorrectCodeChange={handleCorrectCodeChange}
 						onMarkdownChange={handleMarkdownChange}
+						onToggleShowCorrectCodeOnResults={handleToggleShowCorrectCodeOnResults}
 					/>
 				);
 			})}

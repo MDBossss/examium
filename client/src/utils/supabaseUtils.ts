@@ -39,6 +39,6 @@ export async function removeAllTestImagesFromBucket(test:TestType){
 	const {error} = await supabase.storage.from("questionImages").remove(filePaths)
 
 	if(error){
-		console.log("Error removeing all test images from bucket: ", error.message)
+		console.log("Error removing all test images from bucket: ", error.message)
 	}
 }

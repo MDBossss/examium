@@ -43,7 +43,9 @@ export interface MultipleChoiceQuestionType extends QuestionType{
 
 export interface CodeQuestionType extends QuestionType{
 	correctCode: string,
-	description?: string
+	description?: string,
+	showCorrectCodeOnResults: boolean
+
 }
 
 export interface AnswerType {
