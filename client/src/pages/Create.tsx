@@ -3,7 +3,7 @@ import { useSession } from "@clerk/clerk-react";
 import { useNavigate, useParams } from "react-router-dom";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
-import { Input } from "../components/ui/Input";
+import { Input } from "../components/ui/input";
 import {
 	CodeQuestionType,
 	MultipleChoiceQuestionType,
@@ -327,15 +327,15 @@ const Create = () => {
 	};
 
 	return (
-		<div className="flex flex-col gap-10 p-4 pt-5 w-full max-w-screen sm:p-10">
+		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
 			<SearchBar test={test} setTest={setTest} />
-			<div className="flex flex-col border-slate-200 border-b dark:border-gray-800 text-center sm:text-left">
+			<div className="flex flex-col text-center border-b border-slate-200 dark:border-gray-800 sm:text-left">
 				<h1 className="text-2xl font-bold ">Create a test</h1>
-				<p className="text-slate-400 text-sm pt-3 pb-3">
+				<p className="pt-3 pb-3 text-sm text-slate-400">
 					Great! Now compose your test - add questions answers to each of them. Each question must
 					have at least one correct answer.
 				</p>
-				<div className="flex flex-col-reverse md:flex-row gap-3 mb-2 p-2">
+				<div className="flex flex-col-reverse gap-3 p-2 mb-2 md:flex-row">
 					<Input
 						placeholder="Insert test name..."
 						onChange={(e) => handleSetTestTitle(e.target.value)}
@@ -369,21 +369,21 @@ const Create = () => {
 				);
 			})}
 
-			<div className="flex flex-col md:flex-row gap-3 justify-center text-center">
+			<div className="flex flex-col justify-center gap-3 text-center md:flex-row">
 				<div
-					className="flex flex-1 bg-blue-200 dark:bg-blue-600  dark:hover:bg-blue-700 text-blue-500 dark:text-gray-950  font-bold p-5 text-xl justify-center hover:bg-blue-500  hover:text-white dark:hover:text-white  cursor-pointer"
+					className="flex justify-center flex-1 p-5 text-xl font-bold text-blue-500 bg-blue-200 cursor-pointer dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-gray-950 hover:bg-blue-500 hover:text-white dark:hover:text-white"
 					onClick={handleAddQuestion}
 				>
 					Add question +
 				</div>
 				<div
-					className="flex flex-1 bg-blue-200 dark:bg-blue-600  dark:hover:bg-blue-700 text-blue-500 dark:text-gray-950  font-bold p-5 text-xl justify-center hover:bg-blue-500  hover:text-white dark:hover:text-white  cursor-pointer"
+					className="flex justify-center flex-1 p-5 text-xl font-bold text-blue-500 bg-blue-200 cursor-pointer dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-gray-950 hover:bg-blue-500 hover:text-white dark:hover:text-white"
 					onClick={handlePreviewTest}
 				>
 					Preview test
 				</div>
 				<div
-					className="flex flex-1 bg-blue-200 dark:bg-blue-600  dark:hover:bg-blue-700 text-blue-500 dark:text-gray-950  font-bold p-5 text-xl justify-center hover:bg-blue-500  hover:text-white dark:hover:text-white  cursor-pointer"
+					className="flex justify-center flex-1 p-5 text-xl font-bold text-blue-500 bg-blue-200 cursor-pointer dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-gray-950 hover:bg-blue-500 hover:text-white dark:hover:text-white"
 					onClick={handleSaveTest}
 				>
 					{hasParamId ? "Save test" : "Create test"}

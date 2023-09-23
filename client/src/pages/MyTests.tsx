@@ -4,7 +4,7 @@ import { useSession } from "@clerk/clerk-react";
 import { fetchTestsByUserId } from "../utils/dbUtils";
 import Spinner from "../components/ui/Spinner";
 import TestItem from "../components/TestItem";
-import { Input } from "../components/ui/Input";
+import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/Button";
 import { useCallback, useState } from "react";
 import { TestType } from "../types/models";

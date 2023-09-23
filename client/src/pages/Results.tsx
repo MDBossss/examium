@@ -74,7 +74,7 @@ const Results = () => {
 	};
 
 	const handleSetIsCodeCorrect = (value: boolean, questionIndex: number) => {
-		console.log("setting isCodeCorrect")
+		console.log("setting isCodeCorrect");
 		setUserAnswers((prev) => {
 			const updatedUserAnswers = [...prev];
 			(updatedUserAnswers[questionIndex] as CodeAnswer).isCorrect = value;
@@ -129,29 +129,27 @@ const Results = () => {
 							Your answers: ({userScore.value}/{maxScore} correct)
 						</p>
 
-						{test.showQuestionsOnResults &&
-							test.questions.map((question, questionIndex) =>
-								question.type === "MULTIPLE_CHOICE" ? (
-									<MultipleChoiceQuestionResult
-										key={question.id}
-										question={question}
-										answersChecked={userAnswers[questionIndex] as boolean[]}
-										questionIndex={questionIndex}
-										showQuestion={test.showQuestionsOnResults}
-									/>
-								) : (
-									<CodeQuestionResult
-										key={question.id}
-										question={question}
-										userCode={userAnswers[questionIndex] as CodeAnswer}
-										questionIndex={questionIndex}
-										onSetIsCodeCorrect={handleSetIsCodeCorrect}
-										onLoaded={handleFetchedCodeQuestion}
-										showQuestion={test.showQuestionsOnResults}
-
-									/>
-								)
-							)}
+						{test.questions.map((question, questionIndex) =>
+							question.type === "MULTIPLE_CHOICE" ? (
+								<MultipleChoiceQuestionResult
+									key={question.id}
+									question={question}
+									answersChecked={userAnswers[questionIndex] as boolean[]}
+									questionIndex={questionIndex}
+									showQuestion={test.showQuestionsOnResults}
+								/>
+							) : (
+								<CodeQuestionResult
+									key={question.id}
+									question={question}
+									userCode={userAnswers[questionIndex] as CodeAnswer}
+									questionIndex={questionIndex}
+									onSetIsCodeCorrect={handleSetIsCodeCorrect}
+									onLoaded={handleFetchedCodeQuestion}
+									showQuestion={test.showQuestionsOnResults}
+								/>
+							)
+						)}
 					</div>
 				</div>
 				<div
