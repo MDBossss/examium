@@ -9,6 +9,7 @@ import MyTests from "./pages/MyTests";
 import CollabTests from "./pages/CollabTests";
 import { useEffect } from "react";
 import { useThemeStore } from "./store/themeStore";
+import Schedule from "./pages/Schedule";
 
 
 
@@ -38,6 +39,7 @@ function App() {
         <Route path="/collaborations/:id" element={<Layout><CollabTests/></Layout>}/>
         <Route path="/solve/:id" element={<Preview/>}/>
         <Route path="/solve/results" element={<Results/>}/>
+        <Route path="/schedule" element={<Layout><Schedule/></Layout>}/>
       </Routes>
     </div>
   );

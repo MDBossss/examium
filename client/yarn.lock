@@ -121,6 +121,34 @@
     style-mod "^4.0.0"
     w3c-keyname "^2.2.4"
 
+"@devexpress/dx-core@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@devexpress/dx-core/-/dx-core-4.0.5.tgz#006f6f1fac60ce10bd608714edaaf8efd92ee3ec"
+  integrity sha512-z/d4rRSDxZKGRW/24ncvIqj1ba6Jyjv08pipqY1xTsQCDiZJwSGlSrY02Al9tQ5tF0u4kWMGo3khh/ml/cKR9g==
+
+"@devexpress/dx-react-core@^4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@devexpress/dx-react-core/-/dx-react-core-4.0.5.tgz#c9ba44afb24fd52bda05c7253ff43f2f55e5a486"
+  integrity sha512-gaYUhmR65PeuWR/E+tpyHwCVIbdAeVJwiXu+ly9h6YdEcOKaLjOO52lWut3VBW7WhQCsCGq59gezmBVeNAv5oQ==
+  dependencies:
+    "@devexpress/dx-core" "4.0.5"
+    prop-types "^15.7.2"
+
+"@devexpress/dx-react-scheduler@^4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@devexpress/dx-react-scheduler/-/dx-react-scheduler-4.0.5.tgz#8b2305bbf66dd1b714cdb9a4a1217de325d79f8c"
+  integrity sha512-JllbcA0Mll+AKjIXr9Gn7Mm6DkWib7CbkUPZ6UPON28KjMGxxkQU65PCEa1VFIBqYBfYC1ulgjnj5jrxKLwKRg==
+  dependencies:
+    "@devexpress/dx-scheduler-core" "4.0.5"
+
+"@devexpress/dx-scheduler-core@4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@devexpress/dx-scheduler-core/-/dx-scheduler-core-4.0.5.tgz#2545e475bcbf36c832f991e6a7db8bd0dc611613"
+  integrity sha512-quMQcF9sAlGKJ+08QLmTzpWivB/pmuJtMvsz4pasM3HZOAw4gdDgmMerrxXYgbmDAp9YkH9Pxvs4iw5oAv7Bbw==
+  dependencies:
+    moment "^2.24.0"
+    rrule "2.7.1"
+
 "@esbuild/android-arm64@0.17.19":
   version "0.17.19"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.17.19.tgz#bafb75234a5d3d1b690e7c2956a599345e84a2fd"
@@ -2733,6 +2761,11 @@ minimatch@^3.0.4, minimatch@^3.0.5, minimatch@^3.1.1, minimatch@^3.1.2:
   dependencies:
     brace-expansion "^1.1.7"
 
+moment@^2.24.0:
+  version "2.29.4"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
+
 mri@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/mri/-/mri-1.2.0.tgz#6721480fec2a11a4889861115a48b6cbe7cc8f0b"
@@ -2993,7 +3026,7 @@ prelude-ls@^1.2.1:
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prop-types@^15.0.0, prop-types@^15.8.1:
+prop-types@^15.0.0, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -3329,6 +3362,13 @@ rollup@^3.21.0:
   integrity sha512-tywOR+rwIt5m2ZAWSe5AIJcTat8vGlnPFAv15ycCrw33t6iFsXZ6mzHVFh2psSjxQPmI+xgzMZZizUAukBI4aQ==
   optionalDependencies:
     fsevents "~2.3.2"
+
+rrule@2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/rrule/-/rrule-2.7.1.tgz#2511e1aed0e96fb5acf831304cde97d2cb65d99e"
+  integrity sha512-4p20u/1U7WqR3Nb1hOUrm0u1nSI7sO93ZUVZEZ5HeF6Gr5OlJuyhwEGRvUHq8ZfrPsq5gfa5b9dqnUs/kPqpIw==
+  dependencies:
+    tslib "^2.4.0"
 
 run-parallel@^1.1.9:
   version "1.2.0"

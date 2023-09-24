@@ -23,6 +23,11 @@ const Navbar = () => {
 			title: "Collaborations",
 			icon: <UsersIcon className="w-5 h-5" />,
 		},
+		{
+			location: `/schedule`,
+			title: "Schedule",
+			icon: <FileIcon className="w-5 h-5" />,
+		},
 	];
 
 	const handlePreviewTest = () => {
