@@ -1,4 +1,4 @@
-import { PlusIcon, FileIcon, UsersIcon, EditIcon, LockIcon } from "lucide-react";
+import { PlusIcon, FileIcon, UsersIcon, EditIcon, LockIcon, CalendarIcon } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProgressDialog from "./ui/Dialogs/ProgressDialog";
@@ -15,13 +15,18 @@ const Navbar = () => {
 	const navItems = [
 		{
 			location: `/tests/${session?.user.id}`,
-			title: "My tests",
-			icon: <FileIcon className="w-5 h-5" />,
+			title: "My Tests",
+			icon: <FileIcon className="w-4 h-4" />,
 		},
 		{
 			location: `/collaborations/${session?.user.id}`,
 			title: "Collaborations",
-			icon: <UsersIcon className="w-5 h-5" />,
+			icon: <UsersIcon className="w-4 h-4" />,
+		},
+		{
+			location: `/schedule`,
+			title: "Schedule",
+			icon: <CalendarIcon className="w-4 h-4" />,
 		},
 	];
 
@@ -82,7 +87,7 @@ const Navbar = () => {
 									{navItems.map((item) => (
 										<li key={item.title}>
 											<div
-												className="flex items-center gap-1 p-1 transition-all rounded-sm cursor-pointer hover:bg-slate-300 dark:hover:bg-gray-800"
+												className="flex items-center gap-3 p-1 text-lg transition-all rounded-sm cursor-pointer hover:bg-slate-300 dark:hover:bg-gray-800"
 												onClick={() => handleNavigate(item.location)}
 											>
 												{item.icon}

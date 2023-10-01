@@ -14,6 +14,7 @@ import {
 } from "./Dropdown";
 import { Button } from "./Button";
 import {
+	CalendarIcon,
 	FileIcon,
 	LaptopIcon,
 	LogOutIcon,
@@ -128,48 +129,54 @@ const LoginButton = ({ test }: Props) => {
 						<DropdownMenuLabel>My Account</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem className="flex gap-1" onClick={() => handleToggleProfile(true)}>
-							<UserIcon className="h-4 w-4" /> Profile
+							<UserIcon className="w-4 h-4" /> Profile
 						</DropdownMenuItem>
 						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate("/create")}>
-							<PlusIcon className="h-4 w-4" /> New test
+							<PlusIcon className="w-4 h-4" /> New test
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							className="flex gap-1"
 							onClick={() => handleNavigate(`/tests/${session.user.id}`)}
 						>
-							<FileIcon className="h-4 w-4" /> My tests
+							<FileIcon className="w-4 h-4" /> My tests
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							className="flex gap-1"
 							onClick={() => handleNavigate(`/collaborations/${session.user.id}`)}
 						>
-							<UsersIcon className="h-4 w-4" /> Collaborations
+							<UsersIcon className="w-4 h-4" /> Collaborations
+						</DropdownMenuItem>
+						<DropdownMenuItem
+							className="flex gap-1"
+							onClick={() => handleNavigate(`/schedule`)}
+						>
+							<CalendarIcon className="w-4 h-4" /> Schedule
 						</DropdownMenuItem>
 						<DropdownMenuSub>
 							<DropdownMenuSubTrigger className="flex gap-1">
-								<PaletteIcon  className="h-4 w-4" />
+								<PaletteIcon  className="w-4 h-4" />
 								<span>Theme</span>
 							</DropdownMenuSubTrigger>
 							<DropdownMenuPortal>
 								<DropdownMenuSubContent>
 									<DropdownMenuItem className="flex gap-1" onClick={() => setTheme("light")}>
-										<SunIcon className="h-4 w-4" />
+										<SunIcon className="w-4 h-4" />
 										<span>Light</span>
 									</DropdownMenuItem>
 									<DropdownMenuItem className="flex gap-1"  onClick={() => setTheme("dark")}>
-										<MoonIcon className="h-4 w-4" />
+										<MoonIcon className="w-4 h-4" />
 										<span>Dark</span>
 									</DropdownMenuItem>
 									<DropdownMenuSeparator />
 									<DropdownMenuItem className="flex gap-1" onClick={() => clearTheme()}>
-										<LaptopIcon className="h-4 w-4" />
+										<LaptopIcon className="w-4 h-4" />
 										<span>System</span>
 									</DropdownMenuItem>
 								</DropdownMenuSubContent>
 							</DropdownMenuPortal>
 						</DropdownMenuSub>
 						<DropdownMenuItem className="flex gap-1" onClick={handleLogout}>
-							<LogOutIcon className="h-4 w-4" /> Logout
+							<LogOutIcon className="w-4 h-4" /> Logout
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

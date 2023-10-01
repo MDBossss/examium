@@ -141,6 +141,14 @@ body {
 	outline: none;
 }
 
+.darkmode-scheduler span {
+	color: #e2e8f0;
+}
+
+.lightmode-scheduler span {
+	color: #27272a;
+}
+
 /* width */
 ::-webkit-scrollbar {
 	width: 8px;
@@ -161,5 +169,3 @@ body {
 ::-webkit-scrollbar-thumb:hover {
 	background: #3b82f6;
 }
-
-
