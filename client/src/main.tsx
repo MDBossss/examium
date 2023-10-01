@@ -6,7 +6,7 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Toaster } from "./components/ui/Toaster.tsx";
 import "./index.css";
 import { TooltipProvider } from "./components/ui/Tooltip.tsx";
-import MaterialThemeWrapper from "./components/MaterialThemeWrapper.tsx";
+import MaterialThemeProvider from "./components/MaterialThemeProvider.tsx";
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
 	throw new Error("Missing Publishable Key");
@@ -26,7 +26,7 @@ const appearance = {
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<ClerkProvider publishableKey={clerkPubKey} appearance={appearance}>
-		<MaterialThemeWrapper>
+		<MaterialThemeProvider>
 			<QueryClientProvider client={queryClient}>
 				<TooltipProvider>
 					<Toaster />
@@ -35,6 +35,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 					</BrowserRouter>
 				</TooltipProvider>
 			</QueryClientProvider>
-		</MaterialThemeWrapper>
+		</MaterialThemeProvider>
 	</ClerkProvider>
 );

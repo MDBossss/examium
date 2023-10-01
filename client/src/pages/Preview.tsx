@@ -44,7 +44,7 @@ const Preview = () => {
 				setHasParamId(false);
 			} else {
 				setHasParamId(false);
-				navigate("/", { replace: true });
+				navigate("/404", { replace: true });
 			}
 		};
 		initialLoad();

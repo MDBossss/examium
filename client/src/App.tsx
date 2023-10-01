@@ -7,12 +7,10 @@ import Layout from "./pages/Layout";
 import Results from "./pages/Results";
 import MyTests from "./pages/MyTests";
 import CollabTests from "./pages/CollabTests";
-import { useEffect } from "react";
+import { useEffect} from "react";
 import { useThemeStore } from "./store/themeStore";
 import Schedule from "./pages/Schedule";
-
-
-
+import RouteGuard from "./components/RouteGuard";
 
 function App() {
   const {theme} = useThemeStore();
@@ -39,7 +37,7 @@ function App() {
         <Route path="/collaborations/:id" element={<Layout><CollabTests/></Layout>}/>
         <Route path="/solve/:id" element={<Preview/>}/>
         <Route path="/solve/results" element={<Results/>}/>
-        <Route path="/schedule" element={<Layout><Schedule/></Layout>}/>
+        <Route path="/schedule" element={<RouteGuard><Layout><Schedule/></Layout></RouteGuard>}/>
       </Routes>
     </div>
   );

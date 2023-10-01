@@ -44,6 +44,8 @@ interface Props {
 	schedulerRef: RefObject<SchedulerRef>;
 }
 
+
+
 const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 	const event = scheduler.edited;
 
@@ -71,18 +73,31 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 	};
 
 	const handleSubmit = async () => {
-		//Validating the inputs using zod here
-		//Later the error state wont be needed probably?
-		//Displaying the toast message directly
+		
 
-		//and need to check the dates IMPORTANT
-		if (state.title.length < 3) {
+		if (state.title?.length < 3 ) {
 			toast({
-				title: "Title is too short",
-				description: "Title has to be at least 3 characters long!",
+				title: "Title is too short!",
+				description: "Title has to be at least 3 characters long",
 				variant: "destructive",
 			});
 			return;
+		}
+
+		if(state.title?.length > 50){
+			toast({
+				title: "Title is too long!",
+				description: "Title cannot be longer than 50 characters",
+				variant: "destructive",
+			})
+		}
+
+		if(state.description?.length > 300){
+			toast({
+				title: "Description is too long!",
+				description: "Description cannot be longer than 300 characters",
+				variant: "destructive",
+			})
 		}
 
 		if (isBefore(new Date(state.end), new Date(state.start))) {
@@ -166,6 +181,7 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 								value={state.title}
 								className="col-span-3 "
 								onChange={(e) => handleChange(e.target.value, "title")}
+								maxLength={50}
 							/>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
@@ -182,6 +198,18 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 								date={state.end as Date}
 								setDate={(date) => handleChange(date, "end")}
 								className="col-span-3"
+							/>
+						</div>
+						<div className="grid items-center grid-cols-4 gap-4">
+							<Label htmlFor="description" className="text-right">
+								Description
+							</Label>
+							<Input
+								id="description"
+								placeholder="Insert description..."
+								value={state.description}
+								className="col-span-3 bg-background"
+								onChange={(e) => handleChange(e.target.value, "description")}
 							/>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">

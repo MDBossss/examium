@@ -8,11 +8,11 @@ interface Props {
 	children: ReactNode;
 }
 
-const MaterialThemeWrapper = ({ children }: Props) => {
+const MaterialThemeProvider = ({ children }: Props) => {
 	const { theme } = useThemeStore();
 	const materialTheme = createTheme(getDesignTokens(theme));
 
 	return <ThemeProvider theme={materialTheme}>{children}</ThemeProvider>;
 };
 
-export default MaterialThemeWrapper;
+export default MaterialThemeProvider;

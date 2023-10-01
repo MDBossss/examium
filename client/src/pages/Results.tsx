@@ -31,7 +31,7 @@ const Results = () => {
 		: document.documentElement.setAttribute("data-color-mode", "light");
 
 	const [userAnswers, setUserAnswers] = useState<(boolean[] | CodeAnswer)[]>(
-		location.state.userAnswers
+		location.state?.userAnswers
 	);
 	const [fetchedCodeQuestionsCount, setFetchedCodeQuestionsCount] = useState<number>(0);
 
@@ -45,7 +45,7 @@ const Results = () => {
 			navigate("/", { replace: true });
 		}
 	}, []);
-
+	
 	const handleReturn = () => {
 		if (hasParamId) {
 			navigate("/");

@@ -11,11 +11,11 @@ import CustomDateTimeInput from "./TimeInput";
 interface DateTimePickerProps {
 	date: Date;
 	setDate: (date: Date) => void;
-	className?: string
+	className?: string;
 }
 
-export const DateTimePicker = ({ date, setDate,className }: DateTimePickerProps) => {
-	const [selectedDateTime, setSelectedDateTime] = useState<Date>(useMemo(() =>date, []));
+export const DateTimePicker = ({ date, setDate, className }: DateTimePickerProps) => {
+	const [selectedDateTime, setSelectedDateTime] = useState<Date>(useMemo(() => date, []));
 
 	const handleSelect = (selected: Date, time?: Date) => {
 		const selectedDay = new Date(selected);
@@ -35,7 +35,7 @@ export const DateTimePicker = ({ date, setDate,className }: DateTimePickerProps)
 		handleSelect(selectedDateTime, time);
 	};
 
-    const MemoizedCalendar = memo(Calendar);
+	const MemoizedCalendar = memo(Calendar);
 
 	return (
 		<Popover>
@@ -51,7 +51,7 @@ export const DateTimePicker = ({ date, setDate,className }: DateTimePickerProps)
 					{date ? format(selectedDateTime, "eee HH:mm") : <span>Pick a date</span>}
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="z-[9999] w-auto p-0">
+			<PopoverContent className="z-[9999] w-auto p-0 pointer-events-auto">
 				<MemoizedCalendar
 					mode="single"
 					selected={selectedDateTime}
