@@ -60,7 +60,7 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 	const [state, setState] = useState<EditorInput>({
 		event_id: event?.event_id || uuidv4(),
 		title: scheduler.state.title.value,
-		description: event?.description,
+		description: event?.description || "",
 		start: scheduler.state.start.value,
 		end: scheduler.state.end.value,
 		allDay: event?.allDay,
@@ -196,26 +196,27 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 								id="title"
 								placeholder="Insert title..."
 								value={state.title}
-								className="col-span-3 bg-background dark:bg-background"
+								className="col-span-3"
 								onChange={(e) => handleChange(e.target.value, "title")}
 								maxLength={50}
 							/>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
-							<Label htmlFor="description" className="text-right">
+							<Label htmlFor="event-description" className="text-right">
 								Description
 							</Label>
 							<Input
-								id="description"
+								id="event-description"
 								placeholder="Insert description..."
 								value={state.description}
-								className="col-span-3 bg-background dark:bg-background"
+								className="col-span-3"
 								onChange={(e) => handleChange(e.target.value, "description")}
 							/>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
 							<Label className="text-right">Event start</Label>
 							<DateTimePicker
+								id="firsttimepicker"
 								date={state.start as Date}
 								setDate={(date) => handleChange(date, "start")}
 								className="col-span-3"
@@ -224,6 +225,7 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 						<div className="grid items-center grid-cols-4 gap-4">
 							<Label className="text-right">Event end</Label>
 							<DateTimePicker
+								id="secondtimepicker"
 								date={state.end as Date}
 								setDate={(date) => handleChange(date, "end")}
 								className="col-span-3"

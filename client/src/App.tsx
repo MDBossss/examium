@@ -37,7 +37,7 @@ function App() {
         <Route path="/collaborations/:id" element={<Layout><CollabTests/></Layout>}/>
         <Route path="/solve/:id" element={<Preview/>}/>
         <Route path="/solve/results" element={<Results/>}/>
-        <Route path="/schedule" element={<RouteGuard><Layout><Schedule/></Layout></RouteGuard>}/>
+        <Route path="/schedule" element={<Layout><Schedule/></Layout>}/>
       </Routes>
     </div>
   );

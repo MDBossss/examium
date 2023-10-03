@@ -2,12 +2,13 @@ import { format } from "date-fns";
 import { useState, ChangeEvent, useMemo } from "react";
 import { Input } from "./Input";
 
-interface TimeInputProps {
+interface CustomDateTimeInputProps {
 	initialDate?: Date;
 	onChange: (newDate: Date) => void;
+	name?: string
 }
 
-function TimeInput({ initialDate, onChange }: TimeInputProps) {
+function TimeInput({ initialDate, onChange,name }: CustomDateTimeInputProps) {
 	// Initialize state with the provided date or the current date if none provided
 	const [date] = useState<Date>(initialDate || new Date());
 	const [time, setTime] = useState<string>(
@@ -73,6 +74,7 @@ function TimeInput({ initialDate, onChange }: TimeInputProps) {
 
 	return (
 		<Input
+			name={name}
 			type="text"
 			placeholder="HH:mm"
 			value={time}
@@ -80,7 +82,6 @@ function TimeInput({ initialDate, onChange }: TimeInputProps) {
 			pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]"
 			maxLength={5}
 			inputMode="numeric"
-			disabled={false}
 			onBlur={() => handleBlur()}
 		/>
 	);

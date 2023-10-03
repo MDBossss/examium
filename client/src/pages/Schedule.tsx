@@ -18,7 +18,9 @@ const Schedule = () => {
 					ref={schedulerRef}
 					customEditor={(scheduler) => (
 						<SchedulerEditor scheduler={scheduler} schedulerRef={schedulerRef} />
-					)}
+					)
+						
+					}
 					viewerExtraComponent={(fields, event) => {
 						return <p>{event.description}</p>;
 					}}
