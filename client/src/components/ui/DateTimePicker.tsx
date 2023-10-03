@@ -6,7 +6,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "./Calendar";
 import format from "date-fns/format";
 import { Label } from "./Label";
-import CustomDateTimeInput from "./TimeInput";
+import TimeInput from "./TimeInput";
 
 interface DateTimePickerProps {
 	date: Date;
@@ -62,7 +62,7 @@ export const DateTimePicker = ({ date, setDate, className }: DateTimePickerProps
 				<>
 					<div className="px-4 pt-0 pb-4">
 						<Label>Time</Label>
-						<CustomDateTimeInput initialDate={date} onChange={(date) => handleSetTime(date)} />
+						<TimeInput initialDate={date} onChange={(date) => handleSetTime(date)} />
 					</div>
 					{!selectedDateTime && <p>Please pick a day.</p>}
 				</>

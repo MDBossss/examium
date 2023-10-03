@@ -27,6 +27,11 @@ import {
 import { generateRepeatingEvents } from "../utils/dateUtils";
 import { isBefore } from "date-fns";
 import { useToast } from "../hooks/useToast";
+import { MultiSelect } from "./ui/MultiSelect";
+import { useQuery } from "@tanstack/react-query";
+import { fetchTestsByUserId } from "../utils/dbUtils";
+import { useSession } from "@clerk/clerk-react";
+import { OptionType } from "../types/models";
 
 interface EditorInput {
 	event_id: string | number;
@@ -37,6 +42,7 @@ interface EditorInput {
 	allDay: boolean | undefined;
 	color: string;
 	repeatPattern: "none" | "daily" | "weekly" | "monthly";
+	selectedTests: OptionType[]
 }
 
 interface Props {
@@ -44,13 +50,13 @@ interface Props {
 	schedulerRef: RefObject<SchedulerRef>;
 }
 
-
-
 const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 	const event = scheduler.edited;
 
-	//Making custom state for the editor
 	const { toast } = useToast();
+	const {session} = useSession();
+	const userId = session?.user.id;
+	const [testOptions,setTestOptions] = useState<OptionType[]>([])
 	const [state, setState] = useState<EditorInput>({
 		event_id: event?.event_id || uuidv4(),
 		title: scheduler.state.title.value,
@@ -60,10 +66,23 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 		allDay: event?.allDay,
 		color: (event?.color as string) || "#3b82f6",
 		repeatPattern: event?.repeatPattern || "none",
+		selectedTests: event?.selectedTests || []
 	});
 
+	const {isError} = useQuery({
+		queryKey: ["tests",userId],
+		queryFn: () => fetchTestsByUserId(userId!),
+		refetchOnWindowFocus:false,
+		onSuccess: (data) => {
+			const newTestOptions: OptionType[] = [];
+			data.map((test) => {
+				newTestOptions.push({label: test.title,value:test.id})
+			})
+			setTestOptions(newTestOptions);
+		}
+	})
+
 	const handleChange = (value: any, name: string) => {
-		// console.log(`Changed [${name}]: ${value}`)
 		setState((prev) => {
 			return {
 				...prev,
@@ -73,9 +92,7 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 	};
 
 	const handleSubmit = async () => {
-		
-
-		if (state.title?.length < 3 ) {
+		if (state.title?.length < 3) {
 			toast({
 				title: "Title is too short!",
 				description: "Title has to be at least 3 characters long",
@@ -84,20 +101,20 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 			return;
 		}
 
-		if(state.title?.length > 50){
+		if (state.title?.length > 50) {
 			toast({
 				title: "Title is too long!",
 				description: "Title cannot be longer than 50 characters",
 				variant: "destructive",
-			})
+			});
 		}
 
-		if(state.description?.length > 300){
+		if (state.description?.length > 300) {
 			toast({
 				title: "Description is too long!",
 				description: "Description cannot be longer than 300 characters",
 				variant: "destructive",
-			})
+			});
 		}
 
 		if (isBefore(new Date(state.end), new Date(state.start))) {
@@ -179,9 +196,21 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 								id="title"
 								placeholder="Insert title..."
 								value={state.title}
-								className="col-span-3 "
+								className="col-span-3 bg-background dark:bg-background"
 								onChange={(e) => handleChange(e.target.value, "title")}
 								maxLength={50}
+							/>
+						</div>
+						<div className="grid items-center grid-cols-4 gap-4">
+							<Label htmlFor="description" className="text-right">
+								Description
+							</Label>
+							<Input
+								id="description"
+								placeholder="Insert description..."
+								value={state.description}
+								className="col-span-3 bg-background dark:bg-background"
+								onChange={(e) => handleChange(e.target.value, "description")}
 							/>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
@@ -198,18 +227,6 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 								date={state.end as Date}
 								setDate={(date) => handleChange(date, "end")}
 								className="col-span-3"
-							/>
-						</div>
-						<div className="grid items-center grid-cols-4 gap-4">
-							<Label htmlFor="description" className="text-right">
-								Description
-							</Label>
-							<Input
-								id="description"
-								placeholder="Insert description..."
-								value={state.description}
-								className="col-span-3 bg-background"
-								onChange={(e) => handleChange(e.target.value, "description")}
 							/>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
@@ -231,6 +248,10 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 									</SelectGroup>
 								</SelectContent>
 							</Select>
+						</div>
+						<div className="grid items-center grid-cols-4 gap-4">
+							<Label className="text-right">Link tests</Label>
+							<MultiSelect placeholder="Select related tests..." options={testOptions} onChange={(options) => handleChange(options,"selectedTests")} selected={state.selectedTests} className="col-span-3"/>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
 							<Label htmlFor="allDay" className="text-right">

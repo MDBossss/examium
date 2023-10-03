@@ -58,3 +58,8 @@ export interface CodeAnswer{
 	userCode: string,
 	isCorrect: boolean
 }
+
+export type OptionType = {
+	label: string;
+	value: string;
+};
