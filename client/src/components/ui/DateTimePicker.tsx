@@ -1,5 +1,4 @@
 import { memo, useMemo, useRef, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
 import { Button } from "./Button";
 import { cn } from "../../lib/utils";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -8,6 +7,7 @@ import format from "date-fns/format";
 import { Label } from "./Label";
 import TimeInput from "./TimeInput";
 import useClickOutside from "../../hooks/useClickOutside";
+import { isEqual } from "date-fns";
 
 interface DateTimePickerProps {
 	date: Date;
@@ -24,6 +24,9 @@ export const DateTimePicker = ({ date, setDate, className, id }: DateTimePickerP
 	useClickOutside(ref, () => setIsOpen(false));
 
 	const handleSelect = (selected: Date, time?: Date) => {
+        if(selected === undefined && time === undefined){
+            return
+        }
 		const selectedDay = new Date(selected);
 		const modifiedDay = new Date(
 			selectedDay.getFullYear(),
@@ -32,6 +35,15 @@ export const DateTimePicker = ({ date, setDate, className, id }: DateTimePickerP
 			time ? time.getHours() : selectedDateTime.getHours(),
 			time ? time.getMinutes() : selectedDateTime.getMinutes()
 		);
+
+        if(isEqual(modifiedDay,selectedDateTime)){
+            console.log("dates equal")
+            return
+        }
+        else{
+            console.log("not same dates")
+            console.log(selectedDateTime)
+        }
 
 		setSelectedDateTime(modifiedDay);
 		setDate(modifiedDay);
