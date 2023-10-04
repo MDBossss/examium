@@ -36,7 +36,6 @@ const Schedule = () => {
 									<div className="flex flex-col gap-1">
 										<span className="text-sm underline">Linked tests:</span>
 										<div className="flex flex-col gap-2">
-											{console.log(event.selectedTests)}
 											{event?.selectedTests &&
 												event?.selectedTests.map((test: OptionType) => (
 													<div

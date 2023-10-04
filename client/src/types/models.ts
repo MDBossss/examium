@@ -63,3 +63,16 @@ export type OptionType = {
 	label: string;
 	value: string;
 };
+
+export interface EventType {
+	event_id: string | number;
+	title: string;
+	description: string;
+	start: Date | string;
+	end: Date | string;
+	allDay: boolean | undefined;
+	color: string;
+	repeatPattern: "none" | "daily" | "weekly" | "monthly";
+	selectedTests: OptionType[]
+}
+
