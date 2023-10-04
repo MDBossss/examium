@@ -4,25 +4,60 @@ import { useMemo, useRef, useState } from "react";
 import { useThemeStore } from "../store/themeStore";
 import SchedulerEditor from "../components/SchedulerEditor";
 import SearchBar from "../components/SearchBar";
+import { OptionType } from "../types/models";
+import { Button } from "../components/ui/Button";
+import { useNavigate } from "react-router-dom";
 
 const Schedule = () => {
 	const { theme } = useThemeStore();
+	const navigate = useNavigate();
 	const [date, setDate] = useState<Date>(useMemo(() => new Date(), [])); // fetch to here? or use react query
 	const schedulerRef = useRef<SchedulerRef>(null);
 
 	return (
 		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
-			<SearchBar/>
+			<SearchBar />
 			<div className={`${theme === "dark" ? "darkmode-scheduler" : "lightmode-scheduler"}`}>
 				<Scheduler
 					ref={schedulerRef}
 					customEditor={(scheduler) => (
 						<SchedulerEditor scheduler={scheduler} schedulerRef={schedulerRef} />
-					)
-						
-					}
+					)}
 					viewerExtraComponent={(fields, event) => {
-						return <p>{event.description}</p>;
+						return (
+							<div className="flex flex-col gap-5 mt-5">
+								{event?.description && (
+									<div className="flex flex-col gap-1">
+										<span className="text-sm underline">Description:</span>
+										<p className="text-md">{event.description}</p>
+									</div>
+								)}
+								{event?.selectedTests && (
+									<div className="flex flex-col gap-1">
+										<span className="text-sm underline">Linked tests:</span>
+										<div className="flex flex-col gap-2">
+											{console.log(event.selectedTests)}
+											{event?.selectedTests &&
+												event?.selectedTests.map((test: OptionType) => (
+													<div
+														key={test.value}
+														className="flex items-center justify-between gap-1 p-2 rounded-sm bg-slate-200 dark:bg-slate-800"
+													>
+														<p className="font-bold">{test.label}</p>
+														<Button
+															size={"sm"}
+															className="bg-blue-500 hover:bg-blue-600 dark:hover:bg-blue-600"
+															onClick={() => navigate(`/solve/${test.value}`)}
+														>
+															Solve
+														</Button>
+													</div>
+												))}
+										</div>
+									</div>
+								)}
+							</div>
+						);
 					}}
 					view="week"
 					fields={[{ name: "recurrencePattern", type: "select" }]}

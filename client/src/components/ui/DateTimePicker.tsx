@@ -24,6 +24,7 @@ export const DateTimePicker = ({ date, setDate, className, id }: DateTimePickerP
 	useClickOutside(ref, () => setIsOpen(false));
 
 	const handleSelect = (selected: Date, time?: Date) => {
+		//if date has not changed from calendar, it will return undefined
         if(selected === undefined && time === undefined){
             return
         }
@@ -35,15 +36,6 @@ export const DateTimePicker = ({ date, setDate, className, id }: DateTimePickerP
 			time ? time.getHours() : selectedDateTime.getHours(),
 			time ? time.getMinutes() : selectedDateTime.getMinutes()
 		);
-
-        if(isEqual(modifiedDay,selectedDateTime)){
-            console.log("dates equal")
-            return
-        }
-        else{
-            console.log("not same dates")
-            console.log(selectedDateTime)
-        }
 
 		setSelectedDateTime(modifiedDay);
 		setDate(modifiedDay);
