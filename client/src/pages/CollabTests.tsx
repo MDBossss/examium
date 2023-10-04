@@ -4,7 +4,7 @@ import { TestType } from "../types/models";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCollaborationTestsByUserId } from "../utils/dbUtils";
 import SearchBar from "../components/SearchBar";
-import { Input } from "../components/ui/input";
+import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import Spinner from "../components/ui/Spinner";
 import TestItem from "../components/TestItem";
