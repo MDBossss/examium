@@ -3,7 +3,7 @@ import { useSession } from "@clerk/clerk-react";
 import { useNavigate, useParams } from "react-router-dom";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
-import { Input } from "../components/ui/Input";
+import { Input } from "../components/ui/input";
 import {
 	CodeQuestionType,
 	MultipleChoiceQuestionType,
@@ -16,7 +16,7 @@ import { z } from "zod";
 import { useToast } from "../hooks/useToast";
 import useGenerateData from "../hooks/useGenerateData";
 import { validateTest } from "../utils/testUtils";
-import { createTest, deleteTest, fetchTestById, updateTest } from "../utils/dbUtils";
+import { createTest, deleteTest, fetchTestById, updateTest } from "../api/tests";
 import CollaborationsDialog from "../components/ui/Dialogs/CollaborationsDialog";
 import { useThemeStore } from "../store/themeStore";
 

@@ -1,7 +1,7 @@
 import SearchBar from "../components/SearchBar";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "@clerk/clerk-react";
-import { fetchTestsByUserId } from "../utils/dbUtils";
+import { fetchTestsByUserId } from "../api/tests";
 import Spinner from "../components/ui/Spinner";
 import TestItem from "../components/TestItem";
 import { Input } from "../components/ui/Input";

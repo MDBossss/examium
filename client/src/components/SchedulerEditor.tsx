@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import type { SchedulerHelpers, SchedulerRef } from "@aldabil/react-scheduler/types";
 import { RefObject, useState } from "react";
-import { Input } from "./ui/Input";
+import { Input } from "./ui/input";
 import DateTimePicker from "./ui/DateTimePicker";
 import { Label } from "./ui/Label";
 import { Button } from "./ui/Button";
@@ -29,21 +29,10 @@ import { isBefore } from "date-fns";
 import { useToast } from "../hooks/useToast";
 import { MultiSelect } from "./ui/MultiSelect";
 import { useQuery } from "@tanstack/react-query";
-import { fetchTestsByUserId } from "../utils/dbUtils";
 import { useSession } from "@clerk/clerk-react";
-import { OptionType } from "../types/models";
-
-interface EditorInput {
-	event_id: string | number;
-	title: string;
-	description: string;
-	start: Date | string;
-	end: Date | string;
-	allDay: boolean | undefined;
-	color: string;
-	repeatPattern: "none" | "daily" | "weekly" | "monthly";
-	selectedTests: OptionType[]
-}
+import { EventType, OptionType } from "../types/models";
+import { fetchTestsByUserId } from "../api/tests";
+import { createEvent, updateEvent } from "../api/events";
 
 interface Props {
 	scheduler: SchedulerHelpers;
@@ -57,7 +46,7 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 	const {session} = useSession();
 	const userId = session?.user.id;
 	const [testOptions,setTestOptions] = useState<OptionType[]>([])
-	const [state, setState] = useState<EditorInput>({
+	const [state, setState] = useState<EventType>({
 		event_id: event?.event_id || uuidv4(),
 		title: scheduler.state.title.value,
 		description: event?.description || "",
@@ -128,6 +117,36 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 
 		try {
 			scheduler.loading(true);
+
+			// If editing event update else create
+			if(!event){
+				await createEvent(state,userId!)
+				.then(() => {
+					toast({
+						description: "✅ Event created successfully."
+					})
+				})
+				.catch(() => {
+					toast({
+						description: "😓 Failed to create event.",
+						variant: "destructive",
+					});
+				})
+			}
+			else{
+				await updateEvent(state,userId!)
+				.then(() => {
+					toast({
+						description: "✅ Event updated successfully."
+					})
+				})
+				.catch(() => {
+					toast({
+						description: "😓 Failed to update event.",
+						variant: "destructive",
+					});
+				})
+			}
 
 			let editSingleValue = true;
 			schedulerRef.current?.scheduler.events.filter((e) => {

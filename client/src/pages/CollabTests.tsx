@@ -2,7 +2,7 @@ import { useSession } from "@clerk/clerk-react";
 import { useState, useCallback } from "react";
 import { TestType } from "../types/models";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCollaborationTestsByUserId } from "../utils/dbUtils";
+import { fetchCollaborationTestsByUserId } from "../api/tests";
 import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";

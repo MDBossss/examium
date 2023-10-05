@@ -74,7 +74,6 @@ export function generateRepeatingEvents(event: EditorInput): ProcessedEvent[] {
 				});
 				currentDate = addDays(currentDate, 1);
 			}
-			console.log(occurrences);
 			return occurrences as ProcessedEvent[];
 
 		case "weekly":

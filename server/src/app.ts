@@ -4,6 +4,7 @@ import cors from "cors";
 import userRoutes from "./routes/userRoutes";
 import testRoutes from "./routes/testRoutes";
 import codeRoutes from "./routes/codeRoutes";
+import eventRoutes from "./routes/eventRoutes";
 
 config();
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use("/api/users",userRoutes);
 app.use("/api/tests",testRoutes);
 app.use("/api/code",codeRoutes)
+app.use("/api/events",eventRoutes)
 
 //Error handling middleware
 app.use((err:Error,req:Request,res:Response, next: NextFunction) => {

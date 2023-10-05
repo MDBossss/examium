@@ -3,7 +3,7 @@ import SearchBar from "../components/SearchBar";
 import { CodeAnswer, MultipleChoiceQuestionType, TestType } from "../types/models";
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
-import { fetchTestById } from "../utils/dbUtils";
+import { fetchTestById } from "../api/tests";
 import { randomizeTest, renderTextWithLineBreaks } from "../utils/testUtils";
 import { notEmpty } from "../utils/genericUtils";
 import MultipleChoiceQuestionSolve from "../components/MultipleChoiceQuestion/MultipleChoiceQuestionSolve";

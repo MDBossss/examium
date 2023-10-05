@@ -15,7 +15,7 @@ import CollaboratorsTable from "../../CollaboratorsTable";
 import { useState } from "react";
 import { z } from "zod";
 import { useToast } from "../../../hooks/useToast";
-import { fetchUserByEmail } from "../../../utils/dbUtils";
+import { fetchUserByEmail } from "../../../api/users";
 import { ActiveSessionResource } from "@clerk/types";
 
 interface Props {

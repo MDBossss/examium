@@ -32,7 +32,7 @@ import { TestType } from "../../types/models";
 import { useToast } from "../../hooks/useToast";
 import { useEffect, useState } from "react";
 import useGenerateData from "../../hooks/useGenerateData";
-import { createUser, fetchUserById } from "../../utils/dbUtils";
+import { createUser, fetchUserById } from "../../api/users";
 import Spinner from "./Spinner";
 import ProfileDialog from "./Dialogs/ProfileDialog";
 import { useThemeStore } from "../../store/themeStore";
