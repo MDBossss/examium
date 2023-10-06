@@ -12,6 +12,7 @@ import { useSession } from "@clerk/clerk-react";
 import { deleteEvent, fetchUserEvents } from "../api/events";
 import { notEmpty } from "../utils/genericUtils";
 import { useToast } from "../hooks/useToast";
+import { generateRepeatingEvents } from "../utils/dateUtils";
 
 const Schedule = () => {
 	const { theme } = useThemeStore();
@@ -27,11 +28,7 @@ const Schedule = () => {
 		queryFn: () => fetchUserEvents(userId!),
 		refetchOnWindowFocus: false,
 		onSuccess: (data) => {
-			let tempEvents: EventType[] = [];
-			data.map((e) => {
-				tempEvents.push({ ...e, start: new Date(e.start), end: new Date(e.end) });
-			});
-			setEvents(tempEvents);
+			
 		},
 	});
 
@@ -57,7 +54,7 @@ const Schedule = () => {
 	return (
 		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
 			<SearchBar />
-			{data && (notEmpty(events) || !Array.isArray(data)) && (
+			{data && Array.isArray(data) && (
 				<div className={`${theme === "dark" ? "darkmode-scheduler" : "lightmode-scheduler"}`}>
 					<Scheduler
 						ref={schedulerRef}
@@ -130,7 +127,7 @@ const Schedule = () => {
 						// locale={hr}
 						hourFormat="24"
 						onDelete={handleDelete}
-						events={events as ProcessedEvent[]}
+						events={data}
 					/>
 				</div>
 			)}
