@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSession } from "@clerk/clerk-react";
 import { deleteEvent, fetchUserEvents } from "../api/events";
 import { useToast } from "../hooks/useToast";
+import { PaperclipIcon, TextIcon } from "lucide-react";
 
 const Schedule = () => {
 	const { theme } = useThemeStore();
@@ -58,20 +59,20 @@ const Schedule = () => {
 							return (
 								<div className="flex flex-col gap-5 mt-5">
 									{event?.description.length > 1 && (
-										<div className="flex flex-col gap-1">
-											<span className="text-sm underline">Description:</span>
-											<p className="text-md">{event.description}</p>
+										<div className="flex gap-2">
+											<TextIcon className="w-5 h-5"/>
+											<p>{event.description}</p>
 										</div>
 									)}
 									{event?.selectedTests.length > 0 && (
-										<div className="flex flex-col gap-1">
-											<span className="text-sm underline">Linked tests:</span>
-											<div className="flex flex-col gap-2">
+										<div className="flex items-center gap-2">
+											<PaperclipIcon className="w-5 h-5"/>
+											<div className="flex flex-col w-full gap-2">
 												{event?.selectedTests &&
 													event?.selectedTests.map((test: OptionType) => (
 														<div
 															key={test.value}
-															className="flex items-center justify-between gap-1 p-2 rounded-sm bg-slate-200 dark:bg-slate-800"
+															className="flex items-center justify-between gap-1 p-2 border rounded-sm border-slate-200 dark:border-zinc-900"
 														>
 															<p className="font-bold">{test.label}</p>
 															<Button
