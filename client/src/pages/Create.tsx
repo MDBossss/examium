@@ -3,7 +3,7 @@ import { useSession } from "@clerk/clerk-react";
 import { useNavigate, useParams } from "react-router-dom";
 import Question from "../components/Question";
 import SearchBar from "../components/SearchBar";
-import { Input } from "../components/ui/input";
+import { Input } from "../components/ui/Input";
 import {
 	CodeQuestionType,
 	MultipleChoiceQuestionType,

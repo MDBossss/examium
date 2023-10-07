@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import type { SchedulerHelpers, SchedulerRef } from "@aldabil/react-scheduler/types";
 import { RefObject, useState } from "react";
-import { Input } from "./ui/input";
+import { Input } from "./ui/Input";
 import DateTimePicker from "./ui/DateTimePicker";
 import { Label } from "./ui/Label";
 import { Button } from "./ui/Button";
@@ -43,9 +43,9 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 	const event = scheduler.edited;
 
 	const { toast } = useToast();
-	const {session} = useSession();
+	const { session } = useSession();
 	const userId = session?.user.id;
-	const [testOptions,setTestOptions] = useState<OptionType[]>([])
+	const [testOptions, setTestOptions] = useState<OptionType[]>([]);
 	const [state, setState] = useState<EventType>({
 		event_id: event?.event_id || uuidv4(),
 		title: scheduler.state.title.value,
@@ -55,21 +55,21 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 		allDay: event?.allDay,
 		color: (event?.color as string) || "#3b82f6",
 		repeatPattern: event?.repeatPattern || "none",
-		selectedTests: event?.selectedTests || []
+		selectedTests: event?.selectedTests || [],
 	});
 
-	const {isError} = useQuery({
-		queryKey: ["tests",userId],
+	useQuery({
+		queryKey: ["tests", userId],
 		queryFn: () => fetchTestsByUserId(userId!),
-		refetchOnWindowFocus:false,
+		refetchOnWindowFocus: false,
 		onSuccess: (data) => {
 			const newTestOptions: OptionType[] = [];
 			data.map((test) => {
-				newTestOptions.push({label: test.title,value:test.id})
-			})
+				newTestOptions.push({ label: test.title, value: test.id });
+			});
 			setTestOptions(newTestOptions);
-		}
-	})
+		},
+	});
 
 	const handleChange = (value: any, name: string) => {
 		setState((prev) => {
@@ -119,33 +119,32 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 			scheduler.loading(true);
 
 			// If editing event update else create
-			if(!event){
-				await createEvent(state,userId!)
-				.then(() => {
-					toast({
-						description: "✅ Event created successfully."
+			if (!event) {
+				await createEvent(state, userId!)
+					.then(() => {
+						toast({
+							description: "✅ Event created successfully.",
+						});
 					})
-				})
-				.catch(() => {
-					toast({
-						description: "😓 Failed to create event.",
-						variant: "destructive",
+					.catch(() => {
+						toast({
+							description: "😓 Failed to create event.",
+							variant: "destructive",
+						});
 					});
-				})
-			}
-			else{
-				await updateEvent(state,userId!)
-				.then(() => {
-					toast({
-						description: "✅ Event updated successfully."
+			} else {
+				await updateEvent(state, userId!)
+					.then(() => {
+						toast({
+							description: "✅ Event updated successfully.",
+						});
 					})
-				})
-				.catch(() => {
-					toast({
-						description: "😓 Failed to update event.",
-						variant: "destructive",
+					.catch(() => {
+						toast({
+							description: "😓 Failed to update event.",
+							variant: "destructive",
+						});
 					});
-				})
 			}
 
 			let editSingleValue = true;
@@ -272,7 +271,13 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
 							<Label className="text-right">Link tests</Label>
-							<MultiSelect placeholder="Select related tests..." options={testOptions} onChange={(options) => handleChange(options,"selectedTests")} selected={state.selectedTests} className="col-span-3"/>
+							<MultiSelect
+								placeholder="Select related tests..."
+								options={testOptions}
+								onChange={(options) => handleChange(options, "selectedTests")}
+								selected={state.selectedTests}
+								className="col-span-3"
+							/>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
 							<Label htmlFor="allDay" className="text-right">

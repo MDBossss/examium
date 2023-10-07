@@ -11,6 +11,11 @@ import {
 	setMinutes,
 } from "date-fns";
 
+/**
+ * Function which returns the "ago" string based on the passed date and current time.
+ * @param timestamp 
+ * @returns times ago string
+ */
 export function getTimeAgo(timestamp: Date) {
 	const currentDate = new Date();
 	const previousDate = new Date(timestamp);
@@ -48,6 +53,20 @@ interface EditorInput {
 	repeatPattern: "none" | "daily" | "weekly" | "monthly";
 }
 
+/**
+ * Function that uses regex expression to validate a time
+ * @param inputTime time in a HH:mm value
+ * @returns boolean value of the evaluation
+ */
+export const isValidTime = (inputTime: string) => {
+	return /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/.test(inputTime);
+}
+
+/**
+ * Function which generates repeating events based on the one passed
+ * @param event One event from which repeating events will be generated based on the repeat pattern
+ * @returns Array of events based on the repeating pattern of a single passed event
+ */
 export function generateRepeatingEvents(event: EditorInput): ProcessedEvent[] {
 	const { start, end, repeatPattern } = event;
 	const occurrences: EditorInput[] = [];
@@ -92,7 +111,6 @@ export function generateRepeatingEvents(event: EditorInput): ProcessedEvent[] {
 				});
 				currentDate = addWeeks(currentDate, 1);
 			}
-			console.log(occurrences);
 			return occurrences as ProcessedEvent[];
 
 		case "monthly":

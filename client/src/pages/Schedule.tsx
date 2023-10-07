@@ -1,55 +1,48 @@
 import { Scheduler } from "@aldabil/react-scheduler";
-import { ProcessedEvent, SchedulerRef } from "@aldabil/react-scheduler/types";
-import { useMemo, useRef, useState } from "react";
+import { SchedulerRef } from "@aldabil/react-scheduler/types";
+import { useRef } from "react";
 import { useThemeStore } from "../store/themeStore";
 import SchedulerEditor from "../components/SchedulerEditor";
 import SearchBar from "../components/SearchBar";
-import { EventType, OptionType } from "../types/models";
+import { OptionType } from "../types/models";
 import { Button } from "../components/ui/Button";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "@clerk/clerk-react";
 import { deleteEvent, fetchUserEvents } from "../api/events";
-import { notEmpty } from "../utils/genericUtils";
 import { useToast } from "../hooks/useToast";
-import { generateRepeatingEvents } from "../utils/dateUtils";
 
 const Schedule = () => {
 	const { theme } = useThemeStore();
 	const { session } = useSession();
 	const userId = session?.user.id;
 	const navigate = useNavigate();
-	const {toast} = useToast();
+	const { toast } = useToast();
 	const schedulerRef = useRef<SchedulerRef>(null);
-	const [events, setEvents] = useState<EventType[]>([]);
 
-	const { data,} = useQuery({
+	const { data } = useQuery({
 		queryKey: ["events", userId],
 		queryFn: () => fetchUserEvents(userId!),
 		refetchOnWindowFocus: false,
-		onSuccess: (data) => {
-			
-		},
 	});
 
 	const handleDelete = async (event_id: string | number): Promise<string | number | void> => {
 		await deleteEvent(event_id.toString())
-		.then(() => {
-			toast({
-				description: "✅ Event deleted successfully."
+			.then(() => {
+				toast({
+					description: "✅ Event deleted successfully.",
+				});
 			})
-		})
-		.catch(() => {
-			toast({
-				description: "😓 Failed to delete event.",
-				variant: "destructive",
+			.catch(() => {
+				toast({
+					description: "😓 Failed to delete event.",
+					variant: "destructive",
+				});
 			});
-		})
 		return new Promise((res) => {
-			res(event_id)
-		})
-	}
-
+			res(event_id);
+		});
+	};
 
 	return (
 		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
@@ -61,16 +54,16 @@ const Schedule = () => {
 						customEditor={(scheduler) => (
 							<SchedulerEditor scheduler={scheduler} schedulerRef={schedulerRef} />
 						)}
-						viewerExtraComponent={(fields, event) => {
+						viewerExtraComponent={(_fields, event) => {
 							return (
 								<div className="flex flex-col gap-5 mt-5">
-									{event?.description && (
+									{event?.description.length > 1 && (
 										<div className="flex flex-col gap-1">
 											<span className="text-sm underline">Description:</span>
 											<p className="text-md">{event.description}</p>
 										</div>
 									)}
-									{event?.selectedTests && (
+									{event?.selectedTests.length > 0 && (
 										<div className="flex flex-col gap-1">
 											<span className="text-sm underline">Linked tests:</span>
 											<div className="flex flex-col gap-2">

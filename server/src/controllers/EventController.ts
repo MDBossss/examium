@@ -38,7 +38,6 @@ class EventController {
 				};
 				formattedEvents.push(tempEvent);
 			});
-			console.log(formattedEvents);
 
 			res.status(200).json(formattedEvents);
 		} catch (error) {

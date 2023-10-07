@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { useState, ChangeEvent, useMemo } from "react";
 import { Input } from "./Input";
+import { isValidTime } from "../../utils/dateUtils";
 
 interface CustomDateTimeInputProps {
 	initialDate?: Date;
@@ -25,16 +26,12 @@ function TimeInput({ initialDate, onChange,name }: CustomDateTimeInputProps) {
       );
 	const numberRegex = /[0-9]/;
 
-    //put this into a timeutils file
-    const isValidTime = (inputTime: string) => {
-        return /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/.test(inputTime);
-    }
 
 	const handleTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.persist();
 		let inputTime = e.target.value;
 
-		if (inputTime[2] !== ":" && inputTime[2] && inputTime[1] !== ":") {
+		if (inputTime[2] !== ":" && inputTime[2] && !inputTime.includes(":")) {
 			inputTime = inputTime.slice(0, 2) + ":" + inputTime.slice(2);
 		}
 
