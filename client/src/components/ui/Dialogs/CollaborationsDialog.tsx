@@ -70,8 +70,7 @@ const CollaborationsDialog = ({ test, setTest, session }: Props) => {
 						description: error.issues[0].message,
 						variant: "destructive",
 					});
-				}
-				else if(error instanceof Error){
+				} else if (error instanceof Error) {
 					toast({
 						description: error.message,
 						variant: "destructive",
@@ -129,13 +128,15 @@ const CollaborationsDialog = ({ test, setTest, session }: Props) => {
 
 				<div className="flex gap-3">
 					<Input
-						className="bg-slate-200"
 						placeholder="Collaborator email..."
 						type="email"
 						onChange={(e) => setEmailInput(e.target.value)}
 						value={emailInput}
 					/>
-					<Button className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700" onClick={handleAdd}>
+					<Button
+						className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
+						onClick={handleAdd}
+					>
 						Add
 					</Button>
 				</div>

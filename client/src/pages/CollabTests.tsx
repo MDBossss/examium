@@ -46,7 +46,6 @@ const CollabTests = () => {
 					<div className="flex gap-2">
 						<Input
 							placeholder="Filter tests by title..."
-							className="bg-slate-200"
 							onChange={(e) => setFilterTitle(e.target.value)}
 						/>
 						<Button variant="outline" className="hover:bg-slate-200">
