@@ -35,7 +35,7 @@ const Question = ({
 	onToggleShowCorrectCodeOnResults,
 }: Props) => {
 	return (
-		<div className="w-full p-3 rounded-sm bg-slate-200 dark:bg-gray-800 sm:p-5">
+		<div className="w-full p-3 rounded-sm bg-slate-200 dark:bg-gray-900 sm:p-5">
 			<div className="flex flex-col max-w-4xl gap-5 pt-10 pb-10 mx-auto">
 				<QuestionHeader
 					question={question}

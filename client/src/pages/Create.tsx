@@ -16,7 +16,7 @@ import { z } from "zod";
 import { useToast } from "../hooks/useToast";
 import useGenerateData from "../hooks/useGenerateData";
 import { validateTest } from "../utils/testUtils";
-import { createTest, deleteTest, fetchTestById, updateTest } from "../utils/dbUtils";
+import { createTest, deleteTest, fetchTestById, updateTest } from "../api/tests";
 import CollaborationsDialog from "../components/ui/Dialogs/CollaborationsDialog";
 import { useThemeStore } from "../store/themeStore";
 

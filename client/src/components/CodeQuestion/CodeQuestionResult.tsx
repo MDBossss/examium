@@ -3,7 +3,7 @@ import { CodeAnswer, CodeQuestionType, QuestionType } from "../../types/models";
 import { renderTextWithLineBreaks } from "../../utils/testUtils";
 import CodeMirror from "@uiw/react-codemirror";
 import MDEditor from "@uiw/react-md-editor";
-import { checkCode } from "../../utils/dbUtils";
+import { checkCode } from "../../api/tests";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "../ui/Spinner";
 import { useThemeStore } from "../../store/themeStore";

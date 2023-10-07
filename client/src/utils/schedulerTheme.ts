@@ -43,8 +43,8 @@ export const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
 						"300": "#111827",
 					},
 					background: {
-						default: "#020617",
-						paper: "#020617",
+						default: "#030712",
+						paper: "#030712",
 					},
 					text: {
 						primary: "#e2e8f0",

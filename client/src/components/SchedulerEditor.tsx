@@ -29,21 +29,10 @@ import { isBefore } from "date-fns";
 import { useToast } from "../hooks/useToast";
 import { MultiSelect } from "./ui/MultiSelect";
 import { useQuery } from "@tanstack/react-query";
-import { fetchTestsByUserId } from "../utils/dbUtils";
 import { useSession } from "@clerk/clerk-react";
-import { OptionType } from "../types/models";
-
-interface EditorInput {
-	event_id: string | number;
-	title: string;
-	description: string;
-	start: Date | string;
-	end: Date | string;
-	allDay: boolean | undefined;
-	color: string;
-	repeatPattern: "none" | "daily" | "weekly" | "monthly";
-	selectedTests: OptionType[]
-}
+import { EventType, OptionType } from "../types/models";
+import { fetchTestsByUserId } from "../api/tests";
+import { createEvent, updateEvent } from "../api/events";
 
 interface Props {
 	scheduler: SchedulerHelpers;
@@ -54,10 +43,10 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 	const event = scheduler.edited;
 
 	const { toast } = useToast();
-	const {session} = useSession();
+	const { session } = useSession();
 	const userId = session?.user.id;
-	const [testOptions,setTestOptions] = useState<OptionType[]>([])
-	const [state, setState] = useState<EditorInput>({
+	const [testOptions, setTestOptions] = useState<OptionType[]>([]);
+	const [state, setState] = useState<EventType>({
 		event_id: event?.event_id || uuidv4(),
 		title: scheduler.state.title.value,
 		description: event?.description || "",
@@ -66,21 +55,21 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 		allDay: event?.allDay,
 		color: (event?.color as string) || "#3b82f6",
 		repeatPattern: event?.repeatPattern || "none",
-		selectedTests: event?.selectedTests || []
+		selectedTests: event?.selectedTests || [],
 	});
 
-	const {isError} = useQuery({
-		queryKey: ["tests",userId],
+	useQuery({
+		queryKey: ["tests", userId],
 		queryFn: () => fetchTestsByUserId(userId!),
-		refetchOnWindowFocus:false,
+		refetchOnWindowFocus: false,
 		onSuccess: (data) => {
 			const newTestOptions: OptionType[] = [];
 			data.map((test) => {
-				newTestOptions.push({label: test.title,value:test.id})
-			})
+				newTestOptions.push({ label: test.title, value: test.id });
+			});
 			setTestOptions(newTestOptions);
-		}
-	})
+		},
+	});
 
 	const handleChange = (value: any, name: string) => {
 		setState((prev) => {
@@ -128,6 +117,35 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 
 		try {
 			scheduler.loading(true);
+
+			// If editing event update else create
+			if (!event) {
+				await createEvent(state, userId!)
+					.then(() => {
+						toast({
+							description: "✅ Event created successfully.",
+						});
+					})
+					.catch(() => {
+						toast({
+							description: "😓 Failed to create event.",
+							variant: "destructive",
+						});
+					});
+			} else {
+				await updateEvent(state, userId!)
+					.then(() => {
+						toast({
+							description: "✅ Event updated successfully.",
+						});
+					})
+					.catch(() => {
+						toast({
+							description: "😓 Failed to update event.",
+							variant: "destructive",
+						});
+					});
+			}
 
 			let editSingleValue = true;
 			schedulerRef.current?.scheduler.events.filter((e) => {
@@ -253,7 +271,13 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
 							<Label className="text-right">Link tests</Label>
-							<MultiSelect placeholder="Select related tests..." options={testOptions} onChange={(options) => handleChange(options,"selectedTests")} selected={state.selectedTests} className="col-span-3"/>
+							<MultiSelect
+								placeholder="Select related tests..."
+								options={testOptions}
+								onChange={(options) => handleChange(options, "selectedTests")}
+								selected={state.selectedTests}
+								className="col-span-3"
+							/>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
 							<Label htmlFor="allDay" className="text-right">
