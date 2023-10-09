@@ -110,3 +110,8 @@ export function renderTextWithLineBreaks(text: string) {
 		  ))
 		: null;
 }
+
+export function parseQuestionType(type:string): string{
+	let formattedType = type.toLowerCase().replace("_"," ");
+	return formattedType.charAt(0).toUpperCase() + formattedType.slice(1);
+}

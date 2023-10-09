@@ -148,7 +148,7 @@ const LoginButton = ({ test }: Props) => {
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							className="flex gap-1"
-							onClick={() => handleNavigate(`/schedule`)}
+							onClick={() => handleNavigate(`/schedule/${session.user.id}`)}
 						>
 							<CalendarIcon className="w-4 h-4" /> Schedule
 						</DropdownMenuItem>

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
-import { EventType, OptionType } from "../types/models";
+import { EventType, OptionType, TestType } from "../types/models";
+import { endOfDay, startOfDay } from "date-fns";
 
 class EventController {
 	async getUserEvents(req: Request, res: Response) {
@@ -11,9 +12,12 @@ class EventController {
 				include: {
 					selectedTests: true,
 				},
+				orderBy:{
+					start: "asc"
+				}
 			});
-			if (!events) {
-				return res.status(404).json({ error: "User has no events" });
+			if (!events || events.length === 0) {
+				return res.status(200).json([]);
 			}
 
 			let formattedEvents: EventType[] = [];
@@ -29,12 +33,13 @@ class EventController {
 					event_id: event.id,
 					title: event.title,
 					description: event.description || "",
+					location: event.location,
 					start: event.start,
 					end: event.end,
 					allDay: event.allDay,
 					color: event.color,
 					repeatPattern: event.repeatPattern as "none" | "daily" | "weekly" | "monthly",
-					selectedTests: formattedTests,
+					testOptions: formattedTests,
 				};
 				formattedEvents.push(tempEvent);
 			});
@@ -43,6 +48,62 @@ class EventController {
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
+	async getTodayUserEventsWithTests(req: Request, res: Response) {
+		const today = new Date();
+		const startOfDayDate = startOfDay(today);
+		const endOfDayDate = endOfDay(today);
+
+		try {
+			const { userId } = req.params;
+			const events = await prisma.event.findMany({
+				where: { userId, start: { gte: startOfDayDate, lte: endOfDayDate } },
+				include: {
+					selectedTests: {
+						include: {
+							questions: true
+						}
+					}
+				},
+				orderBy:{
+					start: "asc"
+				}
+			});
+			if (!events || events.length === 0) {
+				return res.status(200).json([]);
+			}
+
+			let formattedEvents: EventType[] = [];
+
+			events.map((event) => {
+				let formattedTests: OptionType[] = [];
+
+				event.selectedTests.map((test) => {
+					formattedTests.push({ label: test.title, value: test.id });
+				});
+
+				let tempEvent: EventType = {
+					event_id: event.id,
+					title: event.title,
+					description: event.description || "",
+					location: event.location,
+					start: event.start,
+					end: event.end,
+					allDay: event.allDay,
+					color: event.color,
+					repeatPattern: event.repeatPattern as "none" | "daily" | "weekly" | "monthly",
+					testOptions: formattedTests,
+					selectedTests: event.selectedTests as TestType[],
+				};
+				formattedEvents.push(tempEvent);
+			});
+
+			res.status(200).json(formattedEvents);
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Errror" });
 		}
 	}
 
@@ -60,7 +121,7 @@ class EventController {
 				color,
 				allDay,
 				repeatPattern,
-				selectedTests,
+				testOptions,
 			}: EventType = event;
 
 			const newEvent = await prisma.event.create({
@@ -74,7 +135,7 @@ class EventController {
 					allDay: allDay || false,
 					repeatPattern,
 					selectedTests: {
-						connect: selectedTests.map((test) => ({ id: test.value })),
+						connect: testOptions.map((test) => ({ id: test.value })),
 					},
 					userId,
 				},
@@ -99,7 +160,7 @@ class EventController {
 				color,
 				allDay,
 				repeatPattern,
-				selectedTests,
+				testOptions,
 			}: EventType = event;
 
 			const updatedEvent = await prisma.event.update({
@@ -114,7 +175,7 @@ class EventController {
 					allDay: allDay || false,
 					repeatPattern,
 					selectedTests: {
-						connect: selectedTests.map((test) => ({ id: test.value })),
+						connect: testOptions.map((test) => ({ id: test.value })),
 					},
 					userId,
 				},

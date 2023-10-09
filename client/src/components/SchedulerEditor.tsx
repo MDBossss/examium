@@ -50,12 +50,13 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 		event_id: event?.event_id || uuidv4(),
 		title: scheduler.state.title.value,
 		description: event?.description || "",
+		location: event?.location,
 		start: scheduler.state.start.value,
 		end: scheduler.state.end.value,
 		allDay: event?.allDay,
 		color: (event?.color as string) || "#3b82f6",
 		repeatPattern: event?.repeatPattern || "none",
-		selectedTests: event?.selectedTests || [],
+		testOptions: event?.testOptions || [],
 	});
 
 	useQuery({
@@ -81,7 +82,7 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 	};
 
 	const handleSubmit = async () => {
-		if (state.title?.length < 3) {
+		if (state.title?.length < 2) {
 			toast({
 				title: "Title is too short!",
 				description: "Title has to be at least 3 characters long",
@@ -102,6 +103,22 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 			toast({
 				title: "Description is too long!",
 				description: "Description cannot be longer than 300 characters",
+				variant: "destructive",
+			});
+		}
+
+		if(state.location.length < 2){
+			toast({
+				title: "Location is too short!",
+				description: "Location has to be at least 3 characters long",
+				variant: "destructive",
+			});
+		}
+
+		if(state.location.length > 127){
+			toast({
+				title: "Location is too long!",
+				description: "Location cannot be longer than 128 characters",
 				variant: "destructive",
 			});
 		}
@@ -232,6 +249,18 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 							/>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
+							<Label htmlFor="event-location" className="text-right">
+								Location
+							</Label>
+							<Input
+								id="event-location"
+								placeholder="Insert location..."
+								value={state.location}
+								className="col-span-3"
+								onChange={(e) => handleChange(e.target.value, "location")}
+							/>
+						</div>
+						<div className="grid items-center grid-cols-4 gap-4">
 							<Label className="text-right">Event start</Label>
 							<DateTimePicker
 								id="firsttimepicker"
@@ -274,8 +303,8 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 							<MultiSelect
 								placeholder="Select related tests..."
 								options={testOptions}
-								onChange={(options) => handleChange(options, "selectedTests")}
-								selected={state.selectedTests}
+								onChange={(options) => handleChange(options, "testOptions")}
+								selected={state.testOptions}
 								className="col-span-3"
 							/>
 						</div>

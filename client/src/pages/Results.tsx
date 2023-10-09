@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { CodeAnswer, TestType } from "../types/models";
 import { useEffect, useState } from "react";
-import SearchBar from "../components/SearchBar";
 import { ArrowLeft, MoreVertical, Printer, RotateCcw } from "lucide-react";
 import {
 	DropdownMenu,
@@ -18,10 +17,12 @@ import CodeQuestionResult from "../components/CodeQuestion/CodeQuestionResult";
 import { useQuestionCount } from "../hooks/useQuestionCount";
 import Spinner from "../components/ui/Spinner";
 import { useThemeStore } from "../store/themeStore";
+import { useSession } from "@clerk/clerk-react";
 
 const Results = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const {session} = useSession();
 	const test: TestType = location.state?.test;
 	const hasParamId: boolean = location.state?.hasParamId;
 
@@ -45,10 +46,10 @@ const Results = () => {
 			navigate("/", { replace: true });
 		}
 	}, []);
-	
+
 	const handleReturn = () => {
 		if (hasParamId) {
-			navigate("/");
+			navigate(`/overview/${session?.user.id}`);
 		} else {
 			navigate(-2);
 		}
@@ -92,8 +93,7 @@ const Results = () => {
 					<span className="text-lg font-bold">Calculating results...</span> <Spinner />
 				</div>
 			)} */}
-			<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
-				<SearchBar />
+			<>
 				<div className="flex flex-col items-center w-full mx-auto max-w-7xl">
 					<div className="flex items-center justify-between w-full py-5">
 						<div className="flex items-center gap-5">
@@ -157,7 +157,7 @@ const Results = () => {
 				>
 					Return
 				</div>
-			</div>
+			</>
 		</>
 	);
 };

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useSession } from "@clerk/clerk-react";
 import { useNavigate, useParams } from "react-router-dom";
 import Question from "../components/Question";
-import SearchBar from "../components/SearchBar";
 import { Input } from "../components/ui/Input";
 import {
 	CodeQuestionType,
@@ -341,8 +340,7 @@ const Create = () => {
 	};
 
 	return (
-		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
-			<SearchBar test={test} setTest={setTest} />
+		<>
 			<div className="flex flex-col text-center border-b border-slate-200 dark:border-gray-800 sm:text-left">
 				<h1 className="text-2xl font-bold ">Create a test</h1>
 				<p className="pt-3 pb-3 text-sm text-slate-400">
@@ -404,7 +402,7 @@ const Create = () => {
 					{hasParamId ? "Save test" : "Create test"}
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

@@ -17,7 +17,10 @@ const Navbar = () => {
 				</div>
 				<div className="flex flex-row-reverse gap-3">
 					<LoginButton />
-					<Button className="hidden bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 sm:block" onClick={() => navigate("/create")}>
+					<Button
+						className="hidden bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 sm:block"
+						onClick={() => navigate("/create")}
+					>
 						Get started
 					</Button>
 				</div>

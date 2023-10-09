@@ -47,6 +47,20 @@ export async function fetchUserEvents(userId: string) {
 	}
 }
 
+export async function fetchTodayUserEvents(userId: string){
+	try{
+		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/events/${userId}/today`);
+		// Dates are not in right format
+		let tempEvents: EventType[] = [];
+		(response.data as EventType[]).map((e) => {
+			tempEvents.push({ ...e, start: new Date(e.start), end: new Date(e.end) });
+		});
+		return response.data as EventType[]
+	}catch(error){
+		throw new Error("Failed to get todays user events!");
+	}
+}
+
 export async function deleteEvent(event_id: string) {
 	try {
 		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/events/${event_id}`);

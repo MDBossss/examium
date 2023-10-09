@@ -116,9 +116,27 @@ body {
 		radial-gradient(at 6% 55%, rgb(255, 255, 255) 0, transparent 100%);
 }
 
-/* .bg-primary {
-	background-color: #f4fafa;
-} */
+.bg-doodle-light{
+	background-image: url("/bg-school-doodle-light.svg");
+	background-color: #eff6ff; /*blue 50*/
+	background-size: 50%;
+	background-repeat: repeat;
+}
+
+.bg-doodle-dark{
+	background-image: url("/bg-school-doodle-dark.svg");
+	background-color: #030712; /*gray 950*/
+	background-size: 50%;
+	background-repeat: repeat;
+}
+
+.bg-welcome-back{
+	background-image: url("/bg-welcome-back.svg");
+	background-position: right;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position-y: 10px;
+}
 
 .break-anywhere {
 	overflow-wrap: anywhere;

@@ -1,4 +1,3 @@
-import SearchBar from "../components/SearchBar";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "@clerk/clerk-react";
 import { fetchTestsByUserId } from "../api/tests";
@@ -31,18 +30,16 @@ const MyTests = () => {
 		enabled: !!userId,
 	});
 
-
 	return (
-		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
-			<SearchBar />
-			<div className="w-full mx-auto max-w-7xl">
+		<>
+			<div className="w-full mx-auto ">
 				<div className="flex flex-col mb-10 text-center border-b border-slate-200 dark:border-gray-800 sm:text-left">
-					<h1 className="text-2xl font-bold">My tests</h1>
+					<h1 className="text-2xl font-bold">My Tests</h1>
 					<p className="pt-3 pb-3 text-sm text-slate-400">
 						Here you can manage all tests created by you.
 					</p>
 				</div>
-				<div className="flex flex-col gap-2 mt-1">
+				<div className="flex flex-col gap-2 mx-auto mt-1 max-w-7xl">
 					<div className="flex gap-2">
 						<Input
 							placeholder="Filter tests by title..."
@@ -63,7 +60,7 @@ const MyTests = () => {
 					)}
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

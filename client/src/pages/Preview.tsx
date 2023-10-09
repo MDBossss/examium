@@ -1,5 +1,4 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import SearchBar from "../components/SearchBar";
 import { CodeAnswer, MultipleChoiceQuestionType, TestType } from "../types/models";
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
@@ -125,8 +124,7 @@ const Preview = () => {
 	};
 
 	return (
-		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
-			<SearchBar />
+		<>
 			<div className="flex flex-col items-center w-full max-w-5xl gap-5 mx-auto bg-slate-200 dark:bg-gray-800 p-7">
 				<h2 className="font-medium text-blue-500 dark:text-blue-600 text-md">{test?.title}</h2>
 				{test?.questions[questionNumber].imageUrl && (
@@ -194,7 +192,7 @@ const Preview = () => {
 					)}
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

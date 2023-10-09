@@ -78,6 +78,7 @@ model Event {
   id            String   @id @default(uuid())
   title         String   @db.VarChar(512)
   description   String?  @db.Text
+  location      String   @db.VarChar(128) @default("Online")
   start         DateTime
   end           DateTime
   allDay        Boolean

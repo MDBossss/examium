@@ -64,10 +64,12 @@ export interface EventType {
 	event_id: string | number;
 	title: string;
 	description: string;
+	location: string;
 	start: Date | string;
 	end: Date | string;
 	allDay: boolean | undefined;
 	color: string;
 	repeatPattern: "none" | "daily" | "weekly" | "monthly";
-	selectedTests: OptionType[]
+	testOptions: OptionType[]
+	selectedTests?: TestType[]
 }

@@ -3,27 +3,24 @@ import { SchedulerRef } from "@aldabil/react-scheduler/types";
 import { useRef } from "react";
 import { useThemeStore } from "../store/themeStore";
 import SchedulerEditor from "../components/SchedulerEditor";
-import SearchBar from "../components/SearchBar";
 import { OptionType } from "../types/models";
 import { Button } from "../components/ui/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "@clerk/clerk-react";
 import { deleteEvent, fetchUserEvents } from "../api/events";
 import { useToast } from "../hooks/useToast";
 import { PaperclipIcon, TextIcon } from "lucide-react";
 
 const Schedule = () => {
 	const { theme } = useThemeStore();
-	const { session } = useSession();
-	const userId = session?.user.id;
+	const { id } = useParams();
 	const navigate = useNavigate();
 	const { toast } = useToast();
 	const schedulerRef = useRef<SchedulerRef>(null);
 
 	const { data } = useQuery({
-		queryKey: ["events", userId],
-		queryFn: () => fetchUserEvents(userId!),
+		queryKey: ["events", id],
+		queryFn: () => fetchUserEvents(id!),
 		refetchOnWindowFocus: false,
 	});
 
@@ -46,8 +43,13 @@ const Schedule = () => {
 	};
 
 	return (
-		<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
-			<SearchBar />
+		<>
+			<div className="flex flex-col text-center border-b border-slate-200 dark:border-gray-800 sm:text-left">
+				<h1 className="text-2xl font-bold text-zinc-800 dark:text-white">Schedule</h1>
+				<p className="pt-3 pb-3 text-sm text-slate-400">
+					Here you can mark all your important events and link your tests to them.
+				</p>
+			</div>
 			{data && Array.isArray(data) && (
 				<div className={`${theme === "dark" ? "darkmode-scheduler" : "lightmode-scheduler"}`}>
 					<Scheduler
@@ -60,16 +62,16 @@ const Schedule = () => {
 								<div className="flex flex-col gap-5 mt-5">
 									{event?.description.length > 1 && (
 										<div className="flex gap-2">
-											<TextIcon className="w-5 h-5"/>
+											<TextIcon className="w-5 h-5" />
 											<p>{event.description}</p>
 										</div>
 									)}
-									{event?.selectedTests.length > 0 && (
+									{event?.testOptions.length > 0 && (
 										<div className="flex items-center gap-2">
-											<PaperclipIcon className="w-5 h-5"/>
+											<PaperclipIcon className="w-5 h-5" />
 											<div className="flex flex-col w-full gap-2">
-												{event?.selectedTests &&
-													event?.selectedTests.map((test: OptionType) => (
+												{event?.testOptions &&
+													event?.testOptions.map((test: OptionType) => (
 														<div
 															key={test.value}
 															className="flex items-center justify-between gap-1 p-2 border rounded-sm border-slate-200 dark:border-zinc-900"
@@ -80,7 +82,7 @@ const Schedule = () => {
 																className="bg-blue-500 hover:bg-blue-600 dark:hover:bg-blue-600"
 																onClick={() => navigate(`/solve/${test.value}`)}
 															>
-																Solve
+																Start
 															</Button>
 														</div>
 													))}
@@ -125,7 +127,7 @@ const Schedule = () => {
 					/>
 				</div>
 			)}
-		</div>
+		</>
 	);
 };
 
