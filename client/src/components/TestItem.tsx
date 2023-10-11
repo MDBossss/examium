@@ -1,4 +1,4 @@
-import { TestType } from "../types/models";
+import { TestType } from "../../../shared/models";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
 import Spinner from "./ui/Spinner";
 import { Button } from "./ui/Button";

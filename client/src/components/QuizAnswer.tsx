@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AnswerType } from "../types/models";
+import { AnswerType } from "../../../shared/models";
 import { Checkbox } from "./ui/Checkbox";
 import { renderTextWithLineBreaks } from "../utils/testUtils";
 

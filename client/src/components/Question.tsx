@@ -1,4 +1,4 @@
-import { QuestionType, QuestionVariantsType } from "../types/models";
+import { QuestionType, QuestionVariantsType } from "../../../shared/models";
 import QuestionHeader from "./QuestionHeader";
 import MultipleChoiceQuestionContent from "./MultipleChoiceQuestion/MultipleChoiceQuestionContent";
 import CodeQuestion from "./CodeQuestion/CodeQuestion";

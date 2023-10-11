@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
-import { EventType, OptionType, TestType } from "../types/models";
+import { EventType, OptionType, TestType } from "../../../shared/models";
 import { endOfDay, startOfDay } from "date-fns";
 
 class EventController {

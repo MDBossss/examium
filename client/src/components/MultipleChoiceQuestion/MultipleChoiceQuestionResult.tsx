@@ -1,4 +1,4 @@
-import { MultipleChoiceQuestionType, QuestionType } from "../../types/models";
+import { MultipleChoiceQuestionType, QuestionType } from "../../../../shared/models";
 import { renderTextWithLineBreaks } from "../../utils/testUtils";
 import ResultAnswer from "../ui/ResultAnswer";
 

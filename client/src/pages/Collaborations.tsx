@@ -1,6 +1,6 @@
 import { useSession } from "@clerk/clerk-react";
 import { useState, useCallback } from "react";
-import { TestType } from "../types/models";
+import { TestType } from "../../../shared/models";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCollaborationTestsByUserId } from "../api/tests";
 import { Input } from "../components/ui/Input";

@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { EventType } from "../../types/models";
+import { EventType } from "../../../../shared/models";
 import { CalendarClockIcon } from "lucide-react";
 
 interface Props {

@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { CodeQuestionType, MultipleChoiceQuestionType, TestType } from "../types/models";
+import { CodeQuestionType, MultipleChoiceQuestionType, TestType } from "../../../shared/models";
 
 export function validateTest(
 	test: TestType,

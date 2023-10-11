@@ -28,6 +28,16 @@ const EventActivity = ({ session }: Props) => {
 		refetchOnWindowFocus: false,
 	});
 
+	const isTherePracticeToday = () => {
+		let value: boolean = false;
+		data?.map((event) => {
+			event.selectedTests?.map(() => {
+				value = true;
+			});
+		});
+		return value;
+	};
+
 	const filteredData = data?.filter((event) => isAfter(new Date(event.start), currentTime));
 
 	return (
@@ -75,20 +85,29 @@ const EventActivity = ({ session }: Props) => {
 					</div>
 					<div
 						className={`${
-							selectedLayout === "grid" ? "grid grid-cols-2" : "flex flex-col"
+							selectedLayout === "grid" && isTherePracticeToday()
+								? "grid grid-cols-2"
+								: "flex flex-col"
 						} gap-3 px-2`}
 					>
 						{isLoading && !isError ? (
 							<Spinner />
 						) : (
 							data?.map((event) =>
-								event.selectedTests?.map((test) => <PracticeTodayItem key={test.id} test={test} />)
+								event.selectedTests?.map((test) => (
+									<PracticeTodayItem key={test.id} test={test} selectedLayout={selectedLayout} />
+								))
 							)
 						)}
 						{isError && <div className="flex justify-center p-5">Error loading tests 😓</div>}
-						{data && !notEmpty(data) && (
+						{data && !isTherePracticeToday() && (
 							<div className="p-5 bg-blue-500 rounded-sm cursor-pointer dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700">
-								You have no events that need practice currentTime!😅
+								<div className="flex flex-col justify-between gap-5">
+									<div className="flex flex-col gap-1">
+										<h4 className="font-medium">Take a break!</h4>
+										<p className="text-xs">You have no practice scheduled today!</p>
+									</div>
+								</div>
 							</div>
 						)}
 					</div>

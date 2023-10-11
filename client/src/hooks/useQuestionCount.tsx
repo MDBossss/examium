@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { QuestionType } from "../types/models";
+import { QuestionType } from "../../../shared/models";
 
 export const useQuestionCount = (questions: QuestionType[]) => {
 	const [codeQuestionCount, setCodeQuestionCount] = useState<number>(0);

@@ -1,4 +1,4 @@
-import { MultipleChoiceQuestionType, QuestionType } from "../../types/models";
+import { MultipleChoiceQuestionType, QuestionType } from "../../../../shared/models";
 import Answer from "../Answer";
 import { Button } from "../ui/Button";
 

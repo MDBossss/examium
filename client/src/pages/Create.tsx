@@ -8,7 +8,7 @@ import {
 	MultipleChoiceQuestionType,
 	QuestionVariantsType,
 	TestType,
-} from "../types/models";
+} from "../../../shared/models";
 import ResetDialog from "../components/ui/Dialogs/ResetDialog";
 import SettingsDialog from "../components/ui/Dialogs/SettingsDialog";
 import { z } from "zod";

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserType } from "../types/models";
+import { UserType } from "../../../shared/models";
 
 export async function fetchUsers() {
 	try {

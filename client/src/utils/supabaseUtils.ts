@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { TestType } from "../types/models";
+import { TestType } from "../../../shared/models";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;

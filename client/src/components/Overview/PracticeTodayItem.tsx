@@ -1,17 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { TestType } from "../../types/models";
+import { TestType } from "../../../../shared/models";
 import { parseQuestionType } from "../../utils/testUtils";
 
 interface Props {
 	test: TestType;
+	selectedLayout: "grid" | "column";
 }
 
-const PracticeTodayItem = ({ test }: Props) => {
+const PracticeTodayItem = ({ test, selectedLayout }: Props) => {
 	const navigate = useNavigate();
 
 	return (
 		<div
-			className="flex justify-between gap-2 p-5 bg-blue-500 rounded-sm cursor-pointer dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700"
+			className={`${
+				selectedLayout === "grid" ? "flex-col text-center" : "flex-row"
+			} flex justify-between gap-2 p-5 bg-blue-500 rounded-sm cursor-pointer dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700`}
 			onClick={() => navigate(`/solve/${test.id}`)}
 		>
 			<div className="flex flex-col justify-between gap-5">

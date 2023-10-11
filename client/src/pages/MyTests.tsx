@@ -6,7 +6,7 @@ import TestItem from "../components/TestItem";
 import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 import { useCallback, useState } from "react";
-import { TestType } from "../types/models";
+import { TestType } from "../../../shared/models";
 import { notEmpty } from "../utils/genericUtils";
 
 const MyTests = () => {

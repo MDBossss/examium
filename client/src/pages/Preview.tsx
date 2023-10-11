@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { CodeAnswer, MultipleChoiceQuestionType, TestType } from "../types/models";
+import { CodeAnswer, MultipleChoiceQuestionType, TestType } from "../../../shared/models";
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/Button";
 import { fetchTestById } from "../api/tests";

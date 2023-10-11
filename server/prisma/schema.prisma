@@ -16,6 +16,9 @@ model User {
   lastName          String
   email             String  @unique
   imageUrl          String
+  locationName      String  @default("Berlin")
+  latitude          Float   @default(52.52437)
+  longitude         Float   @default(13.41053)
   tests             Test[]
   collaboratedTests Test[]  @relation("collaborator")
   events            Event[]
@@ -78,7 +81,7 @@ model Event {
   id            String   @id @default(uuid())
   title         String   @db.VarChar(512)
   description   String?  @db.Text
-  location      String   @db.VarChar(128) @default("Online")
+  location      String   @default("Online") @db.VarChar(128)
   start         DateTime
   end           DateTime
   allDay        Boolean

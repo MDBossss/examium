@@ -28,7 +28,7 @@ import {
 import ProgressDialog from "./Dialogs/ProgressDialog";
 import useNavigationDialog from "../../hooks/useNavigationDialog";
 import { useLocation, useNavigate } from "react-router-dom";
-import { TestType } from "../../types/models";
+import { TestType } from "../../../../shared/models";
 import { useToast } from "../../hooks/useToast";
 import { useEffect, useState } from "react";
 import useGenerateData from "../../hooks/useGenerateData";

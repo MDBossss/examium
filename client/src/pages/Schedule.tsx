@@ -3,13 +3,13 @@ import { SchedulerRef } from "@aldabil/react-scheduler/types";
 import { useRef } from "react";
 import { useThemeStore } from "../store/themeStore";
 import SchedulerEditor from "../components/SchedulerEditor";
-import { OptionType } from "../types/models";
+import { OptionType } from "../../../shared/models";
 import { Button } from "../components/ui/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { deleteEvent, fetchUserEvents } from "../api/events";
 import { useToast } from "../hooks/useToast";
-import { PaperclipIcon, TextIcon } from "lucide-react";
+import { MapPinIcon, PaperclipIcon, TextIcon } from "lucide-react";
 
 const Schedule = () => {
 	const { theme } = useThemeStore();
@@ -61,10 +61,16 @@ const Schedule = () => {
 							return (
 								<div className="flex flex-col gap-5 mt-5">
 									{event?.description.length > 1 && (
-										<div className="flex gap-2">
-											<TextIcon className="w-5 h-5" />
-											<p>{event.description}</p>
-										</div>
+										<>
+											<div className="flex gap-2">
+												<MapPinIcon className="w-5 h-5" />
+												<p>{event.location}</p>
+											</div>
+											<div className="flex gap-2">
+												<TextIcon className="w-5 h-5" />
+												<p>{event.description}</p>
+											</div>
+										</>
 									)}
 									{event?.testOptions.length > 0 && (
 										<div className="flex items-center gap-2">

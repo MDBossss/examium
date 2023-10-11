@@ -1,6 +1,6 @@
 import CodeMirror from "@uiw/react-codemirror";
 import MDEditor from "@uiw/react-md-editor";
-import { CodeQuestionType, QuestionType } from "../../types/models";
+import { CodeQuestionType, QuestionType } from "../../../../shared/models";
 import { useThemeStore } from "../../store/themeStore";
 import { Checkbox } from "../ui/Checkbox";
 

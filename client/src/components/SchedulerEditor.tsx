@@ -30,7 +30,7 @@ import { useToast } from "../hooks/useToast";
 import { MultiSelect } from "./ui/MultiSelect";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "@clerk/clerk-react";
-import { EventType, OptionType } from "../types/models";
+import { EventType, OptionType } from "../../../shared/models";
 import { fetchTestsByUserId } from "../api/tests";
 import { createEvent, updateEvent } from "../api/events";
 

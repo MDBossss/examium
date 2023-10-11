@@ -1,5 +1,5 @@
 import axios from "axios";
-import { TestType } from "../types/models";
+import { TestType } from "../../../shared/models";
 import { removeAllTestImagesFromBucket } from "../utils/supabaseUtils";
 
 export async function createTest(test: TestType) {

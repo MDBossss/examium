@@ -1,4 +1,4 @@
-import { TestType } from "../../../types/models";
+import { TestType } from "../../../../../shared/models";
 import { Button } from "../Button";
 import {
 	Dialog,

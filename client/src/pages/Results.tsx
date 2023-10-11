@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { CodeAnswer, TestType } from "../types/models";
+import { CodeAnswer, TestType } from "../../../shared/models";
 import { useEffect, useState } from "react";
 import { ArrowLeft, MoreVertical, Printer, RotateCcw } from "lucide-react";
 import {

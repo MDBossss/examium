@@ -1,5 +1,5 @@
 import { cn } from "../../lib/utils";
-import { CodeAnswer, CodeQuestionType, QuestionType } from "../../types/models";
+import { CodeAnswer, CodeQuestionType, QuestionType } from "../../../../shared/models";
 import { renderTextWithLineBreaks } from "../../utils/testUtils";
 import CodeMirror from "@uiw/react-codemirror";
 import MDEditor from "@uiw/react-md-editor";

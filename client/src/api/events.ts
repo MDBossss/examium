@@ -1,5 +1,5 @@
 import axios from "axios";
-import { EventType } from "../types/models";
+import { EventType } from "../../../shared/models";
 import { generateRepeatingEvents } from "../utils/dateUtils";
 import { ProcessedEvent } from "@aldabil/react-scheduler/types";
 

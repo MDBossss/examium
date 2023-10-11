@@ -8,7 +8,7 @@ import {
 } from "./Dialog";
 import { UsersIcon } from "lucide-react";
 import { Button } from "../Button";
-import { TestType } from "../../../types/models";
+import { TestType } from "../../../../../shared/models";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip";
 import { Input } from "../Input";
 import CollaboratorsTable from "../../CollaboratorsTable";

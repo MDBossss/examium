@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getRandomItemFromArray } from "../../utils/genericUtils";
 import { ActiveSessionResource } from "@clerk/types";
-import { ArrowRightIcon } from "lucide-react";
+import { BrushIcon } from "lucide-react";
 
 const colors: string[] = [
 	"bg-amber-600",
@@ -35,7 +35,7 @@ const WelcomeBack = ({ session }: Props) => {
 					>
 						Be creative today!{" "}
 					</p>
-					<ArrowRightIcon className="w-4 h-4" />
+					<BrushIcon className="w-4 h-4" />
 				</div>
 			</div>
 		</div>

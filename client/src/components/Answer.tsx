@@ -1,6 +1,6 @@
 import { Textarea } from "./ui/Textarea";
 import { CheckIcon, XIcon } from "lucide-react";
-import { AnswerType } from "../types/models";
+import { AnswerType } from "../../../shared/models";
 
 interface Props {
 	label: string;
