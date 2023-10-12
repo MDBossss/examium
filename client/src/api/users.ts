@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserType } from "../../../shared/models";
+import { LocationType, UserType } from "../../../shared/models";
 
 export async function fetchUsers() {
 	try {
@@ -61,6 +61,15 @@ export async function updateUser(user: UserType) {
 		return response.data;
 	} catch (error) {
 		throw new Error("Failed to update user");
+	}
+}
+
+export async function updateUserLocation(userId:string,location:LocationType){
+	try{
+		const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/location/${userId}`, location);
+		return response.data;
+	}catch(error){
+		throw new Error("Failed to update user location");
 	}
 }
 

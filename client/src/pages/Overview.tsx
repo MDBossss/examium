@@ -12,7 +12,7 @@ const Overview = () => {
 			<div className="flex flex-col w-8/12 gap-2">
 				<WelcomeBack session={session} />
 				<div className="flex gap-2">
-					<Forecast session={session}/>
+					<Forecast session={session} />
 					<Calendar className="border rounded-sm" ISOWeek />
 				</div>
 			</div>

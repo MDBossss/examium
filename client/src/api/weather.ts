@@ -6,13 +6,23 @@ export async function getCoordinatesFromLocationName(name: string) {
 		const response = await axios.get(
 			`https://geocoding-api.open-meteo.com/v1/search?name=${name}&count=5&language=en&format=json`
 		);
+
+		if (!(response.data.results)) {
+			throw {
+			  response: {
+				status: 404,
+				data: { message: 'There is no such city!' },
+			  },
+			};
+		  }
+
 		return {
-			name: name,
-			latitude: response.data[0].latitude,
-			longitude: response.data[0].longitude,
+			name: response.data.results[0].name,
+			latitude: response.data.results[0].latitude,
+			longitude: response.data.results[0].longitude,
 		} as LocationType;
 	} catch (error) {
-		throw new Error("Failed to get location coordinates!");
+		throw error
 	}
 }
 
@@ -25,3 +35,5 @@ export async function getWeatherData(latitude:number,longitude:number){
         throw new Error("Failed to get weather data!");
     }
 }
+
+
