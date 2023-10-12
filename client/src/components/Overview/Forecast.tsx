@@ -40,7 +40,7 @@ const Forecast = ({ session }: Props) => {
 	const [weatherData, setWeatherData] = useState<WeatherDataType>();
 
 	useQuery({
-		queryKey: ["users", userId, location?.name],
+		queryKey: ["users", location?.name],
 		queryFn: () => fetchUserById(userId!),
 		refetchOnWindowFocus: false,
 		onSuccess: (data) => {
@@ -69,9 +69,6 @@ const Forecast = ({ session }: Props) => {
 	};
 
 	const handleChangeCity = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		//open popup with input and write to db if valid
-		//get city coords first and if array is not empty
-		//then call the weather api and update the location to db
 		e.preventDefault();
 
 		const res = cityNameSchema.safeParse(cityName);
@@ -155,7 +152,7 @@ const Forecast = ({ session }: Props) => {
 									<Input
 										id="city"
 										name="city"
-										defaultValue={cityName}
+										defaultValue={location?.name}
 										onChange={(e) => setCityName(e.target.value)}
 										className="col-span-3"
 									/>
