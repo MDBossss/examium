@@ -19,10 +19,10 @@ const Layout = ({ children }: Props) => {
 	return (
 		<div className="flex ">
 			{showSidebar && !isPathInBlacklist && <Sidebar />}
-			<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
+			<main className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
 				<SearchBar />
 				{children}
-			</div>
+			</main>
 		</div>
 	);
 };

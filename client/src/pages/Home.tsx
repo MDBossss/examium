@@ -9,7 +9,7 @@ const Home = () => {
 	const { theme } = useThemeStore();
 
 	return (
-		<div
+		<section
 			className={`w-screen h-screen ${theme === "light" ? "bg-doodle-light" : "bg-doodle-dark"}`}
 		>
 			<div className="flex flex-col h-full gap-48 p-4 mx-auto sm:pt-2 sm:p-10 max-w-7xl">
@@ -37,7 +37,7 @@ const Home = () => {
 				</div>
 			</div>
 			<Footer />
-		</div>
+		</section>
 	);
 };
 

@@ -80,6 +80,14 @@
 		@apply bg-background text-foreground;
 		font-feature-settings: "rlig" 1, "calt" 1;
 	}
+
+	.bg-welcome-back{
+		background-image: url("/bg-welcome-back.svg");
+		background-position: right;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position-y: 10px;
+	}
 }
 
 * {
@@ -130,13 +138,7 @@ body {
 	background-repeat: repeat;
 }
 
-.bg-welcome-back{
-	background-image: url("/bg-welcome-back.svg");
-	background-position: right;
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position-y: 10px;
-}
+
 
 .break-anywhere {
 	overflow-wrap: anywhere;

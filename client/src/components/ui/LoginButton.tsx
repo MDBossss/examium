@@ -17,6 +17,7 @@ import {
 	CalendarIcon,
 	FileIcon,
 	LaptopIcon,
+	LayoutGridIcon,
 	LogOutIcon,
 	MoonIcon,
 	PaletteIcon,
@@ -133,6 +134,9 @@ const LoginButton = ({ test }: Props) => {
 						</DropdownMenuItem>
 						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate("/create")}>
 							<PlusIcon className="w-4 h-4" /> New test
+						</DropdownMenuItem>
+						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate(`/overview/${session.user.id}`)}>
+							<LayoutGridIcon className="w-4 h-4" /> Overview
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							className="flex gap-1"

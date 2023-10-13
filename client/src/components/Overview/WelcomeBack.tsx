@@ -22,11 +22,11 @@ const WelcomeBack = ({ session }: Props) => {
 	return (
 		<div className="flex flex-col p-2 border rounded-sm border-slate-200 dark:border-gray-800">
 			<div
-				className={`${randomColor} flex flex-col justify-between gap-10 p-8 rounded-sm bg-welcome-back text-slate-200`}
+				className={`${randomColor} flex flex-col justify-between gap-10 p-8 rounded-sm sm:bg-welcome-back text-slate-200`}
 			>
 				<div className="flex flex-col gap-3 ">
 					<h2 className="font-bold tracking-wider">Welcome Back 👋</h2>
-					<h1 className="text-5xl font-medium ">{session?.user.fullName}</h1>
+					<h1 className="text-5xl font-medium text">{session?.user.fullName}</h1>
 				</div>
 				<div className="flex items-center gap-1">
 					<p

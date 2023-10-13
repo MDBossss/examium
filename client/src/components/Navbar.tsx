@@ -7,7 +7,7 @@ const Navbar = () => {
 	const navigate = useNavigate();
 
 	return (
-		<div>
+		<nav>
 			<div className="flex items-center justify-between p-0 mx-auto max-w-7xl">
 				<div
 					className="flex items-center gap-1 text-xl cursor-pointer"
@@ -25,7 +25,7 @@ const Navbar = () => {
 					</Button>
 				</div>
 			</div>
-		</div>
+		</nav>
 	);
 };
 

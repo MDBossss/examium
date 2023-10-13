@@ -128,7 +128,7 @@ const Forecast = ({ session }: Props) => {
 			</div>
 			<div className="flex items-center justify-between gap-2">
 				<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-					<DialogTrigger asChild>
+					<DialogTrigger>
 						<h1
 							className="flex items-center gap-2 text-3xl cursor-pointer hover:underline"
 							onClick={() => setDialogOpen(true)}
