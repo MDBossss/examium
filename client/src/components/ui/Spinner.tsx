@@ -6,7 +6,7 @@ interface Props{
 
 const Spinner = ({className}:Props) => {
 	return (
-		<div className={cn(className)}>
+		<div className={cn(`${className} w-full flex justify-center`)}>
 			<div
 				className="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-blue-500 rounded-full"
 				role="status"

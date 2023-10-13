@@ -1,4 +1,4 @@
-import { TestType } from "../types/models";
+import { TestType } from "../../../shared/models";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/Avatar";
 import Spinner from "./ui/Spinner";
 import { Button } from "./ui/Button";
@@ -61,7 +61,7 @@ const TestItem = ({ test }: Props) => {
 									<Avatar key={index}>
 										<AvatarImage
 											src={collaborator.imageUrl}
-											className="inline-block border-2 border-white rounded-full"
+											className="inline-block border-2 border-white rounded-full dark:border-gray-950"
 										/>
 										<AvatarFallback>
 											<Spinner />

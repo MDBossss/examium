@@ -1,6 +1,6 @@
 import { useSession } from "@clerk/clerk-react";
 import LoginButton from "./ui/LoginButton";
-import { TestType } from "../types/models";
+import { TestType } from "../../../shared/models";
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,

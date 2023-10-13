@@ -12,7 +12,7 @@ import {
 import { Check, ImageIcon, SettingsIcon, XIcon } from "lucide-react";
 import ImageUpload from "./ImageUpload";
 import { useToast } from "../hooks/useToast";
-import { QuestionType, QuestionVariantsType } from "../types/models";
+import { QuestionType, QuestionVariantsType } from "../../../shared/models";
 import {
 	DropdownMenu,
 	DropdownMenuContent,

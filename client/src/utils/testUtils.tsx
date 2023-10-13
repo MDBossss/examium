@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { CodeQuestionType, MultipleChoiceQuestionType, TestType } from "../types/models";
+import { CodeQuestionType, MultipleChoiceQuestionType, TestType } from "../../../shared/models";
 
 export function validateTest(
 	test: TestType,
@@ -109,4 +109,9 @@ export function renderTextWithLineBreaks(text: string) {
 				</Fragment>
 		  ))
 		: null;
+}
+
+export function parseQuestionType(type:string): string{
+	let formattedType = type.toLowerCase().replace("_"," ");
+	return formattedType.charAt(0).toUpperCase() + formattedType.slice(1);
 }

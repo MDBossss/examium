@@ -1,4 +1,4 @@
-import { QuestionType, QuestionVariantsType } from "../types/models";
+import { QuestionType, QuestionVariantsType } from "../../../shared/models";
 import QuestionHeader from "./QuestionHeader";
 import MultipleChoiceQuestionContent from "./MultipleChoiceQuestion/MultipleChoiceQuestionContent";
 import CodeQuestion from "./CodeQuestion/CodeQuestion";
@@ -15,7 +15,8 @@ interface Props {
 	onAnswerDelete: (questionID: string, answerID: string) => void;
 	toggleAnswerCorrect: (questionID: string, answerID: string) => void;
 	onCorrectCodeChange: (correctCode: string, questionID: string) => void;
-	onMarkdownChange: (description:string,questionID: string) => void;
+	onMarkdownChange: (description: string, questionID: string) => void;
+	onToggleShowCorrectCodeOnResults: (questionID: string) => void;
 }
 
 const Question = ({
@@ -30,11 +31,12 @@ const Question = ({
 	onAnswerAdd,
 	toggleAnswerCorrect,
 	onCorrectCodeChange,
-	onMarkdownChange
+	onMarkdownChange,
+	onToggleShowCorrectCodeOnResults,
 }: Props) => {
 	return (
-		<div className=" bg-slate-200 dark:bg-gray-800 w-full p-3 sm:p-5 rounded-sm">
-			<div className="flex flex-col gap-5 max-w-4xl mx-auto pt-10 pb-10">
+		<div className="w-full p-3 rounded-sm bg-slate-200 dark:bg-gray-900 sm:p-5">
+			<div className="flex flex-col max-w-4xl gap-5 pt-10 pb-10 mx-auto">
 				<QuestionHeader
 					question={question}
 					questionIndex={questionIndex}
@@ -53,7 +55,12 @@ const Question = ({
 						toggleAnswerCorrect={toggleAnswerCorrect}
 					/>
 				) : (
-					<CodeQuestion question={question} onCorrectCodeChange={onCorrectCodeChange} onMarkdownChange={onMarkdownChange}/>
+					<CodeQuestion
+						question={question}
+						onCorrectCodeChange={onCorrectCodeChange}
+						onMarkdownChange={onMarkdownChange}
+						onToggleShowCorrectCodeOnResults={onToggleShowCorrectCodeOnResults}
+					/>
 				)}
 			</div>
 		</div>

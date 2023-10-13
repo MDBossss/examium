@@ -1,4 +1,4 @@
-import { PlusIcon, FileIcon, UsersIcon, EditIcon, LockIcon } from "lucide-react";
+import { PlusIcon, FileIcon, UsersIcon, EditIcon, LockIcon, CalendarIcon, LayoutGridIcon } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProgressDialog from "./ui/Dialogs/ProgressDialog";
@@ -14,14 +14,24 @@ const Navbar = () => {
 
 	const navItems = [
 		{
+			location: `/overview/${session?.user.id}`,
+			title: "Overview",
+			icon: <LayoutGridIcon className="w-6 h-6"/>
+		},
+		{
 			location: `/tests/${session?.user.id}`,
-			title: "My tests",
-			icon: <FileIcon className="w-5 h-5" />,
+			title: "My Tests",
+			icon: <FileIcon className="w-6 h-6" />,
 		},
 		{
 			location: `/collaborations/${session?.user.id}`,
 			title: "Collaborations",
-			icon: <UsersIcon className="w-5 h-5" />,
+			icon: <UsersIcon className="w-6 h-6" />,
+		},
+		{
+			location: `/schedule/${session?.user.id}`,
+			title: "Schedule",
+			icon: <CalendarIcon className="w-6 h-6" />,
 		},
 	];
 
@@ -77,15 +87,26 @@ const Navbar = () => {
 						</Button>
 						{session?.user ? (
 							<div className="h-full">
-								<h4 className="text-sm border-b border-gray-300 ">Menu</h4>
+								<h4 className="text-xs font-bold dark:text-gray-500">MANAGEMENT</h4>
 								<ul className="flex flex-col gap-1 py-2 text-md">
 									{navItems.map((item) => (
 										<li key={item.title}>
 											<div
-												className="flex items-center gap-1 p-1 transition-all rounded-sm cursor-pointer hover:bg-slate-300 dark:hover:bg-gray-800"
+												className={`${
+													location.pathname.includes(item.location) &&
+													"bg-slate-300 dark:bg-gray-800 "
+												} flex font-medium items-center gap-3 p-2 text-md transition-all rounded-sm cursor-pointer hover:bg-slate-300 dark:hover:bg-gray-800`}
 												onClick={() => handleNavigate(item.location)}
 											>
-												{item.icon}
+												<span
+													className={`${
+														location.pathname.includes(item.location)
+															? "dark:text-slate-300"
+															: "dark:text-gray-500"
+													}`}
+												>
+													{item.icon}
+												</span>
 												{item.title}
 											</div>
 										</li>

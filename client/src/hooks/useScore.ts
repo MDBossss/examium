@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CodeAnswer, MultipleChoiceQuestionType, QuestionType } from "../types/models";
+import { CodeAnswer, MultipleChoiceQuestionType, QuestionType } from "../../../shared/models";
 
 interface UserScore {
 	value: number;

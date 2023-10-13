@@ -1,4 +1,4 @@
-import { CodeAnswer, MultipleChoiceQuestionType, TestType } from "../../types/models";
+import { CodeAnswer, MultipleChoiceQuestionType, TestType } from "../../../../shared/models";
 import QuizAnswer from "../QuizAnswer";
 
 interface Props {

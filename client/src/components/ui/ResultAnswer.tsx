@@ -1,4 +1,4 @@
-import { AnswerType } from "../../types/models";
+import { AnswerType } from "../../../../shared/models";
 import { renderTextWithLineBreaks } from "../../utils/testUtils";
 
 interface Props {

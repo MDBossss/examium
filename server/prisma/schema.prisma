@@ -11,13 +11,17 @@ datasource db {
 }
 
 model User {
-  id                String @id @default(uuid())
+  id                String  @id @default(uuid())
   firstName         String
   lastName          String
-  email             String @unique
+  email             String  @unique
   imageUrl          String
+  locationName      String  @default("Berlin")
+  latitude          Float   @default(52.52437)
+  longitude         Float   @default(13.41053)
   tests             Test[]
-  collaboratedTests Test[] @relation("collaborator")
+  collaboratedTests Test[]  @relation("collaborator")
+  events            Event[]
 }
 
 model Test {
@@ -35,6 +39,7 @@ model Test {
   authorId               String
   author                 User       @relation(fields: [authorId], references: [id])
   collaborators          User[]     @relation("collaborator")
+  events                 Event[]    @relation("eventTests")
 }
 
 model Question {
@@ -56,10 +61,11 @@ model MultipleChoiceQuestion {
 }
 
 model CodeQuestion {
-  questionId  String   @id
-  correctCode String   @db.Text
-  description String?  @db.Text
-  Question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId               String   @id
+  correctCode              String   @db.Text
+  description              String?  @db.Text
+  showCorrectCodeOnResults Boolean
+  Question                 Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
 model Answer {
@@ -69,4 +75,19 @@ model Answer {
   createdAt  DateTime               @default(now())
   questionId String
   question   MultipleChoiceQuestion @relation(fields: [questionId], references: [questionId], onDelete: Cascade)
+}
+
+model Event {
+  id            String   @id @default(uuid())
+  title         String   @db.VarChar(512)
+  description   String?  @db.Text
+  location      String   @default("Online") @db.VarChar(128)
+  start         DateTime
+  end           DateTime
+  allDay        Boolean
+  color         String
+  repeatPattern String
+  selectedTests Test[]   @relation("eventTests")
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
 }

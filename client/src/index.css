@@ -80,6 +80,14 @@
 		@apply bg-background text-foreground;
 		font-feature-settings: "rlig" 1, "calt" 1;
 	}
+
+	.bg-welcome-back{
+		background-image: url("/bg-welcome-back.svg");
+		background-position: right;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position-y: 10px;
+	}
 }
 
 * {
@@ -87,6 +95,7 @@
 	padding: 0;
 	box-sizing: border-box;
 }
+
 
 body {
 	font-family: "Poppins", sans-serif;
@@ -115,9 +124,21 @@ body {
 		radial-gradient(at 6% 55%, rgb(255, 255, 255) 0, transparent 100%);
 }
 
-/* .bg-primary {
-	background-color: #f4fafa;
-} */
+.bg-doodle-light{
+	background-image: url("/bg-school-doodle-light.svg");
+	background-color: #eff6ff; /*blue 50*/
+	background-size: 50%;
+	background-repeat: repeat;
+}
+
+.bg-doodle-dark{
+	background-image: url("/bg-school-doodle-dark.svg");
+	background-color: #030712; /*gray 950*/
+	background-size: 50%;
+	background-repeat: repeat;
+}
+
+
 
 .break-anywhere {
 	overflow-wrap: anywhere;
@@ -141,6 +162,18 @@ body {
 	outline: none;
 }
 
+.darkmode-scheduler span {
+	color: #e2e8f0;
+}
+
+.lightmode-scheduler span {
+	color: #27272a;
+}
+
+.pointer-events-all{
+	pointer-events: all;
+}
+
 /* width */
 ::-webkit-scrollbar {
 	width: 8px;
@@ -161,5 +194,3 @@ body {
 ::-webkit-scrollbar-thumb:hover {
 	background: #3b82f6;
 }
-
-

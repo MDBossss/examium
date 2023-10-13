@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
-import { UserType } from "../types/models";
+import { LocationType, UserType } from "../../../shared/models";
 
 class UserController {
 	async getAllUsers(req: Request, res: Response) {
 		try {
 			const users = await prisma.user.findMany();
-			if(!users){
-				return res.status(404).json({error: "No users found."})
+			if (!users) {
+				return res.status(404).json({ error: "No users found." });
 			}
 			res.status(200).json(users);
 		} catch (error) {
@@ -68,6 +68,25 @@ class UserController {
 			const updatedUser = await prisma.user.update({
 				where: { id },
 				data: { ...userData },
+			});
+			res.status(200).json(updatedUser);
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
+	async updateUserLocation(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const { ...location }: LocationType = req.body;
+			const updatedUser = await prisma.user.update({
+				where: { id },
+				data: {
+					locationName: location.name,
+					latitude: location.latitude,
+					longitude: location.longitude,
+				},
 			});
 			res.status(200).json(updatedUser);
 		} catch (error) {

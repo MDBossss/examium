@@ -1,4 +1,4 @@
-import { CodeAnswer, CodeQuestionType, TestType } from "../../types/models";
+import { CodeAnswer, CodeQuestionType, TestType } from "../../../../shared/models";
 import MDEditor from "@uiw/react-md-editor";
 import CodeMirror from "@uiw/react-codemirror";
 import { useThemeStore } from "../../store/themeStore";

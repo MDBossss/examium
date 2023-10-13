@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { CodeAnswer, TestType } from "../types/models";
+import { CodeAnswer, TestType } from "../../../shared/models";
 import { useEffect, useState } from "react";
-import SearchBar from "../components/SearchBar";
 import { ArrowLeft, MoreVertical, Printer, RotateCcw } from "lucide-react";
 import {
 	DropdownMenu,
@@ -18,10 +17,12 @@ import CodeQuestionResult from "../components/CodeQuestion/CodeQuestionResult";
 import { useQuestionCount } from "../hooks/useQuestionCount";
 import Spinner from "../components/ui/Spinner";
 import { useThemeStore } from "../store/themeStore";
+import { useSession } from "@clerk/clerk-react";
 
 const Results = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const {session} = useSession();
 	const test: TestType = location.state?.test;
 	const hasParamId: boolean = location.state?.hasParamId;
 
@@ -31,7 +32,7 @@ const Results = () => {
 		: document.documentElement.setAttribute("data-color-mode", "light");
 
 	const [userAnswers, setUserAnswers] = useState<(boolean[] | CodeAnswer)[]>(
-		location.state.userAnswers
+		location.state?.userAnswers
 	);
 	const [fetchedCodeQuestionsCount, setFetchedCodeQuestionsCount] = useState<number>(0);
 
@@ -48,7 +49,7 @@ const Results = () => {
 
 	const handleReturn = () => {
 		if (hasParamId) {
-			navigate("/");
+			navigate(`/overview/${session?.user.id}`);
 		} else {
 			navigate(-2);
 		}
@@ -74,7 +75,6 @@ const Results = () => {
 	};
 
 	const handleSetIsCodeCorrect = (value: boolean, questionIndex: number) => {
-		console.log("setting isCodeCorrect")
 		setUserAnswers((prev) => {
 			const updatedUserAnswers = [...prev];
 			(updatedUserAnswers[questionIndex] as CodeAnswer).isCorrect = value;
@@ -93,8 +93,7 @@ const Results = () => {
 					<span className="text-lg font-bold">Calculating results...</span> <Spinner />
 				</div>
 			)} */}
-			<div className="flex flex-col w-full gap-10 p-4 pt-5 max-w-screen sm:p-10">
-				<SearchBar />
+			<>
 				<div className="flex flex-col items-center w-full mx-auto max-w-7xl">
 					<div className="flex items-center justify-between w-full py-5">
 						<div className="flex items-center gap-5">
@@ -129,29 +128,27 @@ const Results = () => {
 							Your answers: ({userScore.value}/{maxScore} correct)
 						</p>
 
-						{test.showQuestionsOnResults &&
-							test.questions.map((question, questionIndex) =>
-								question.type === "MULTIPLE_CHOICE" ? (
-									<MultipleChoiceQuestionResult
-										key={question.id}
-										question={question}
-										answersChecked={userAnswers[questionIndex] as boolean[]}
-										questionIndex={questionIndex}
-										showQuestion={test.showQuestionsOnResults}
-									/>
-								) : (
-									<CodeQuestionResult
-										key={question.id}
-										question={question}
-										userCode={userAnswers[questionIndex] as CodeAnswer}
-										questionIndex={questionIndex}
-										onSetIsCodeCorrect={handleSetIsCodeCorrect}
-										onLoaded={handleFetchedCodeQuestion}
-										showQuestion={test.showQuestionsOnResults}
-
-									/>
-								)
-							)}
+						{test.questions.map((question, questionIndex) =>
+							question.type === "MULTIPLE_CHOICE" ? (
+								<MultipleChoiceQuestionResult
+									key={question.id}
+									question={question}
+									answersChecked={userAnswers[questionIndex] as boolean[]}
+									questionIndex={questionIndex}
+									showQuestion={test.showQuestionsOnResults}
+								/>
+							) : (
+								<CodeQuestionResult
+									key={question.id}
+									question={question}
+									userCode={userAnswers[questionIndex] as CodeAnswer}
+									questionIndex={questionIndex}
+									onSetIsCodeCorrect={handleSetIsCodeCorrect}
+									onLoaded={handleFetchedCodeQuestion}
+									showQuestion={test.showQuestionsOnResults}
+								/>
+							)
+						)}
 					</div>
 				</div>
 				<div
@@ -160,7 +157,7 @@ const Results = () => {
 				>
 					Return
 				</div>
-			</div>
+			</>
 		</>
 	);
 };

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { AnswerType, CodeQuestionType, MultipleChoiceQuestionType, QuestionVariantsType, TestType, UserType } from "../types/models";
+import { AnswerType, CodeQuestionType, MultipleChoiceQuestionType, QuestionVariantsType, TestType, UserType } from "../../../shared/models";
 import {UserResource} from "@clerk/types"
 
 
@@ -20,7 +20,8 @@ const useGenerateData = () => {
 			type: type,
 			question: "",
 			createdAt: new Date(),
-			correctCode: ""
+			correctCode: "",
+			showCorrectCodeOnResults: true
 
 		} as CodeQuestionType : {
 			id: uuidv4(),

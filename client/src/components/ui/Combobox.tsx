@@ -7,7 +7,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "./Dropdown";
-import { QuestionVariantsType } from "../../types/models";
+import { QuestionVariantsType } from "../../../../shared/models";
 
 interface optionsProps{
     value: QuestionVariantsType["type"],
