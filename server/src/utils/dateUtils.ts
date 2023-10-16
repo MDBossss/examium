@@ -1,63 +1,20 @@
-import { ProcessedEvent } from "@aldabil/react-scheduler/types";
-import {
-	addDays,
-	addMonths,
-	addWeeks,
-	getMonth,
-	getWeek,
-	getYear,
-	isBefore,
-	setHours,
-	setMinutes,
-} from "date-fns";
-import { EventType } from "../../../shared/models";
-
-/**
- * Function which returns the "ago" string based on the passed date and current time.
- * @param timestamp 
- * @returns times ago string
- */
-export function getTimeAgo(timestamp: Date) {
-	const currentDate = new Date();
-	const previousDate = new Date(timestamp);
-	const timeDifference = currentDate.getTime() - previousDate.getTime();
-	const seconds = Math.floor(timeDifference / 1000);
-
-	if (seconds < 60) {
-		return `${seconds} seconds ago`;
-	}
-
-	const minutes = Math.floor(seconds / 60);
-
-	if (minutes < 60) {
-		return `${minutes} minutes ago`;
-	}
-
-	const hours = Math.floor(minutes / 60);
-
-	if (hours < 24) {
-		return `${hours} hours ago`;
-	}
-
-	const days = Math.floor(hours / 24);
-	return `${days} days ago`;
-}
-
-/**
- * Function that uses regex expression to validate a time
- * @param inputTime time in a HH:mm value
- * @returns boolean value of the evaluation
- */
-export const isValidTime = (inputTime: string) => {
-	return /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/.test(inputTime);
-}
+import addMonths from "date-fns/addMonths";
+import {EventType} from "../../../shared/models";
+import setMinutes from "date-fns/setMinutes";
+import setHours from "date-fns/setHours";
+import isBefore from "date-fns/isBefore";
+import getYear from "date-fns/getYear";
+import addWeeks from "date-fns/addWeeks";
+import getMonth from "date-fns/getMonth";
+import addDays from "date-fns/addDays";
+import getWeek from "date-fns/getWeek";
 
 /**
  * Function which generates repeating events based on the one passed
  * @param event One event from which repeating events will be generated based on the repeat pattern
  * @returns Array of events based on the repeating pattern of a single passed event
  */
-export function generateRepeatingEvents(event: EventType): ProcessedEvent[] {
+export function generateRepeatingEvents(event: EventType): EventType[] {
 	const { start, end, repeatPattern } = event;
 	const occurrences: EventType[] = [];
 	let currentDate = new Date(start);
@@ -65,7 +22,7 @@ export function generateRepeatingEvents(event: EventType): ProcessedEvent[] {
 	switch (repeatPattern) {
 		case "none":
 			occurrences.push(event);
-			return occurrences as ProcessedEvent[];
+			return occurrences;
 
 		case "daily":
 			//Skips occurrences already passed
@@ -83,7 +40,7 @@ export function generateRepeatingEvents(event: EventType): ProcessedEvent[] {
 				});
 				currentDate = addDays(currentDate, 1);
 			}
-			return occurrences as ProcessedEvent[];
+			return occurrences;
 
 		case "weekly":
 			//Skips occurrences already passed
@@ -101,7 +58,7 @@ export function generateRepeatingEvents(event: EventType): ProcessedEvent[] {
 				});
 				currentDate = addWeeks(currentDate, 1);
 			}
-			return occurrences as ProcessedEvent[];
+			return occurrences;
 
 		case "monthly":
 			//Skips occurrences already passed
@@ -120,10 +77,10 @@ export function generateRepeatingEvents(event: EventType): ProcessedEvent[] {
 				currentDate = addMonths(currentDate, 1);
 			}
 			console.log(occurrences);
-			return occurrences as ProcessedEvent[];
+			return occurrences ;
 
 		default:
 			occurrences.push(event);
-			return occurrences as ProcessedEvent[];
+			return occurrences ;
 	}
 }

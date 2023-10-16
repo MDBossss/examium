@@ -40,6 +40,9 @@ const EventActivity = ({ session }: Props) => {
 
 	const filteredData = data?.filter((event) => isAfter(new Date(event.start), currentTime));
 
+	console.log(data)
+	console.log(filteredData)
+
 	return (
 		<div className="flex flex-col gap-5">
 			<div className="flex flex-col gap-6 px-4 pt-6 pb-2 border rounded-sm border-slate-200 dark:border-gray-800">

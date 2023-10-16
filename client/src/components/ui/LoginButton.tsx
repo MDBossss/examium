@@ -19,6 +19,7 @@ import {
 	LaptopIcon,
 	LayoutGridIcon,
 	LogOutIcon,
+	MessagesSquareIcon,
 	MoonIcon,
 	PaletteIcon,
 	PlusIcon,
@@ -155,6 +156,12 @@ const LoginButton = ({ test }: Props) => {
 							onClick={() => handleNavigate(`/schedule/${session.user.id}`)}
 						>
 							<CalendarIcon className="w-4 h-4" /> Schedule
+						</DropdownMenuItem>
+						<DropdownMenuItem
+							className="flex gap-1"
+							onClick={() => handleNavigate(`/groups`)}
+						>
+							<MessagesSquareIcon className="w-4 h-4" /> Study groups
 						</DropdownMenuItem>
 						<DropdownMenuSub>
 							<DropdownMenuSubTrigger className="flex gap-1">

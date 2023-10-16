@@ -7,41 +7,137 @@ import Layout from "./pages/Layout";
 import Results from "./pages/Results";
 import MyTests from "./pages/MyTests";
 import Collaborations from "./pages/Collaborations";
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { useThemeStore } from "./store/themeStore";
 import Schedule from "./pages/Schedule";
 import Overview from "./pages/Overview";
+import StudyGroups from "./pages/StudyGroups";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const {theme} = useThemeStore();
+	const { theme } = useThemeStore();
 
-  useEffect(() => {
-    // On page load or when changing themes, add inline in `head` to avoid FOUC
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
+	useEffect(() => {
+		// On page load or when changing themes, add inline in `head` to avoid FOUC
+		if (theme === "dark") {
+			document.documentElement.classList.add("dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+		}
+	}, [theme]);
 
-  return (
-    <div>
-      <Routes>
-        <Route path="*" element={<NotFound />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/create" element={<Layout><Create/></Layout>} />
-        <Route path="/create/:id" element={<Layout><Create/></Layout>}/>
-        <Route path="/create/preview" element={<Layout><Preview /></Layout>} />
-        <Route path="/create/preview/results" element={<Layout><Results/></Layout>}/>
-        <Route path="/tests/:id" element={<Layout><MyTests/></Layout>}/>
-        <Route path="/collaborations/:id" element={<Layout><Collaborations/></Layout>}/>
-        <Route path="/solve/:id" element={<Layout><Preview/></Layout>}/>
-        <Route path="/solve/results" element={<Layout><Results/></Layout>}/>
-        <Route path="/schedule/:id" element={<Layout><Schedule/></Layout>}/>
-        <Route path="/overview/:id" element={<Layout><Overview/></Layout>}/>
-      </Routes>
-    </div>
-  );
+	return (
+		<Routes>
+			<Route path="*" element={<NotFound />} />
+			<Route path="/" element={<Home />} />
+			<Route
+				path="/create"
+				element={
+					<Layout>
+						<Create />
+					</Layout>
+				}
+			/>
+			<Route
+				path="/create/:id"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<Create />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/create/preview"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<Preview />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/create/preview/results"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<Results />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/tests/:id"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<MyTests />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/collaborations/:id"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<Collaborations />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/solve/:id"
+				element={
+					<Layout>
+						<Preview />
+					</Layout>
+				}
+			/>
+			<Route
+				path="/solve/results"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<Results />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/schedule/:id"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<Schedule />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/overview/:id"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<Overview />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/groups"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<StudyGroups />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+		</Routes>
+	);
 }
 
 export default App;
