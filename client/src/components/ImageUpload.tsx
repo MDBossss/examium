@@ -6,27 +6,29 @@ import { removeImageFromBucket, uploadImageToBucket } from "../utils/supabaseUti
 import Spinner from "./ui/Spinner";
 
 interface Props {
-	onSetQuestionImage: (imageUrl: string | undefined, questionID: string) => void;
-	imageUrl: string | undefined;
-	questionID: string
+	onSetImage: (path: string | undefined) => void;
+	imageUrl?: string | undefined;
 }
 
-const ImageUpload = ({ onSetQuestionImage, imageUrl, questionID }: Props) => {
+const ImageUpload = ({ onSetImage, imageUrl }: Props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [path, setPath] = useState<string | undefined>(undefined);
 
 	const onDrop = useCallback(async (acceptedFiles: File[]) => {
 		setIsLoading(true);
 		const path = await uploadImageToBucket("questionImages", acceptedFiles[0]);
-		onSetQuestionImage(path, questionID);
+		setPath(path);
+		onSetImage(path);
 		setIsLoading(false);
 	}, []);
 
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
 	const handleDeleteImage = async () => {
-		if (imageUrl) {
-			await removeImageFromBucket("questionImages", imageUrl);
-			onSetQuestionImage(undefined, questionID);
+		if (imageUrl || path) {
+			await removeImageFromBucket("questionImages", path ? path : imageUrl ? imageUrl : "");
+			setPath(undefined);
+			onSetImage(undefined);
 		}
 	};
 
@@ -37,29 +39,29 @@ const ImageUpload = ({ onSetQuestionImage, imageUrl, questionID }: Props) => {
 				isDragActive ? "border-blue-500" : "border-slate-400"
 			} w-full h-[200px] p-3 border-2 border-dashed  flex items-center justify-center rounded-sm relative cursor-grab`}
 		>
-			{imageUrl ? (
+			{imageUrl || path ? (
 				<>
 					<img
-						src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${imageUrl}`}
+						src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${path ? path : imageUrl}`}
 						alt="image"
-						className=" h-full object-cover"
+						className="object-cover h-full "
 					/>
 					<Button
-						className="bg-red-500 hover:bg-red-600 p-3 text-white absolute right-1 top-1"
+						className="absolute p-3 text-white bg-red-500 hover:bg-red-600 right-1 top-1"
 						onClick={handleDeleteImage}
 					>
-						<Trash2Icon className="h-4 w-4" />
+						<Trash2Icon className="w-4 h-4" />
 					</Button>
 				</>
 			) : (
 				<>
-					<input {...getInputProps()} accept=".png, .jpg" />
+					<input {...getInputProps()} id="image-upload" accept=".png, .jpg" />
 					{isDragActive ? (
 						<p className="text-blue-500">Drop the files here ...</p>
 					) : isLoading ? (
-						<Spinner/>
+						<Spinner />
 					) : (
-						<p>Drag 'n' drop .png files here, or click to select files</p>
+						<p className="text-center">Drag 'n' drop .png files here, or click to select files</p>
 					)}
 				</>
 			)}

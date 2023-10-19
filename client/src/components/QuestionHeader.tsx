@@ -71,6 +71,10 @@ const QuestionHeader = ({
 		}
 	};
 
+	const handleSetImage = (imageUrl:string | undefined) => {
+		onSetQuestionImage(imageUrl,question.id)
+	}
+
 	useEffect(() => {
 		const textarea = textareaRef.current;
 
@@ -111,9 +115,8 @@ const QuestionHeader = ({
 							<AlertDialogHeader>
 								<AlertDialogTitle>Upload an image</AlertDialogTitle>
 								<ImageUpload
-									onSetQuestionImage={onSetQuestionImage}
+									onSetImage={handleSetImage}
 									imageUrl={question.imageUrl}
-									questionID={question.id}
 								/>
 							</AlertDialogHeader>
 							<AlertDialogFooter>

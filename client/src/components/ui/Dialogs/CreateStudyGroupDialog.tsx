@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -19,10 +19,16 @@ import { Switch } from "../Switch";
 import ImageUpload from "../../ImageUpload";
 
 const schema = z.object({
-	name: z.string().max(50, { message: "Name must be at most 50 characters" }),
-	description: z.string().max(200, { message: "Description must be at most 200 characters" }),
-	imageUrl: z.string(),
-	isPublic: z.boolean(),
+	name: z
+		.string()
+		.max(50, { message: "Name must be at most 50 characters" })
+		.min(2, { message: "Name must have at least 2 characters" }),
+	description: z
+		.string()
+		.max(200, { message: "Description must be at most 200 characters" })
+		.min(10, { message: "Description must have at least 10 characters" }),
+	imageUrl: z.string().min(1, { message: "Cover image is required" }).default(""),
+	isPublic: z.boolean().optional(),
 });
 
 const CreateStudyGroupDialog = () => {
@@ -39,9 +45,26 @@ const CreateStudyGroupDialog = () => {
 
 	const onSubmit: SubmitHandler<z.infer<typeof schema>> = (data) => {
 		//create the group inside the db
+		console.log(data);
 	};
 
-	console.log(errors);
+	const handleSetImage = (imageUrl: string | undefined) => {
+		if (imageUrl) {
+			setValue("imageUrl", imageUrl);
+		} else {
+			setValue("imageUrl", "");
+		}
+	};
+
+	useEffect(() => {
+		Object.keys(errors).forEach((field) => {
+			const error = errors[field as keyof typeof errors];
+			toast({
+				description: error?.message?.toString(),
+				variant: "destructive",
+			});
+		});
+	}, [errors]);
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -49,45 +72,56 @@ const CreateStudyGroupDialog = () => {
 				<Button className="w-full m-2 md:w-fit">Create Study Group</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
-				<DialogHeader>
-					<DialogTitle>Create Study Group</DialogTitle>
-					<DialogDescription>Learn together with your very own study group!</DialogDescription>
-				</DialogHeader>
-				<div className="grid gap-4 py-4">
-					<div className="grid items-center grid-cols-4 gap-4">
-						<Label htmlFor="name" className="text-right">
-							Name
-						</Label>
-						<Input id="group-name" placeholder="Insert name..." {...register("name")} className="col-span-3" />
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<DialogHeader>
+						<DialogTitle>Create Study Group</DialogTitle>
+						<DialogDescription>Learn together with your very own study group!</DialogDescription>
+					</DialogHeader>
+					<div className="grid gap-4 py-4">
+						<div className="grid items-center grid-cols-4 gap-4">
+							<Label htmlFor="group-name" className="text-right">
+								Name
+							</Label>
+							<Input
+								id="group-name"
+								placeholder="Insert name..."
+								{...register("name")}
+								className="col-span-3"
+							/>
+						</div>
+						<div className="grid items-center grid-cols-4 gap-4">
+							<Label htmlFor="group-description" className="text-right">
+								Description
+							</Label>
+							<Input
+								id="group-description"
+								placeholder="Insert description..."
+								{...register("description")}
+								className="col-span-3"
+							/>
+						</div>
+						<div className="grid items-center grid-cols-4 gap-4">
+							<Label htmlFor="group-public" className="text-right">
+								Public
+							</Label>
+							<Switch
+								id="group-public"
+								className="col-span-1"
+								onCheckedChange={(v) => setValue("isPublic", v)}
+								// {...register("isPublic")}
+							/>
+						</div>
+						<div className="flex flex-col gap-2">
+							<Label htmlFor="group-image" className="">
+								Cover Image
+							</Label>
+							<ImageUpload onSetImage={handleSetImage} />
+						</div>
 					</div>
-					<div className="grid items-center grid-cols-4 gap-4">
-						<Label htmlFor="group-description" className="text-right">
-							Description
-						</Label>
-						<Input id="group-description" placeholder="Insert description..." {...register("description")} className="col-span-3" />
-					</div>
-					<div className="grid items-center grid-cols-4 gap-4">
-						<Label htmlFor="group-public" className="text-right">
-							Public
-						</Label>
-						<Switch
-							id="group-public"
-							className="col-span-1"
-                            defaultChecked={true}
-							onCheckedChange={(v) => setValue("isPublic", v)}
-							{...register("isPublic")}
-						/>
-					</div>
-                    <div className="grid items-center grid-cols-4 gap-4">
-						<Label htmlFor="group-image" className="text-right">
-							Public
-						</Label>
-						<ImageUpload/>
-					</div>
-				</div>
-				<DialogFooter>
-					<Button type="submit">Save changes</Button>
-				</DialogFooter>
+					<DialogFooter>
+						<Button type="submit">Create group</Button>
+					</DialogFooter>
+				</form>
 			</DialogContent>
 		</Dialog>
 	);
