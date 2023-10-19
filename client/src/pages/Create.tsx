@@ -217,7 +217,7 @@ const Create = () => {
 		}));
 	};
 
-	const handleQuestionTypeChange = (value: QuestionVariantsType["type"], questionIndex: number) => {
+	const handleQuestionTypeChange = (value: QuestionVariantsType, questionIndex: number) => {
 		setTest((prevTest) => ({
 			...prevTest,
 			questions: prevTest.questions.map((question, index) => {

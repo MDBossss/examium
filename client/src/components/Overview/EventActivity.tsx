@@ -40,9 +40,6 @@ const EventActivity = ({ session }: Props) => {
 
 	const filteredData = data?.filter((event) => isAfter(new Date(event.start), currentTime));
 
-	console.log(data)
-	console.log(filteredData)
-
 	return (
 		<div className="flex flex-col gap-5">
 			<div className="flex flex-col gap-6 px-4 pt-6 pb-2 border rounded-sm border-slate-200 dark:border-gray-800">
@@ -148,7 +145,9 @@ const EventActivity = ({ session }: Props) => {
 						) : null}
 						{isError && <div className="flex justify-center p-5">Error loading tests 😓</div>}
 						{filteredData && !notEmpty(filteredData) && (
-							<div className="flex justify-center p-5 text-center">You have no more events today! 😅</div>
+							<div className="flex justify-center p-5 text-center">
+								You have no more events today! 😅
+							</div>
 						)}
 					</div>
 				</div>

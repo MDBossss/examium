@@ -26,6 +26,8 @@ function App() {
 		}
 	}, [theme]);
 
+	
+
 	return (
 		<Routes>
 			<Route path="*" element={<NotFound />} />

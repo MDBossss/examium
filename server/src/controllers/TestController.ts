@@ -158,7 +158,7 @@ class TestController {
 				showQuestionsOnResults: testWithCollaborators.showQuestionsOnResults,
 				randomizeQuestions: testWithCollaborators.randomizeQuestions,
 				randomizeAnswers: testWithCollaborators.randomizeAnswers,
-				defaultQuestionType: testWithCollaborators.defaultQuestionType as QuestionVariantsType["type"],
+				defaultQuestionType: testWithCollaborators.defaultQuestionType,
 				createdAt: testWithCollaborators.createdAt,
 				updatedAt: testWithCollaborators.updatedAt,
 				authorId: testWithCollaborators.authorId,

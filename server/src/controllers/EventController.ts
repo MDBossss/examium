@@ -41,7 +41,7 @@ class EventController {
 					end: event.end,
 					allDay: event.allDay,
 					color: event.color,
-					repeatPattern: event.repeatPattern as "none" | "daily" | "weekly" | "monthly",
+					repeatPattern: event.repeatPattern,
 					testOptions: formattedTests,
 				};
 				formattedEvents.push(tempEvent);
@@ -97,7 +97,7 @@ class EventController {
 					end: event.end,
 					allDay: event.allDay,
 					color: event.color,
-					repeatPattern: event.repeatPattern as "none" | "daily" | "weekly" | "monthly",
+					repeatPattern: event.repeatPattern,
 					testOptions: formattedTests,
 					selectedTests: event.selectedTests as TestType[],
 				};

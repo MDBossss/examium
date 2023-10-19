@@ -21,6 +21,7 @@ import { Label } from "../ui/Label";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import { z } from "zod";
+import { Skeleton } from "../ui/Skeleton";
 
 const cityNameSchema = z
 	.string()
@@ -106,8 +107,8 @@ const Forecast = ({ session }: Props) => {
 
 	if (!weatherData) {
 		return (
-			<div className="p-5 border rounded-sm">
-				<Spinner />
+			<div className="flex flex-1 p-5 border rounded-sm">
+				<Skeleton className="w-full h-full"/>
 			</div>
 		);
 	}

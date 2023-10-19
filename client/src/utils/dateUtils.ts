@@ -63,11 +63,11 @@ export function generateRepeatingEvents(event: EventType): ProcessedEvent[] {
 	let currentDate = new Date(start);
 
 	switch (repeatPattern) {
-		case "none":
+		case "NONE":
 			occurrences.push(event);
 			return occurrences as ProcessedEvent[];
 
-		case "daily":
+		case "DAILY":
 			//Skips occurrences already passed
 			while (getWeek(currentDate, { weekStartsOn: 1 }) < getWeek(new Date(), { weekStartsOn: 1 })) {
 				currentDate = addDays(currentDate, 1);
@@ -85,7 +85,7 @@ export function generateRepeatingEvents(event: EventType): ProcessedEvent[] {
 			}
 			return occurrences as ProcessedEvent[];
 
-		case "weekly":
+		case "WEEKLY":
 			//Skips occurrences already passed
 			while (getMonth(currentDate) < getMonth(new Date())) {
 				currentDate = addWeeks(currentDate, 1);
@@ -103,7 +103,7 @@ export function generateRepeatingEvents(event: EventType): ProcessedEvent[] {
 			}
 			return occurrences as ProcessedEvent[];
 
-		case "monthly":
+		case "MONTHLY":
 			//Skips occurrences already passed
 			while (getYear(currentDate) < getYear(new Date())) {
 				currentDate = addMonths(currentDate, 1);

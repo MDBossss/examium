@@ -17,7 +17,7 @@ export interface TestType {
 	showQuestionsOnResults: boolean;
 	randomizeQuestions: boolean;
 	randomizeAnswers: boolean;
-	defaultQuestionType: QuestionVariantsType["type"];
+	defaultQuestionType: QuestionVariantsType;
 	createdAt: Date;
 	updatedAt?: Date;
 	authorId?: string;
@@ -27,13 +27,12 @@ export interface TestType {
 	questions: QuestionType[];
 }
 
-export interface QuestionVariantsType {
-	type: "MULTIPLE_CHOICE" | "CODE";
-}
+export type QuestionVariantsType = "MULTIPLE_CHOICE" | "CODE";
+
 
 export interface QuestionType {
 	id: string;
-	type: QuestionVariantsType["type"];
+	type: QuestionVariantsType;
 	question: string;
 	imageUrl?: string;
 	createdAt: Date;
@@ -66,6 +65,8 @@ export type OptionType = {
 	value: string;
 };
 
+export type RepeatPattern = "NONE" | "DAILY" | "WEEKLY" | "MONTHLY";
+
 export interface EventType {
 	event_id: string | number;
 	title: string;
@@ -75,7 +76,7 @@ export interface EventType {
 	end: Date | string;
 	allDay: boolean | undefined;
 	color: string;
-	repeatPattern: "none" | "daily" | "weekly" | "monthly";
+	repeatPattern: RepeatPattern
 	testOptions: OptionType[];
 	selectedTests?: TestType[];
 }
@@ -84,6 +85,31 @@ export interface LocationType {
 	name: string;
 	longitude: number;
 	latitude: number;
+}
+
+export interface StudyGroupType{
+	id: string;
+	name: string;
+	description:string;
+	imageUrl: string;
+	isPublic: boolean;
+	owner?: UserType;
+	members?:MemberType[];
+	messages?: MessageType[]
+	createdAt?: Date
+	updatedAt?: Date
+}
+
+export interface MemberType extends UserType{
+	
+}
+
+export interface MessageType{
+	id:string;
+	content:string;
+	fileUrl?: string;
+	member?:MemberType;
+	test?:TestType
 }
 
 export interface WeatherDataType {
