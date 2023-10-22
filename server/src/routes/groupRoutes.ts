@@ -11,6 +11,6 @@ router.get("/:id",groupController.getStudyGroupById)
 router.get("/user/:userId",groupController.getUserStudyGroups)
 router.post("/",groupController.createStudyGroup)
 router.put("/:id",groupController.updateStudyGroup)
-router.delete("/id",groupController.deleteStudyGroup)
+router.delete("/:id",groupController.deleteStudyGroup)
 
 export default router

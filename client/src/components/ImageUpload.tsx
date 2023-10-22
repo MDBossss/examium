@@ -16,7 +16,7 @@ const ImageUpload = ({ onSetImage, imageUrl }: Props) => {
 
 	const onDrop = useCallback(async (acceptedFiles: File[]) => {
 		setIsLoading(true);
-		const path = await uploadImageToBucket("questionImages", acceptedFiles[0]);
+		const path = await uploadImageToBucket(import.meta.env.VITE_SUPABASE_BUCKET_NAME, acceptedFiles[0]);
 		setPath(path);
 		onSetImage(path);
 		setIsLoading(false);
@@ -27,7 +27,7 @@ const ImageUpload = ({ onSetImage, imageUrl }: Props) => {
 	const handleDeleteImage = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
 		if (path) {
-			await removeImageFromBucket("questionImages", path);
+			await removeImageFromBucket(import.meta.env.VITE_SUPABASE_BUCKET_NAME, path);
 			setPath(undefined);
 			onSetImage(undefined);
 		}

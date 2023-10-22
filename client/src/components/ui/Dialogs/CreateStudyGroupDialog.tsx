@@ -17,10 +17,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "../../../hooks/useToast";
 import { Switch } from "../Switch";
 import ImageUpload from "../../ImageUpload";
-import { createStudyGroup, updateStudyGroup } from "../../../api/groups";
+import { createStudyGroup, deleteStudyGroup, updateStudyGroup } from "../../../api/groups";
 import { v4 as uuidv4 } from "uuid";
 import { useSession } from "@clerk/clerk-react";
 import { StudyGroupType } from "../../../../../shared/models";
+import DeleteGroupDialog from "./DeleteGroupDialog";
+import { useNavigate } from "react-router-dom";
+import { removeImageFromBucket } from "../../../utils/supabaseUtils";
 
 const schema = z.object({
 	name: z
@@ -43,6 +46,7 @@ interface Props {
 
 const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Props) => {
 	const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+	const navigate = useNavigate();
 	const { session } = useSession();
 	const {
 		register,
@@ -100,7 +104,7 @@ const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Prop
 				.catch((err) => {
 					console.log(err);
 					toast({
-						title: "😓 Failed to create group",
+						title: "😓 Failed to delete group",
 						variant: "destructive",
 					});
 				});
@@ -115,6 +119,33 @@ const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Prop
 		}
 	};
 
+	const handleDeleteGroup = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.preventDefault();
+		if (defaultStudyGroup) {
+			setDialogOpen(false);
+			await removeImageFromBucket(
+				import.meta.env.VITE_SUPABASE_BUCKET_NAME,
+				defaultStudyGroup.imageUrl
+			);
+			await deleteStudyGroup(defaultStudyGroup?.id)
+				.then(() => {
+					navigate("/groups");
+					toast({
+						description: "✅ Group deleted successfully.",
+					});
+					// weird bug fix when navigating to the groups the body has pointer-events:none
+					document.body.style.pointerEvents = "auto";
+				})
+				.catch((err) => {
+					console.log(err);
+					toast({
+						title: "😓 Failed to create group",
+						variant: "destructive",
+					});
+				});
+		}
+	};
+
 	useEffect(() => {
 		Object.keys(errors).forEach((field) => {
 			const error = errors[field as keyof typeof errors];
@@ -124,8 +155,6 @@ const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Prop
 			});
 		});
 	}, [errors]);
-
-	console.log(defaultStudyGroup?.isPublic)
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -183,6 +212,7 @@ const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Prop
 						</div>
 					</div>
 					<DialogFooter>
+						{defaultStudyGroup ? <DeleteGroupDialog onTrigger={handleDeleteGroup} /> : null}
 						<Button type="submit">{defaultStudyGroup ? "Edit group" : "Create group"}</Button>
 					</DialogFooter>
 				</form>
