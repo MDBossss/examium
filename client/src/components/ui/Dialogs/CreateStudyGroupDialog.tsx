@@ -125,6 +125,8 @@ const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Prop
 		});
 	}, [errors]);
 
+	console.log(defaultStudyGroup?.isPublic)
+
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
@@ -166,7 +168,7 @@ const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Prop
 							<Switch
 								id="group-public"
 								className="col-span-1"
-								defaultChecked={true}
+								defaultChecked={defaultStudyGroup ? defaultStudyGroup?.isPublic : true}
 								onCheckedChange={(v) => setValue("isPublic", v)}
 							/>
 						</div>
