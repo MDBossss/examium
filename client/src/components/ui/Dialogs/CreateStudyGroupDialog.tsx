@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -17,6 +17,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "../../../hooks/useToast";
 import { Switch } from "../Switch";
 import ImageUpload from "../../ImageUpload";
+import { createStudyGroup, updateStudyGroup } from "../../../api/groups";
+import { v4 as uuidv4 } from "uuid";
+import { useSession } from "@clerk/clerk-react";
+import { StudyGroupType } from "../../../../../shared/models";
 
 const schema = z.object({
 	name: z
@@ -28,11 +32,18 @@ const schema = z.object({
 		.max(200, { message: "Description must be at most 200 characters" })
 		.min(10, { message: "Description must have at least 10 characters" }),
 	imageUrl: z.string().min(1, { message: "Cover image is required" }).default(""),
-	isPublic: z.boolean().optional(),
+	isPublic: z.boolean().default(true),
 });
 
-const CreateStudyGroupDialog = () => {
+interface Props {
+	defaultStudyGroup?: StudyGroupType;
+	onCreated?: (studyGroup?: StudyGroupType) => void;
+	children: ReactNode;
+}
+
+const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Props) => {
 	const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+	const { session } = useSession();
 	const {
 		register,
 		handleSubmit,
@@ -40,12 +51,60 @@ const CreateStudyGroupDialog = () => {
 		formState: { errors },
 	} = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
+		defaultValues: defaultStudyGroup,
 	});
 	const { toast } = useToast();
 
-	const onSubmit: SubmitHandler<z.infer<typeof schema>> = (data) => {
-		//create the group inside the db
-		console.log(data);
+	const onSubmit: SubmitHandler<z.infer<typeof schema>> = async (data) => {
+		if (defaultStudyGroup) {
+			//update the group instead of creating a new one
+			const tempStudyGroup = {
+				...defaultStudyGroup,
+				name: data.name,
+				description: data.description,
+				isPublic: data.isPublic,
+				imageUrl: data.imageUrl,
+			};
+
+			await updateStudyGroup(tempStudyGroup)
+				.then(() => {
+					onCreated ? onCreated(tempStudyGroup) : null;
+					setDialogOpen(false);
+					toast({
+						title: "✅ Group updated successfully",
+					});
+				})
+				.catch((err) => {
+					console.log(err);
+					toast({
+						title: "😓 Failed to update group",
+						variant: "destructive",
+					});
+				});
+		} else {
+			await createStudyGroup({
+				id: uuidv4(),
+				name: data.name,
+				description: data.description,
+				isPublic: data.isPublic,
+				imageUrl: data.imageUrl,
+				ownerId: session?.user.id!,
+			})
+				.then(() => {
+					onCreated ? onCreated() : null;
+					setDialogOpen(false);
+					toast({
+						title: "✅ Group created successfully",
+					});
+				})
+				.catch((err) => {
+					console.log(err);
+					toast({
+						title: "😓 Failed to create group",
+						variant: "destructive",
+					});
+				});
+		}
 	};
 
 	const handleSetImage = (imageUrl: string | undefined) => {
@@ -68,13 +127,13 @@ const CreateStudyGroupDialog = () => {
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-			<DialogTrigger asChild>
-				<Button className="w-full m-2 md:w-fit">Create Study Group</Button>
-			</DialogTrigger>
+			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<DialogHeader>
-						<DialogTitle>Create Study Group</DialogTitle>
+						<DialogTitle>
+							{defaultStudyGroup ? "Edit Study Group" : "Study Study Group"}
+						</DialogTitle>
 						<DialogDescription>Learn together with your very own study group!</DialogDescription>
 					</DialogHeader>
 					<div className="grid gap-4 py-4">
@@ -107,19 +166,22 @@ const CreateStudyGroupDialog = () => {
 							<Switch
 								id="group-public"
 								className="col-span-1"
+								defaultChecked={true}
 								onCheckedChange={(v) => setValue("isPublic", v)}
-								// {...register("isPublic")}
 							/>
 						</div>
 						<div className="flex flex-col gap-2">
 							<Label htmlFor="group-image" className="">
 								Cover Image
 							</Label>
-							<ImageUpload onSetImage={handleSetImage} />
+							<ImageUpload
+								imageUrl={defaultStudyGroup ? defaultStudyGroup.imageUrl : undefined}
+								onSetImage={handleSetImage}
+							/>
 						</div>
 					</div>
 					<DialogFooter>
-						<Button type="submit">Create group</Button>
+						<Button type="submit">{defaultStudyGroup ? "Edit group" : "Create group"}</Button>
 					</DialogFooter>
 				</form>
 			</DialogContent>

@@ -13,6 +13,7 @@ import Schedule from "./pages/Schedule";
 import Overview from "./pages/Overview";
 import StudyGroups from "./pages/StudyGroups";
 import ProtectedRoute from "./components/ProtectedRoute";
+import StudyGroupChat from "./pages/StudyGroupChat";
 
 function App() {
 	const { theme } = useThemeStore();
@@ -25,8 +26,6 @@ function App() {
 			document.documentElement.classList.remove("dark");
 		}
 	}, [theme]);
-
-	
 
 	return (
 		<Routes>
@@ -134,6 +133,16 @@ function App() {
 					<ProtectedRoute>
 						<Layout>
 							<StudyGroups />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/groups/:id"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<StudyGroupChat />
 						</Layout>
 					</ProtectedRoute>
 				}

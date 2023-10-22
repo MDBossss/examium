@@ -21,7 +21,6 @@ export async function uploadImageToBucket(bucketName: string, file: File) {
 
 export async function removeImageFromBucket(bucketName: string, path: string) {
 	const { error } = await supabase.storage.from(bucketName).remove([path]);
-
 	if (error) {
 		console.error("Error removing image:", error.message);
 	}

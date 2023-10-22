@@ -12,7 +12,7 @@ interface Props {
 
 const ImageUpload = ({ onSetImage, imageUrl }: Props) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [path, setPath] = useState<string | undefined>(undefined);
+	const [path, setPath] = useState<string | undefined>(imageUrl);
 
 	const onDrop = useCallback(async (acceptedFiles: File[]) => {
 		setIsLoading(true);
@@ -24,9 +24,10 @@ const ImageUpload = ({ onSetImage, imageUrl }: Props) => {
 
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-	const handleDeleteImage = async () => {
-		if (imageUrl || path) {
-			await removeImageFromBucket("questionImages", path ? path : imageUrl ? imageUrl : "");
+	const handleDeleteImage = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		e.preventDefault();
+		if (path) {
+			await removeImageFromBucket("questionImages", path);
 			setPath(undefined);
 			onSetImage(undefined);
 		}
@@ -39,16 +40,16 @@ const ImageUpload = ({ onSetImage, imageUrl }: Props) => {
 				isDragActive ? "border-blue-500" : "border-slate-400"
 			} w-full h-[200px] p-3 border-2 border-dashed  flex items-center justify-center rounded-sm relative cursor-grab`}
 		>
-			{imageUrl || path ? (
+			{path ? (
 				<>
 					<img
-						src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${path ? path : imageUrl}`}
+						src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${path}`}
 						alt="image"
 						className="object-cover h-full "
 					/>
 					<Button
 						className="absolute p-3 text-white bg-red-500 hover:bg-red-600 right-1 top-1"
-						onClick={handleDeleteImage}
+						onClick={(e) => handleDeleteImage(e)}
 					>
 						<Trash2Icon className="w-4 h-4" />
 					</Button>

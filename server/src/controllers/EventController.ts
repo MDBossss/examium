@@ -119,7 +119,7 @@ class EventController {
 	async createEvent(req: Request, res: Response) {
 		try {
 			const { userId } = req.params;
-			const event = req.body;
+			const event: EventType = req.body;
 
 			let {
 				event_id,

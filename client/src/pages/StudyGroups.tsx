@@ -1,15 +1,36 @@
-import { ClipboardPasteIcon, PlusIcon } from "lucide-react";
+import { ClipboardPasteIcon } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { useState } from "react";
 import CreateStudyGroupDialog from "../components/ui/Dialogs/CreateStudyGroupDialog";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "@clerk/clerk-react";
+import { getUserStudyGroups } from "../api/groups";
+import GenerateMultipleSkeletons from "../components/GenerateMultipleSkeletons";
+import GroupDisplay from "../components/GroupDisplayCard";
 
 const StudyGroups = () => {
 	const [joinLink, setJoinLink] = useState<string>("");
+	const { session } = useSession();
 
 	const handlePaste = async () => {
 		const clipboard = await navigator.clipboard.readText();
 		setJoinLink(clipboard);
+	};
+
+	const {
+		data: userGroups,
+		isLoading: userIsLoading,
+		isError: userIsError,
+		refetch,
+	} = useQuery({
+		queryKey: ["groups", "user", session?.user.id],
+		queryFn: () => getUserStudyGroups(session?.user.id!),
+		refetchOnWindowFocus: false,
+	});
+
+	const handleOnCreated = () => {
+		refetch();
 	};
 
 	return (
@@ -21,9 +42,9 @@ const StudyGroups = () => {
 						Meet classmates from your school, create and share groups, all in one place.
 					</p>
 				</div>
-
-				<CreateStudyGroupDialog/>
-
+				<CreateStudyGroupDialog onCreated={handleOnCreated}>
+					<Button className="w-full m-2 md:w-fit">Create Study Group</Button>
+				</CreateStudyGroupDialog>
 			</div>
 			<div className="flex flex-wrap gap-5">
 				<div className="flex flex-col aspect-square text-center max-w-[280px] max-h-[280px] flex-1 gap-5 p-5 border rounded-sm">
@@ -49,6 +70,16 @@ const StudyGroups = () => {
 						Join
 					</Button>
 				</div>
+				{userIsLoading && (
+					<GenerateMultipleSkeletons
+						number={3}
+						className="aspect-square  max-w-[280px] max-h-[280px] rouned-sm"
+					/>
+				)}
+				{userGroups &&
+					!userIsLoading &&
+					userGroups.map((group) => <GroupDisplay studyGroup={group} key={group.id} />)}
+				{userIsError && <p>😓 Couldn't load your groups, try again.</p>}
 			</div>
 			<div className="relative flex flex-col gap-5">
 				<div className="absolute w-full p-2 border-b "></div>

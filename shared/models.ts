@@ -93,23 +93,31 @@ export interface StudyGroupType{
 	description:string;
 	imageUrl: string;
 	isPublic: boolean;
+	ownerId: string;
 	owner?: UserType;
+	memberCount?: number;
 	members?:MemberType[];
 	messages?: MessageType[]
 	createdAt?: Date
 	updatedAt?: Date
 }
 
-export interface MemberType extends UserType{
-	
+export interface MemberType{
+	id:string
+	userId: string,
+	user:UserType,
 }
 
 export interface MessageType{
 	id:string;
 	content:string;
-	fileUrl?: string;
+	fileUrl?: string | null;
+	testId?: string;
+	memberId?: string;
+	studyGroupId?:string;
 	member?:MemberType;
 	test?:TestType
+	deleted: boolean
 }
 
 export interface WeatherDataType {
