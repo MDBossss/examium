@@ -9,18 +9,17 @@ interface Props {
 const GroupDisplayCard = ({ studyGroup }: Props) => {
 	const navigate = useNavigate();
 
+	// console.log(`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${studyGroup.imageUrl}`);
+
 	return (
 		<div
 			className="flex flex-col aspect-square max-w-[280px] max-h-[280px] flex-1 border rounded-sm cursor-pointer  transition-all hover:scale-105"
 			onClick={() => navigate(`/groups/${studyGroup.id}`)}
 		>
-			<div
-				className="flex-1 bg-cover rounded-sm"
-				style={{
-					backgroundImage: `url(${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${
-						studyGroup.imageUrl
-					})`,
-				}}
+			<img
+				src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${studyGroup.imageUrl}`}
+				alt="cover"
+				className="flex-1 w-full overflow-hidden rounded-sm"
 			/>
 			<div className="flex flex-col gap-1 p-5">
 				<div className="flex gap-2 text-xs text-gray-500">

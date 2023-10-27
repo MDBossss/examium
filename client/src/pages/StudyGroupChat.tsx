@@ -5,15 +5,22 @@ import { Skeleton } from "../components/ui/Skeleton";
 import MemberListItem from "../components/MemberListItem";
 import { useSession } from "@clerk/clerk-react";
 import CreateStudyGroupDialog from "../components/ui/Dialogs/CreateStudyGroupDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StudyGroupType } from "../../../shared/models";
 import { Button } from "../components/ui/Button";
 import { SettingsIcon } from "lucide-react";
+import Chat from "../components/Chat/Chat";
+import { useSocket } from "../components/SocketProvider";
+
 
 const StudyGroupChat = () => {
 	const { id } = useParams();
 	const { session } = useSession();
 	const [studyGroup, setStudyGroup] = useState<StudyGroupType>();
+
+	const {socket,isConnected} = useSocket();
+
+	const updateKey = `chat:${id}:messages`;
 
 	const { data, isLoading, isError } = useQuery({
 		queryKey: ["groups", id],
@@ -21,6 +28,7 @@ const StudyGroupChat = () => {
 		refetchOnWindowFocus: false,
 		onSuccess: (data) => setStudyGroup(data),
 	});
+
 
 	if (isLoading) {
 		return (
@@ -60,11 +68,14 @@ const StudyGroupChat = () => {
 					)}
 				</div>
 			</div>
-			<div className="p-5 border-l">
-				<p className=" text-slate-400">Members</p>
-				{studyGroup?.members?.map((member) => (
-					<MemberListItem key={member.id} member={member} />
-				))}
+			<div className="flex w-full h-full gap-5 mx-auto max-w-7xl">
+				<Chat />
+				<div className="p-5 border-l">
+					<p className=" text-slate-400">Members</p>
+					{studyGroup?.members?.map((member) => (
+						<MemberListItem key={member.id} member={member} isOwner={member.id === data.ownerId} />
+					))}
+				</div>
 			</div>
 		</>
 	);

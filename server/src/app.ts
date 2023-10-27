@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import http from "http";
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes";
@@ -6,10 +7,12 @@ import testRoutes from "./routes/testRoutes";
 import codeRoutes from "./routes/codeRoutes";
 import eventRoutes from "./routes/eventRoutes";
 import groupRoutes from "./routes/groupRoutes";
+import { initializeSocketIo } from "./utils/socket";
 
 config();
 
 const app = express();
+const httpServer = http.createServer(app);
 
 //Middleware
 app.use(cors());
@@ -28,8 +31,11 @@ app.use((err:Error,req:Request,res:Response, next: NextFunction) => {
     res.status(500).json({error: "Internal Server Error"});
 })
 
+// Initialize Socket.io and attach it to the HTTP server
+initializeSocketIo(httpServer);
+
 //Start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })

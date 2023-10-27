@@ -8,7 +8,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function uploadImageToBucket(bucketName: string, file: File) {
 	const timestamp = new Date().getTime();
-	const fileName = `${timestamp}_${file.name}`;
+	const fileName = `${timestamp}_${file.name.replace(" ","_")}`;
 	const { data, error } = await supabase.storage.from(bucketName).upload(fileName, file);
 
 	if (error) {
