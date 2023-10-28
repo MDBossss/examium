@@ -12,13 +12,12 @@ import { SettingsIcon } from "lucide-react";
 import Chat from "../components/Chat/Chat";
 import { useSocket } from "../components/SocketProvider";
 
-
 const StudyGroupChat = () => {
 	const { id } = useParams();
 	const { session } = useSession();
 	const [studyGroup, setStudyGroup] = useState<StudyGroupType>();
 
-	const {socket,isConnected} = useSocket();
+	const { socket, isConnected } = useSocket();
 
 	const updateKey = `chat:${id}:messages`;
 
@@ -28,7 +27,6 @@ const StudyGroupChat = () => {
 		refetchOnWindowFocus: false,
 		onSuccess: (data) => setStudyGroup(data),
 	});
-
 
 	if (isLoading) {
 		return (

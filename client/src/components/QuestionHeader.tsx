@@ -10,7 +10,6 @@ import {
 	AlertDialogTrigger,
 } from "./ui/Dialogs/AlertDialog";
 import { Check, ImageIcon, SettingsIcon, XIcon } from "lucide-react";
-import ImageUpload from "./ImageUpload";
 import { useToast } from "../hooks/useToast";
 import { QuestionType, QuestionVariantsType } from "../../../shared/models";
 import {
@@ -23,6 +22,7 @@ import {
 } from "./ui/Dropdown";
 import { Textarea } from "./ui/Textarea";
 import { useEffect, useRef } from "react";
+import FileUpload from "./FileUpload";
 
 interface optionsProps {
 	value: QuestionVariantsType;
@@ -114,9 +114,10 @@ const QuestionHeader = ({
 						<AlertDialogContent>
 							<AlertDialogHeader>
 								<AlertDialogTitle>Upload an image</AlertDialogTitle>
-								<ImageUpload
-									onSetImage={handleSetImage}
-									imageUrl={question.imageUrl}
+								<FileUpload
+									onSetFilePath={handleSetImage}
+									defaultFilePath={question.imageUrl}
+									fileType="image"
 								/>
 							</AlertDialogHeader>
 							<AlertDialogFooter>

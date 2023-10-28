@@ -16,14 +16,15 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "../../../hooks/useToast";
 import { Switch } from "../Switch";
-import ImageUpload from "../../ImageUpload";
+import ImageUpload from "../../FileUpload";
 import { createStudyGroup, deleteStudyGroup, updateStudyGroup } from "../../../api/groups";
 import { v4 as uuidv4 } from "uuid";
 import { useSession } from "@clerk/clerk-react";
 import { StudyGroupType } from "../../../../../shared/models";
 import DeleteGroupDialog from "./DeleteGroupDialog";
 import { useNavigate } from "react-router-dom";
-import { removeImageFromBucket } from "../../../utils/supabaseUtils";
+import { removeFileFromBucket } from "../../../utils/supabaseUtils";
+import FileUpload from "../../FileUpload";
 
 const schema = z.object({
 	name: z
@@ -123,7 +124,7 @@ const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Prop
 		e.preventDefault();
 		if (defaultStudyGroup) {
 			setDialogOpen(false);
-			await removeImageFromBucket(
+			await removeFileFromBucket(
 				import.meta.env.VITE_SUPABASE_BUCKET_NAME,
 				defaultStudyGroup.imageUrl
 			);
@@ -205,9 +206,10 @@ const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Prop
 							<Label htmlFor="group-image" className="">
 								Cover Image
 							</Label>
-							<ImageUpload
-								imageUrl={defaultStudyGroup ? defaultStudyGroup.imageUrl : undefined}
-								onSetImage={handleSetImage}
+							<FileUpload
+								defaultFilePath={defaultStudyGroup ? defaultStudyGroup.imageUrl : undefined}
+								onSetFilePath={handleSetImage}
+								fileType="image"
 							/>
 						</div>
 					</div>
