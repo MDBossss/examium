@@ -7,6 +7,7 @@ import testRoutes from "./routes/testRoutes";
 import codeRoutes from "./routes/codeRoutes";
 import eventRoutes from "./routes/eventRoutes";
 import groupRoutes from "./routes/groupRoutes";
+import messageRoutes from "./routes/messageRoutes";
 import { initializeSocketIo } from "./utils/socket";
 
 config();
@@ -24,6 +25,7 @@ app.use("/api/tests",testRoutes);
 app.use("/api/code",codeRoutes)
 app.use("/api/events",eventRoutes)
 app.use("/api/groups",groupRoutes)
+app.use("/api/messages",messageRoutes);
 
 //Error handling middleware
 app.use((err:Error,req:Request,res:Response, next: NextFunction) => {

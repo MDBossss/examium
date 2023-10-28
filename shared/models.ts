@@ -112,7 +112,7 @@ export interface MessageType{
 	id:string;
 	content:string;
 	fileUrl?: string | null;
-	testId?: string;
+	testId?: string | null;
 	memberId?: string;
 	studyGroupId?:string;
 	member?:MemberType;

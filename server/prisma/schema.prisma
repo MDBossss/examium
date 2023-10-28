@@ -141,8 +141,8 @@ model Message {
   id           String     @id @default(uuid())
   content      String     @db.Text
   fileUrl      String?    @db.Text
-  testId       String
-  test         Test       @relation(fields: [testId], references: [id], onDelete: Cascade)
+  testId       String?
+  test         Test?       @relation(fields: [testId], references: [id], onDelete: Cascade)
   memberId     String
   member       Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)
   studyGroupId String

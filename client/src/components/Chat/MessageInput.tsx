@@ -35,6 +35,8 @@ import { v4 as uuidv4 } from "uuid";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTestsByUserId } from "../../api/tests";
 import { useSession } from "@clerk/clerk-react";
+import { useParams } from "react-router-dom";
+import { createMessage } from "../../api/messages";
 
 const schema = z.object({
 	messageContent: z.string().min(1),
@@ -43,6 +45,7 @@ const schema = z.object({
 });
 
 const MessageInput = () => {
+	const { id } = useParams();
 	const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 	const [fileType, setFileType] = useState<"image" | "document">("image");
 	const [filePath, setFilePath] = useState<string | undefined>();
@@ -65,7 +68,7 @@ const MessageInput = () => {
 		},
 	});
 
-	const { register, handleSubmit, setValue } = useForm<z.infer<typeof schema>>({
+	const { register, handleSubmit, setValue, reset } = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 	});
 
@@ -79,7 +82,7 @@ const MessageInput = () => {
 			await removeFileFromBucket("questionImages", filePath)
 				.then(() => {
 					setFilePath(undefined);
-					setValue("fileUrl",undefined)
+					setValue("fileUrl", undefined);
 				})
 				.catch(() => {
 					toast({
@@ -114,8 +117,17 @@ const MessageInput = () => {
 			fileUrl: data.fileUrl,
 			testId: data.testId,
 			deleted: false,
+			studyGroupId: id,
 		};
-
+		await createMessage(message, userId!)
+			.then(() => {
+				console.log("message created");
+				reset();
+				setTestOptions(undefined);
+				setFilePath(undefined);
+				
+			})
+			.catch(() => console.log("error creating message"));
 	};
 
 	return (
