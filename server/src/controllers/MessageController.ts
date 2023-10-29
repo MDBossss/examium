@@ -23,12 +23,82 @@ class MessageController {
 					content: message.content,
 					fileUrl: message.fileUrl,
 					deleted: message.deleted,
-					memberId:member.id,
-                    testId:message.testId,
-                    studyGroupId:message.studyGroupId!
+					memberId: member.id,
+					testId: message.testId,
+					studyGroupId: message.studyGroupId!,
 				},
 			});
 			res.status(201).json(newMessage);
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
+	async fetchMessages(req: Request, res: Response) {
+		const MESSAGE_BATCH = 10;
+		try {
+			const { pageParam, studyGroupId } = req.params;
+
+			let messages: MessageType[] = [];
+
+			if (pageParam) {
+				messages = await prisma.message.findMany({
+					take: MESSAGE_BATCH,
+					skip: 1,
+					cursor: {
+						id: pageParam,
+					},
+					where: {
+						studyGroupId: studyGroupId,
+					},
+					include: {
+						member: {
+							include: {
+								user: true,
+							},
+						},
+						test: {
+							include:{
+								questions : true
+							}
+						}
+					},
+					orderBy: {
+						createdAt: "desc",
+					},
+				});
+			} else {
+				messages = await prisma.message.findMany({
+					take: MESSAGE_BATCH,
+					where: {
+						studyGroupId: studyGroupId,
+					},
+					include: {
+						member: {
+							include: {
+								user: true,
+							},
+						},
+						test: {
+							include:{
+								questions : true
+							}
+						}
+					},
+					orderBy: {
+						createdAt: "desc",
+					},
+				});
+			}
+
+			let nextCursor = null;
+
+			if (messages.length === MESSAGE_BATCH) {
+				nextCursor = messages[MESSAGE_BATCH - 1].id;
+			}
+
+			return res.status(200).json({ messages, nextCursor });
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });

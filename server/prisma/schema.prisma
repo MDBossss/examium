@@ -31,6 +31,7 @@ enum QuestionType {
   CODE
 }
 
+
 model Test {
   id                     String       @id @default(uuid())
   title                  String
@@ -52,7 +53,7 @@ model Test {
 
 model Question {
   id                     String                  @id @default(uuid())
-  type                   String
+  type                   QuestionType
   question               String                  @db.VarChar(512)
   imageUrl               String?
   createdAt              DateTime                @default(now())

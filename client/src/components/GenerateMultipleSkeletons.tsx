@@ -1,10 +1,12 @@
 import { Skeleton } from "./ui/Skeleton";
 
-interface Props {
+const GenerateMultipleSkeletons = ({
+	number,
+	className,
+}: {
 	number: number;
 	className?: string;
-}
-const GenerateMultipleSkeletons = ({ number, className }: Props) => {
+}) => {
 	const skeletonArray = Array.from({ length: number });
 
 	return (

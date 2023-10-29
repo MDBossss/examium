@@ -34,7 +34,7 @@ export interface QuestionType {
 	id: string;
 	type: QuestionVariantsType;
 	question: string;
-	imageUrl?: string;
+	imageUrl?: string | null;
 	createdAt: Date;
 }
 
@@ -116,8 +116,9 @@ export interface MessageType{
 	memberId?: string;
 	studyGroupId?:string;
 	member?:MemberType;
-	test?:TestType
+	test?:TestType | null
 	deleted: boolean
+	updatedAt?:Date
 }
 
 export interface WeatherDataType {

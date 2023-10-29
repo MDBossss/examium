@@ -141,7 +141,7 @@ function App() {
 				path="/groups/:id"
 				element={
 					<ProtectedRoute>
-						<Layout>
+						<Layout className="max-h-screen">
 							<StudyGroupChat />
 						</Layout>
 					</ProtectedRoute>

@@ -1,9 +1,11 @@
-import MessageInput from "./MessageInput"
+import ChatMessages from "./ChatMessages"
+import ChatInput from "./ChatInput"
 
 const Chat = () => {
   return (
-    <div className='flex flex-col flex-1 p-2 bg-gray-900 '>
-        <MessageInput/>
+    <div className='flex flex-col justify-end h-full p-2 bg-gray-900'>
+        <ChatMessages/>
+        <ChatInput/>
     </div>
   )
 }

@@ -66,13 +66,19 @@ const StudyGroupChat = () => {
 					)}
 				</div>
 			</div>
-			<div className="flex w-full h-full gap-5 mx-auto max-w-7xl">
+			<div className="flex flex-1 w-full gap-5 mx-auto overflow-y-auto max-w-7xl">
 				<Chat />
-				<div className="p-5 border-l">
+				<div className="hidden p-1 border-l md:p-5 md:block">
 					<p className=" text-slate-400">Members</p>
-					{studyGroup?.members?.map((member) => (
-						<MemberListItem key={member.id} member={member} isOwner={member.id === data.ownerId} />
-					))}
+					<div className="flex flex-col gap-2 overflow-y-auto">
+						{studyGroup?.members?.map((member) => (
+							<MemberListItem
+								key={member.id}
+								member={member}
+								isOwner={member.id === data.ownerId}
+							/>
+						))}
+					</div>
 				</div>
 			</div>
 		</>

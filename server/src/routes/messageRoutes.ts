@@ -6,6 +6,7 @@ const messageController = new MessageController();
 
 router.use(express.json());
 
-router.post("/",messageController.createMessage)
+router.post("/", messageController.createMessage);
+router.get("/", messageController.fetchMessages);
 
 export default router;

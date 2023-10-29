@@ -44,7 +44,7 @@ const schema = z.object({
 	testId: z.string().optional(),
 });
 
-const MessageInput = () => {
+const ChatInput = () => {
 	const { id } = useParams();
 	const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 	const [fileType, setFileType] = useState<"image" | "document">("image");
@@ -155,7 +155,7 @@ const MessageInput = () => {
 			</AlertDialog>
 
 			<form
-				className="relative flex flex-col w-full max-w-4xl gap-2 p-2 mx-auto mt-auto bg-gray-900 rounded-sm"
+				className="relative flex flex-col w-full gap-2 p-2 bg-gray-900 rounded-sm"
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				{filePath && (
@@ -233,4 +233,4 @@ const MessageInput = () => {
 	);
 };
 
-export default MessageInput;
+export default ChatInput;
