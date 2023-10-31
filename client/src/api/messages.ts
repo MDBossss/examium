@@ -12,8 +12,14 @@ export async function createMessage(message:MessageType,userId:string){
 
 export async function fetchMessages(pageParam: any | undefined = undefined,studyGroupId:string){
     try{
-        const response = await  axios.get(`${import.meta.env.VITE_API_BASE_URL}/messages?pageParam=${pageParam}&studyGroupId=${studyGroupId}`);
-        console.log(response.data)
+        let queryParams = "?";
+        if(pageParam){
+            queryParams = queryParams.concat(`pageParam=${pageParam}&`)
+        }
+        if(studyGroupId){
+            queryParams = queryParams.concat(`studyGroupId=${studyGroupId}`)
+        }
+        const response = await  axios.get(`${import.meta.env.VITE_API_BASE_URL}/messages${queryParams}`);
         return response.data
     }catch(error){
         throw new Error("Failed to fetch messages!");

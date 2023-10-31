@@ -5,9 +5,9 @@ import { useState } from "react";
 import CreateStudyGroupDialog from "../components/ui/Dialogs/CreateStudyGroupDialog";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "@clerk/clerk-react";
-import { getUserStudyGroups } from "../api/groups";
+import { getPublicStudyGroups, getUserStudyGroups } from "../api/groups";
 import GenerateMultipleSkeletons from "../components/GenerateMultipleSkeletons";
-import GroupDisplay from "../components/GroupDisplayCard";
+import GroupDisplayCard from "../components/GroupDisplayCard";
 
 const StudyGroups = () => {
 	const [joinLink, setJoinLink] = useState<string>("");
@@ -20,18 +20,30 @@ const StudyGroups = () => {
 
 	const {
 		data: userGroups,
-		isLoading: userIsLoading,
-		isError: userIsError,
-		refetch,
+		isLoading: isUserGroupsLoading,
+		isError: isUserGroupsError,
+		refetch: refetchUserGroups,
 	} = useQuery({
 		queryKey: ["groups", "user", session?.user.id],
 		queryFn: () => getUserStudyGroups(session?.user.id!),
 		refetchOnWindowFocus: false,
 	});
 
-	const handleOnCreated = () => {
-		refetch();
-	};
+	const {
+		data: publicGroups,
+		isLoading: isPublicGroupsLoading,
+		isError: isPublicGroupsError,
+		refetch: refetchPublicGroups
+	} = useQuery({
+		queryKey: ["groups"],
+		queryFn: () => getPublicStudyGroups(),
+		refetchOnWindowFocus: false,
+	});
+
+	const handleGroupJoin = () => {
+		refetchPublicGroups();
+		refetchUserGroups();
+	}
 
 	return (
 		<>
@@ -42,12 +54,12 @@ const StudyGroups = () => {
 						Meet classmates from your school, create and share groups, all in one place.
 					</p>
 				</div>
-				<CreateStudyGroupDialog onCreated={handleOnCreated}>
+				<CreateStudyGroupDialog onCreated={() => refetchUserGroups()}>
 					<Button className="w-full m-2 md:w-fit">Create Study Group</Button>
 				</CreateStudyGroupDialog>
 			</div>
 			<div className="flex flex-wrap gap-5">
-				<div className="flex flex-col aspect-square text-center max-w-[280px] max-h-[280px] flex-1 gap-5 p-5 border rounded-sm">
+				<div className="flex flex-col text-center max-w-[280px] max-h-[380px] flex-1 gap-5 p-5 border rounded-sm">
 					<div className="flex flex-col gap-1">
 						<h2 className="text-lg font-bold text-left">Join group</h2>
 						<p className="text-xs text-left text-gray-500">
@@ -70,21 +82,37 @@ const StudyGroups = () => {
 						Join
 					</Button>
 				</div>
-				{userIsLoading && (
+				{isUserGroupsLoading && (
 					<GenerateMultipleSkeletons
 						number={3}
 						className="aspect-square  max-w-[280px] max-h-[280px] rouned-sm"
 					/>
 				)}
 				{userGroups &&
-					!userIsLoading &&
-					userGroups.map((group) => <GroupDisplay studyGroup={group} key={group.id} />)}
-				{userIsError && <p>😓 Couldn't load your groups, try again.</p>}
+					!isUserGroupsLoading &&
+					userGroups.map((group) => (
+						<GroupDisplayCard studyGroup={group} key={group.id} isUserGroup={true} />
+					))}
+				{isUserGroupsError && <p>😓 Couldn't load your groups, try again.</p>}
 			</div>
 			<div className="relative flex flex-col gap-5">
 				<div className="absolute w-full p-2 border-b "></div>
 				<div className="flex justify-center">
 					<h1 className="z-10 px-5 text-lg font-bold bg-background">Public Groups</h1>
+				</div>
+				<div className="flex flex-wrap gap-5">
+					{isPublicGroupsLoading && (
+						<GenerateMultipleSkeletons
+							number={3}
+							className="aspect-square  max-w-[280px] max-h-[280px] rouned-sm"
+						/>
+					)}
+					{publicGroups &&
+						!isPublicGroupsLoading &&
+						publicGroups.map((group) => (
+							<GroupDisplayCard studyGroup={group} key={group.id} isUserGroup={false} isJoined={userGroups?.some((g) => g.id === group.id)} onGroupJoin={() => handleGroupJoin()}/>
+						))}
+					{isPublicGroupsError && <p>😓 Couldn't load your groups, try again.</p>}
 				</div>
 			</div>
 		</>

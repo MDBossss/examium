@@ -52,6 +52,24 @@ export async function updateStudyGroup(studyGroup: StudyGroupType){
 	}
 }
 
+export async function joinStudyGroup(studyGroupId:string,userId:string){
+	try{
+		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/groups/join/${studyGroupId}?userId=${userId}`);
+		return response.data;
+	}catch(error){
+		throw new Error("Failed to join study group!");
+	}
+}
+
+export async function leaveStudyGroup(studyGroupId:string,userId:string){
+	try{
+		const response = await axios.patch(`${import.meta.env.VITE_API_BASE_URL}/groups/leave/${studyGroupId}?userId=${userId}`);
+		return response.data;
+	}catch(error){
+		throw new Error("Failed to leave study group!");
+	}
+}
+
 export async function deleteStudyGroup(id:string){
 	try{
 		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/groups/${id}`);

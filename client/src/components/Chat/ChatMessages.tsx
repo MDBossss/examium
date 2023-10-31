@@ -12,17 +12,19 @@ const ChatMessages = () => {
 	const { id } = useParams();
 	const { isConnected } = useSocket();
 
+
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery({
 		queryKey: ["messages", id],
 		queryFn: ({ pageParam }) => fetchMessages(pageParam, id!),
 		getNextPageParam: (lastPage) => lastPage?.nextCursor,
 		refetchOnWindowFocus: false,
+		initialPageParam: undefined
 		// refetchInterval: isConnected ? false : 1000
 	});
 
 	console.log(data);
 
-	if (status === "loading") {
+	if (status === "pending") {
 		return GenerateMultipleSkeletons({ number: 5, className: "h-5 w-full" });
 	}
 
@@ -35,7 +37,7 @@ const ChatMessages = () => {
 		);
 	}
 
-	return <div className="flex flex-col-reverse gap-1 mt-auto overflow-y-auto">
+	return <div className="flex flex-col-reverse gap-1 mt-auto overflow-y-scroll scroll-hidden">
         {data?.pages?.map((group, i) => (
           <Fragment key={i}>
             {group.messages.map((message: MessageType) => (

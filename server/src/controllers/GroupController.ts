@@ -165,42 +165,118 @@ class GroupController {
 		}
 	}
 
-	async updateStudyGroup(req:Request,res:Response){
-		try{
-			const studyGroup:StudyGroupType = req.body;
+	async joinStudyGroup(req: Request, res: Response) {
+		try {
+			const { studyGroupId } = req.params;
+			const { userId } = req.query;
+
+			// console.log(`STUDY GROUP ID = ${studyGroupId} \n USERID = ${userId?.toString()}` )
+
+			if (!userId?.toString()) {
+				res.status(404).json({ error: "User ID not found" });
+			}
+
+			const newMember = await prisma.member.create({
+				data: {
+					userId: userId?.toString()!,
+					studyGroupId: studyGroupId,
+				},
+			});
+
+			await prisma.studyGroup.update({
+				where: {
+					id: studyGroupId,
+				},
+				data: {
+					members: {
+						connect: {
+							id: newMember.id,
+						},
+					},
+				},
+			});
+			res.status(201).json({ newMember });
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
+	async leaveStudyGroup(req: Request, res: Response) {
+		try {
+			const { studyGroupId } = req.params;
+			const { userId } = req.query;
+
+			if (!userId) {
+				res.status(404).json({ error: "User ID not found" });
+			}
+
+			const member = await prisma.member.findFirst({
+				where:{
+					AND: [
+						{userId: userId?.toString()},
+						{studyGroupId: studyGroupId}
+					]
+				}
+
+			})
+
+			if(!member){
+				res.status(404).json({error: "No such member found"})
+			}
+
+			const updatedGroup = await prisma.studyGroup.update({
+				where: { id: studyGroupId },
+				data: {
+					members: {
+						delete: { id: member?.id },
+					},
+				},
+			});
+
+			res.status(200).json(updatedGroup);
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
+	async updateStudyGroup(req: Request, res: Response) {
+		try {
+			const studyGroup: StudyGroupType = req.body;
 
 			const updatedStudyGroup = await prisma.studyGroup.update({
-				where:{
-					id: studyGroup.id
+				where: {
+					id: studyGroup.id,
 				},
-				data:{
+				data: {
 					name: studyGroup.name,
 					description: studyGroup.description,
 					imageUrl: studyGroup.imageUrl,
 					isPublic: studyGroup.isPublic,
-				}
-			})
-			res.status(200).json(updatedStudyGroup)
-		}catch(error){
+				},
+			});
+			res.status(200).json(updatedStudyGroup);
+		} catch (error) {
 			console.error(error);
-			res.status(500).json({error:"Internal Server Error"})
+			res.status(500).json({ error: "Internal Server Error" });
 		}
 	}
 
-	async deleteStudyGroup(req:Request,res:Response){
-		try{
-			const {id} = req.params;
+	async deleteStudyGroup(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
 			await prisma.studyGroup.delete({
-				where: {id},
-				include:{
+				where: { id },
+				include: {
 					members: true,
-					messages: true
-				}
-			})
-			res.status(204).json({message: "Group deleted successfully"})
-		}catch(error){
+					messages: true,
+				},
+			});
+			res.status(204).json({ message: "Group deleted successfully" });
+		} catch (error) {
 			console.error(error);
-			res.status(500).json({error:"Internal Server Error"});
+			res.status(500).json({ error: "Internal Server Error" });
 		}
 	}
 }

@@ -17,7 +17,7 @@ const MemberListItem = ({ member,isOwner }: Props) => {
 					<Spinner />
 				</AvatarFallback>
 			</Avatar>
-			<p className="flex items-center gap-1 font-medium">{member.user.firstName} <ShieldCheckIcon className="w-4 h-4 text-blue-500"/></p>
+			<p className="flex items-center gap-1 font-medium">{member.user.firstName} {isOwner && <ShieldCheckIcon className="w-4 h-4 text-blue-500"/>}</p>
 		</div>
 	);
 };

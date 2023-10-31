@@ -1,13 +1,13 @@
-import ChatMessages from "./ChatMessages"
-import ChatInput from "./ChatInput"
+import ChatMessages from "./ChatMessages";
+import ChatInput from "./ChatInput";
 
 const Chat = () => {
-  return (
-    <div className='flex flex-col justify-end h-full p-2 bg-gray-900'>
-        <ChatMessages/>
-        <ChatInput/>
-    </div>
-  )
-}
+	return (
+		<div className="flex flex-col justify-end flex-1 min-h-full p-2 bg-gray-900">
+			<ChatMessages />
+			<ChatInput />
+		</div>
+	);
+};
 
-export default Chat
+export default Chat;

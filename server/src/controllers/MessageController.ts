@@ -38,8 +38,7 @@ class MessageController {
 	async fetchMessages(req: Request, res: Response) {
 		const MESSAGE_BATCH = 10;
 		try {
-			const { pageParam, studyGroupId } = req.params;
-
+			const { pageParam, studyGroupId } = req.query;
 			let messages: MessageType[] = [];
 
 			if (pageParam) {
@@ -47,10 +46,10 @@ class MessageController {
 					take: MESSAGE_BATCH,
 					skip: 1,
 					cursor: {
-						id: pageParam,
+						id: pageParam.toString(),
 					},
 					where: {
-						studyGroupId: studyGroupId,
+						studyGroupId: studyGroupId?.toString(),
 					},
 					include: {
 						member: {
@@ -72,7 +71,7 @@ class MessageController {
 				messages = await prisma.message.findMany({
 					take: MESSAGE_BATCH,
 					where: {
-						studyGroupId: studyGroupId,
+						studyGroupId: studyGroupId?.toString(),
 					},
 					include: {
 						member: {
@@ -97,6 +96,7 @@ class MessageController {
 			if (messages.length === MESSAGE_BATCH) {
 				nextCursor = messages[MESSAGE_BATCH - 1].id;
 			}
+
 
 			return res.status(200).json({ messages, nextCursor });
 		} catch (error) {
