@@ -121,7 +121,6 @@ const ChatInput = () => {
 		};
 		await createMessage(message, userId!)
 			.then(() => {
-				console.log("message created");
 				reset();
 				setTestOptions(undefined);
 				setFilePath(undefined);
@@ -155,7 +154,7 @@ const ChatInput = () => {
 			</AlertDialog>
 
 			<form
-				className="relative flex flex-col w-full gap-2 p-2 bg-gray-900 rounded-sm"
+				className="relative flex flex-col w-full gap-2 p-2 rounded-sm bg-slate-300 dark:bg-gray-900"
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				{filePath && (

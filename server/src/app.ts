@@ -8,7 +8,7 @@ import codeRoutes from "./routes/codeRoutes";
 import eventRoutes from "./routes/eventRoutes";
 import groupRoutes from "./routes/groupRoutes";
 import messageRoutes from "./routes/messageRoutes";
-import { initializeSocketIo } from "./utils/socket";
+import { initializeSocketIo, io } from "./utils/socket";
 
 config();
 

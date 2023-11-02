@@ -20,8 +20,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 	const [isConnected, setIsConnected] = useState(false);
 
 	useEffect(() => {
-		// const socket = io(`${import.meta.env.VITE_API_BASE_URL}`,{path:"/"});
-		const socket = io(`http://localhost:3000`, { path: "/api/socket", addTrailingSlash: false });
+		const socket = io(import.meta.env.VITE_API_BASE_URL,{path:"/api/socket/io",addTrailingSlash:false});
 
 		socket.on("connect", () => {
 			setIsConnected(true);

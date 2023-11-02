@@ -212,29 +212,30 @@ class GroupController {
 			}
 
 			const member = await prisma.member.findFirst({
-				where:{
-					AND: [
-						{userId: userId?.toString()},
-						{studyGroupId: studyGroupId}
-					]
-				}
-
-			})
-
-			if(!member){
-				res.status(404).json({error: "No such member found"})
-			}
-
-			const updatedGroup = await prisma.studyGroup.update({
-				where: { id: studyGroupId },
-				data: {
-					members: {
-						delete: { id: member?.id },
-					},
+				where: {
+					userId: userId as string,
+					studyGroupId: studyGroupId,
 				},
 			});
 
-			res.status(200).json(updatedGroup);
+			if (!member) {
+				res.status(404).json({ error: "No such member found" });
+			}
+
+			await prisma.message.updateMany({
+				where: { memberId: member?.id },
+				data: {
+					memberId: "",
+				},
+			});
+
+			await prisma.member.delete({
+				where: {
+					id: member?.id,
+				},
+			});
+
+			res.status(200).json({ message: "Removed member from group." });
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });

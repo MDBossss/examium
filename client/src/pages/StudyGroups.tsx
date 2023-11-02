@@ -10,12 +10,12 @@ import GenerateMultipleSkeletons from "../components/GenerateMultipleSkeletons";
 import GroupDisplayCard from "../components/GroupDisplayCard";
 
 const StudyGroups = () => {
-	const [joinLink, setJoinLink] = useState<string>("");
+	const [joinCode, setJoinCode] = useState<string>("");
 	const { session } = useSession();
 
 	const handlePaste = async () => {
 		const clipboard = await navigator.clipboard.readText();
-		setJoinLink(clipboard);
+		setJoinCode(clipboard);
 	};
 
 	const {
@@ -63,22 +63,22 @@ const StudyGroups = () => {
 					<div className="flex flex-col gap-1">
 						<h2 className="text-lg font-bold text-left">Join group</h2>
 						<p className="text-xs text-left text-gray-500">
-							Join a group by entering the invite link
+							Join a group by entering the invite code
 						</p>
 					</div>
 					<div className="relative">
 						<Input
-							placeholder="Enter invite link..."
+							placeholder="Enter invite code..."
 							className="pr-10"
-							value={joinLink}
-							onChange={(e) => setJoinLink(e.target.value)}
+							value={joinCode}
+							onChange={(e) => setJoinCode(e.target.value)}
 						/>
 						<ClipboardPasteIcon
 							className="absolute top-0 right-0 w-10 h-10 p-2 border-l rounded-sm cursor-pointer hover:bg-gray-800"
 							onClick={handlePaste}
 						/>
 					</div>
-					<Button disabled={!joinLink} className="mt-auto">
+					<Button disabled={!joinCode} className="mt-auto">
 						Join
 					</Button>
 				</div>

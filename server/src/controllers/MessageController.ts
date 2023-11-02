@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
 import { MessageType } from "../../../shared/models";
+import { removeFileFromBucket } from "../utils/supabase";
+import { io } from "../utils/socket";
 
 class MessageController {
 	async createMessage(req: Request, res: Response) {
@@ -27,7 +29,18 @@ class MessageController {
 					testId: message.testId,
 					studyGroupId: message.studyGroupId!,
 				},
+				include:{
+					member:{
+						include:{
+							user: true
+						}
+					}
+				}
 			});
+
+			const channelKey = `chat:${message.studyGroupId}:messages`;
+			io.emit(channelKey,newMessage as MessageType)
+
 			res.status(201).json(newMessage);
 		} catch (error) {
 			console.error(error);
@@ -102,6 +115,45 @@ class MessageController {
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
+	async deleteMessage(req:Request,res:Response){
+		try{
+
+			const {id} = req.params;
+
+			const prevMessage = await prisma.message.findFirst({
+				where:{id}
+			})
+
+			const newMessage = await prisma.message.update({
+				where:{id},
+				data:{
+					content:"Message deleted",
+					deleted: true,
+					fileUrl: "",
+				},
+				include:{
+					member:{
+						include:{
+							user: true
+						}
+					}
+				}
+			})
+			if(prevMessage?.fileUrl){
+				await removeFileFromBucket("questionImages",prevMessage?.fileUrl)
+			}
+
+
+			const updateKey = `chat:${newMessage.studyGroupId}:messages:update`;
+			io.emit(updateKey,newMessage as MessageType)
+
+			res.status(204).json(newMessage); 
+		}catch(error){
+			console.error(error);
+			res.status(500).json({error:"Internal Server Error"});
 		}
 	}
 }

@@ -10,7 +10,6 @@ import { StudyGroupType } from "../../../shared/models";
 import { Button } from "../components/ui/Button";
 import { CopyIcon, LogOutIcon, SettingsIcon } from "lucide-react";
 import Chat from "../components/Chat/Chat";
-import { useSocket } from "../components/SocketProvider";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -18,17 +17,24 @@ import {
 	DropdownMenuTrigger,
 } from "../components/ui/Dropdown";
 import { useToast } from "../hooks/useToast";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "../components/ui/Dialogs/AlertDialog";
 
 const StudyGroupChat = () => {
 	const { id } = useParams();
 	const { session } = useSession();
 	const navigate = useNavigate();
-	const {toast} = useToast();
+	const { toast } = useToast();
 	const [studyGroup, setStudyGroup] = useState<StudyGroupType>();
-
-	// const { socket, isConnected } = useSocket();
-
-	const updateKey = `chat:${id}:messages`;
 
 	const { data, isLoading, isError } = useQuery({
 		queryKey: ["groups", id],
@@ -37,35 +43,39 @@ const StudyGroupChat = () => {
 		onSuccess: (data) => setStudyGroup(data),
 	});
 
+	const isOwner = data?.ownerId === session?.user.id;
+
 	const handleCopyInviteLink = async () => {
-		await navigator.clipboard.writeText(id!)
-		.then(() => {
-			toast({
-				title: "✅ Copied invite link.",
+		await navigator.clipboard
+			.writeText(id!)
+			.then(() => {
+				toast({
+					title: "✅ Copied invite link.",
+				});
+			})
+			.catch(() => {
+				toast({
+					title: "😓 Failed to copy invite link.",
+					variant: "destructive",
+				});
 			});
-		})
-		.catch(() => {
-			toast({
-				title: "😓 Failed to copy invite link.",
-				variant: "destructive",
-			});
-		})
-	}
+	};
 
 	const handleLeaveGroup = async () => {
-		await leaveStudyGroup(id!,session?.user.id!)
-		.then(() => {
-			toast({
-				title: "✅ Successfully left group.",
+		await leaveStudyGroup(id!, session?.user.id!)
+			.then(() => {
+				toast({
+					title: "✅ Successfully left group.",
+				});
+				navigate("/groups");
+			})
+			.catch(() => {
+				toast({
+					title: "😓 Failed to leave group.",
+					variant: "destructive",
+				});
 			});
-			navigate("/groups")
-		}).catch(() => {
-			toast({
-				title: "😓 Failed to leave group.",
-				variant: "destructive",
-			});
-		})
-	}
+	};
 
 	if (isLoading) {
 		return (
@@ -101,12 +111,32 @@ const StudyGroupChat = () => {
 							<DropdownMenuItem className="flex gap-1" onClick={() => handleCopyInviteLink()}>
 								<CopyIcon className="w-4 h-4" /> Copy invite link
 							</DropdownMenuItem>
-							<DropdownMenuItem
-								className="flex gap-1 text-red-500 dark:text-red-600"
-								onClick={() => handleLeaveGroup()}
-							>
-								<LogOutIcon className="w-4 h-4" /> Leave group
-							</DropdownMenuItem>
+							<AlertDialog>
+								<AlertDialogTrigger asChild>
+									<div
+										className="flex gap-1 text-red-500 dark:text-red-600 relative select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors cursor-pointer focus:bg-slate-200 dark:focus:bg-gray-800 focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-slate-200 dark:hover:bg-gray-800"
+									>
+										<LogOutIcon className="w-4 h-4" /> Leave group
+									</div>
+								</AlertDialogTrigger>
+								<AlertDialogContent>
+									<AlertDialogHeader>
+										<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+										<AlertDialogDescription>
+											Are you sure you want to leave this study group?
+										</AlertDialogDescription>
+									</AlertDialogHeader>
+									<AlertDialogFooter>
+										<AlertDialogCancel>Cancel</AlertDialogCancel>
+										<AlertDialogAction
+											className="bg-red-500 hover:bg-red-600"
+											onClick={() => handleLeaveGroup()}
+										>
+											Leave
+										</AlertDialogAction>
+									</AlertDialogFooter>
+								</AlertDialogContent>
+							</AlertDialog>
 						</DropdownMenuContent>
 					</DropdownMenu>
 
@@ -121,10 +151,10 @@ const StudyGroupChat = () => {
 				</div>
 			</div>
 			<div className="flex flex-1 w-full gap-5 mx-auto overflow-y-auto max-w-7xl">
-				<Chat />
+				<Chat isOwner={isOwner} />
 				<div className="hidden p-1 border-l md:p-5 md:block max-w-[200px]">
 					<p className=" text-slate-400">Members</p>
-					<div className="flex flex-col gap-2 overflow-y-auto">
+					<div className="flex flex-col overflow-y-auto">
 						{studyGroup?.members?.map((member) => (
 							<MemberListItem
 								key={member.id}

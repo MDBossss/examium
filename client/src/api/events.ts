@@ -6,7 +6,7 @@ import { ProcessedEvent } from "@aldabil/react-scheduler/types";
 export async function createEvent(event: EventType, userId: string) {
 	try {
 		const response = await axios.post(
-			`${import.meta.env.VITE_API_BASE_URL}/events/${userId}`,
+			`${import.meta.env.VITE_API_BASE_URL}/api/events/${userId}`,
 			event
 		);
 		return response.data;
@@ -18,7 +18,7 @@ export async function createEvent(event: EventType, userId: string) {
 export async function updateEvent(event: EventType, userId: string) {
 	try {
 		const response = await axios.put(
-			`${import.meta.env.VITE_API_BASE_URL}/events/${userId}`,
+			`${import.meta.env.VITE_API_BASE_URL}/api/events/${userId}`,
 			event
 		);
 		return response.data;
@@ -29,7 +29,7 @@ export async function updateEvent(event: EventType, userId: string) {
 
 export async function fetchUserEvents(userId: string) {
 	try {
-		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/events/${userId}`);
+		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/events/${userId}`);
         // Dates are not in right format
 		let tempEvents: EventType[] = [];
 		(response.data as EventType[]).map((e) => {
@@ -49,7 +49,7 @@ export async function fetchUserEvents(userId: string) {
 
 export async function fetchTodayUserEvents(userId: string){
 	try{
-		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/events/${userId}/today`);
+		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/events/${userId}/today`);
 		// Dates are not in right format
 		let tempEvents: EventType[] = [];
 		(response.data as EventType[]).map((e) => {
@@ -63,7 +63,7 @@ export async function fetchTodayUserEvents(userId: string){
 
 export async function deleteEvent(event_id: string) {
 	try {
-		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/events/${event_id}`);
+		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/events/${event_id}`);
 		return response.data;
 	} catch (error) {
 		throw new Error("Failed to delete event!");

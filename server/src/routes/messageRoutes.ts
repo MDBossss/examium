@@ -8,5 +8,6 @@ router.use(express.json());
 
 router.post("/", messageController.createMessage);
 router.get("/", messageController.fetchMessages);
+router.delete("/:id",messageController.deleteMessage);
 
 export default router;

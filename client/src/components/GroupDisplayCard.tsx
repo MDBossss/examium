@@ -5,6 +5,8 @@ import { Button } from "./ui/Button";
 import { joinStudyGroup } from "../api/groups";
 import { useSession } from "@clerk/clerk-react";
 import { useToast } from "../hooks/useToast";
+import { useState } from "react";
+import { Skeleton } from "./ui/Skeleton";
 
 interface Props {
 	studyGroup: StudyGroupType;
@@ -17,6 +19,7 @@ const GroupDisplayCard = ({ studyGroup, isUserGroup, isJoined,onGroupJoin }: Pro
 	const {session} = useSession();
 	const navigate = useNavigate();
 	const {toast} = useToast();
+	const [isImageLoaded,setIsImageLoaded] = useState<boolean>(false);
 
 	const handleClickCard = async () => {
 		if (isJoined || isUserGroup) {
@@ -52,8 +55,12 @@ const GroupDisplayCard = ({ studyGroup, isUserGroup, isJoined,onGroupJoin }: Pro
 				src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${studyGroup.imageUrl}`}
 				alt="cover"
 				className="flex-1 w-full overflow-hidden rounded-sm max-h-[50%]"
+				loading="eager"
+				onLoad={() => setIsImageLoaded(true)}
 			/>
-			<div className="flex flex-col gap-1 p-5">
+			{!isImageLoaded && <Skeleton className="flex-1 w-full h-full overflow-hidden rounded-sm"/>} 
+			
+			<div className="flex flex-col gap-1 p-5 max-h-[50%]">
 				<div className="flex gap-2 text-xs text-gray-500">
 					<UsersIcon className="w-4 h-4 text-blue-500" />
 					<span className="text-gray-500">{studyGroup.memberCount} members</span>
