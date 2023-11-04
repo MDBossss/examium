@@ -87,6 +87,7 @@ const ChatInput = () => {
 				.catch(() => {
 					toast({
 						title: "😓 Failed to remove the file",
+						description: "Please try again.",
 						variant: "destructive",
 					});
 				});
@@ -122,11 +123,17 @@ const ChatInput = () => {
 		await createMessage(message, userId!)
 			.then(() => {
 				reset();
-				setTestOptions(undefined);
+				setSelectedTest(undefined);
 				setFilePath(undefined);
 				
 			})
-			.catch(() => console.log("error creating message"));
+			.catch(() => {
+				toast({
+					title: "😓 Failed to send message",
+					description: "Please try again.",
+					variant: "destructive",
+				});
+			});
 	};
 
 	return (
@@ -154,7 +161,7 @@ const ChatInput = () => {
 			</AlertDialog>
 
 			<form
-				className="relative flex flex-col w-full gap-2 p-2 rounded-sm bg-slate-300 dark:bg-gray-900"
+				className="relative flex flex-col w-full gap-2 rounded-sm sm:p-2 bg-slate-300 dark:bg-gray-900"
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				{filePath && (
@@ -180,7 +187,7 @@ const ChatInput = () => {
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button
-								className="self-end"
+								className="self-end p-0 aspect-square"
 								type="button"
 								disabled={filePath || selectedTest ? true : false}
 							>
@@ -218,10 +225,10 @@ const ChatInput = () => {
 						</DropdownMenuContent>
 					</DropdownMenu>
 
-					<Textarea className="resize-none" {...register("messageContent")} />
+					<Textarea className="overflow-y-auto resize-none" {...register("messageContent")}/>
 
 					<Button
-						className="self-end bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700"
+						className="self-end p-0 bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 aspect-square"
 						type="submit"
 					>
 						<SendIcon className="w-6 h-6 " />

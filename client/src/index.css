@@ -81,23 +81,6 @@
 		font-feature-settings: "rlig" 1, "calt" 1;
 	}
 
-	.bg-welcome-back{
-		background-image: url("/bg-welcome-back.svg");
-		background-position: right;
-		background-size: contain;
-		background-repeat: no-repeat;
-		background-position-y: 10px;
-	}
-
-	.scroll-hidden{
-		-ms-overflow-style: none;  /* Internet Explorer 10+ */
-		scrollbar-width: none;  /* Firefox */
-	}
-
-	.scroll-hidden::-webkit-scrollbar { 
-		display: none;  /* Safari and Chrome */
-	}
-
 }
 
 * {
@@ -109,6 +92,24 @@
 
 body {
 	font-family: "Poppins", sans-serif;
+
+}
+
+.bg-welcome-back{
+	background-image: url("/bg-welcome-back.svg");
+	background-position: right;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position-y: 10px;
+}
+
+.scroll-hidden{
+	-ms-overflow-style: none;  /* Internet Explorer 10+ */
+	scrollbar-width: none;  /* Firefox */
+}
+
+.scroll-hidden::-webkit-scrollbar { 
+	display: none;  /* Safari and Chrome */
 }
 
 .mesh-home {
@@ -183,6 +184,7 @@ body {
 .pointer-events-all{
 	pointer-events: all;
 }
+
 
 /* width */
 ::-webkit-scrollbar {

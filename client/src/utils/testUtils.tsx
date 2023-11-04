@@ -31,7 +31,7 @@ export function validateTest(
 			}
 
 			(question as MultipleChoiceQuestionType).answers.map((answer) => {
-				if ((!answer.answer) && ((question as MultipleChoiceQuestionType).answers.length < 3)) {
+				if (!answer.answer && (question as MultipleChoiceQuestionType).answers.length < 3) {
 					testValid = false;
 					messages.push("Answer cannot be empty!");
 					return;
@@ -111,7 +111,23 @@ export function renderTextWithLineBreaks(text: string) {
 		: null;
 }
 
-export function parseQuestionType(type:string): string{
-	let formattedType = type.toLowerCase().replace("_"," ");
+export function parseQuestionType(type: string): string {
+	let formattedType = type.toLowerCase().replace("_", " ");
 	return formattedType.charAt(0).toUpperCase() + formattedType.slice(1);
+}
+
+export function formatLinks(text: string) {
+	const urlPattern = /(https?:\/\/[^\s]+)/g;
+	const segments = text.split(urlPattern);
+	return segments.map((segment, index) => {
+		if (segment.match(urlPattern)) {
+			return (
+				<a key={index} href={segment} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline dark:text-blue-300">
+					{segment}
+				</a>
+			);
+		} else {
+			return <span key={index}>{segment}</span>;
+		}
+	});
 }

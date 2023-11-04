@@ -3,10 +3,13 @@ import Navbar from "../components/Navbar";
 import { Button } from "../components/ui/Button";
 import Footer from "../components/Footer";
 import { useThemeStore } from "../store/themeStore";
+import { useSession } from "@clerk/clerk-react";
 
 const Home = () => {
+	const {session} = useSession();
 	const navigate = useNavigate();
 	const { theme } = useThemeStore();
+	
 
 	return (
 		<section
@@ -28,7 +31,7 @@ const Home = () => {
 					<div>
 						<Button
 							className="px-6 py-6 text-xl font-bold bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
-							onClick={() => navigate("/create")}
+							onClick={() => session?.user.id ? navigate(`overview/${session.user.id}`) : navigate("/create")}
 							size={"lg"}
 						>
 							Get started

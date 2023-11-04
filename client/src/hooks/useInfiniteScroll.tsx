@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 
 interface Props {
 	triggerRef: React.RefObject<HTMLDivElement>;

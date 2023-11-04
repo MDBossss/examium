@@ -17,7 +17,6 @@ interface Props {
 
 const ChatMessages = ({ isOwner }: Props) => {
 	const triggerRef = useRef<ElementRef<"div">>(null);
-	const bottomRef = useRef<ElementRef<"div">>(null);
 	const { id } = useParams();
 	const addKey = `chat:${id}:messages`;
 	const queryKey = `chat:${id}`;
@@ -40,7 +39,7 @@ const ChatMessages = ({ isOwner }: Props) => {
 		shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
 	});
 
-	console.log(data);
+	// console.log(data);
 
 	if (status === "loading") {
 		return GenerateMultipleSkeletons({ number: 5, className: "h-5 w-full" });
@@ -56,7 +55,7 @@ const ChatMessages = ({ isOwner }: Props) => {
 	}
 
 	return (
-		<div className="flex flex-col-reverse gap-1 mt-auto overflow-y-scroll scroll-hidden">
+		<div className="flex flex-col-reverse gap-1 mt-auto overflow-y-scroll scroll-hidden" >
 			{data?.pages?.map((group, i) => (
 				<Fragment key={i}>
 					{group.messages.map((message: MessageType) => (
@@ -65,7 +64,8 @@ const ChatMessages = ({ isOwner }: Props) => {
 				</Fragment>
 			))}
 			{isFetchingNextPage && <Spinner/>}
-			<div ref={triggerRef} className="flex h-1" />
+			<div ref={triggerRef} className="flex h-1 mt-1" />
+			{!hasNextPage && <p className="self-center pb-20 text-xs italic">Welcome! This is the start of the study group chat!</p>}
 		</div>
 	);
 };

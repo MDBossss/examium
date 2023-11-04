@@ -2,8 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/Button";
 import LoginButton from "./ui/LoginButton";
 import Logo from "./ui/Logo";
+import { useSession } from "@clerk/clerk-react";
 
 const Navbar = () => {
+	const {session} = useSession();
 	const navigate = useNavigate();
 
 	return (
@@ -19,7 +21,7 @@ const Navbar = () => {
 					<LoginButton />
 					<Button
 						className="hidden bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 sm:block"
-						onClick={() => navigate("/create")}
+						onClick={() => session?.user.id ? navigate(`overview/${session.user.id}`) : navigate("/create")}
 					>
 						Get started
 					</Button>

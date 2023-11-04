@@ -213,7 +213,7 @@ const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Prop
 							/>
 						</div>
 					</div>
-					<DialogFooter>
+					<DialogFooter className="flex flex-col-reverse gap-2">
 						{defaultStudyGroup ? <DeleteGroupDialog onTrigger={handleDeleteGroup} /> : null}
 						<Button type="submit">{defaultStudyGroup ? "Edit group" : "Create group"}</Button>
 					</DialogFooter>

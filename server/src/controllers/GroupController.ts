@@ -170,10 +170,20 @@ class GroupController {
 			const { studyGroupId } = req.params;
 			const { userId } = req.query;
 
-			// console.log(`STUDY GROUP ID = ${studyGroupId} \n USERID = ${userId?.toString()}` )
-
 			if (!userId?.toString()) {
 				res.status(404).json({ error: "User ID not found" });
+			}
+
+			const member = await prisma.member.findFirst({
+				where:{
+					userId: userId?.toString(),
+					studyGroupId: studyGroupId
+				}
+			})
+
+			if(member){
+				res.status(200).json({message: "You are already a member of this group!"})
+				return
 			}
 
 			const newMember = await prisma.member.create({

@@ -111,7 +111,7 @@ model Event {
 model StudyGroup {
   id          String    @id @default(uuid())
   name        String
-  description String
+  description String    @db.Text
   imageUrl    String    @db.Text
   isPublic    Boolean
   ownerId     String

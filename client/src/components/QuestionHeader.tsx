@@ -116,7 +116,7 @@ const QuestionHeader = ({
 								<AlertDialogTitle>Upload an image</AlertDialogTitle>
 								<FileUpload
 									onSetFilePath={handleSetImage}
-									defaultFilePath={question.imageUrl}
+									defaultFilePath={question.imageUrl!}
 									fileType="image"
 								/>
 							</AlertDialogHeader>

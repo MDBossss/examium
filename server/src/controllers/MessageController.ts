@@ -32,9 +32,10 @@ class MessageController {
 				include:{
 					member:{
 						include:{
-							user: true
-						}
-					}
+							user: true,
+						},
+					},
+					test: true
 				}
 			});
 
@@ -133,6 +134,7 @@ class MessageController {
 					content:"Message deleted",
 					deleted: true,
 					fileUrl: "",
+					testId: null
 				},
 				include:{
 					member:{

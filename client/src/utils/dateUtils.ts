@@ -23,6 +23,10 @@ export function getTimeAgo(timestamp: Date) {
 	const timeDifference = currentDate.getTime() - previousDate.getTime();
 	const seconds = Math.floor(timeDifference / 1000);
 
+	if(seconds < 30){
+		return `Now`;
+	}
+
 	if (seconds < 60) {
 		return `${seconds} seconds ago`;
 	}
