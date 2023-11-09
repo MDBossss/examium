@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
-import { StudyGroupType } from "../../../shared/models";
+import { MessageType, StudyGroupType } from "../../../shared/models";
 
 class GroupController {
 	private async getStudyGroupMemberCount(studyGroupId: string) {
@@ -81,7 +81,7 @@ class GroupController {
 				isPublic: studyGroup.isPublic,
 				ownerId: studyGroup.ownerId,
 				owner: studyGroup.owner,
-				messages: studyGroup.messages,
+				messages: studyGroup.messages as MessageType[],
 				members: studyGroup.members,
 				memberCount: await this.getStudyGroupMemberCount(studyGroup.id),
 			};
@@ -175,15 +175,15 @@ class GroupController {
 			}
 
 			const member = await prisma.member.findFirst({
-				where:{
+				where: {
 					userId: userId?.toString(),
-					studyGroupId: studyGroupId
-				}
-			})
+					studyGroupId: studyGroupId,
+				},
+			});
 
-			if(member){
-				res.status(200).json({message: "You are already a member of this group!"})
-				return
+			if (member) {
+				res.status(200).json({ message: "You are already a member of this group!" });
+				return;
 			}
 
 			const newMember = await prisma.member.create({
@@ -235,7 +235,7 @@ class GroupController {
 			await prisma.message.updateMany({
 				where: { memberId: member?.id },
 				data: {
-					memberId: "",
+					memberId: null,
 				},
 			});
 

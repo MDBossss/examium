@@ -80,7 +80,7 @@ class MessageController {
 					orderBy: {
 						createdAt: "desc",
 					},
-				});
+				}) as MessageType[];
 			} else {
 				messages = await prisma.message.findMany({
 					take: MESSAGE_BATCH,
@@ -102,7 +102,7 @@ class MessageController {
 					orderBy: {
 						createdAt: "desc",
 					},
-				});
+				}) as MessageType[];
 			}
 
 			let nextCursor = null;
@@ -148,7 +148,7 @@ class MessageController {
 					orderBy: {
 						createdAt: "desc",
 					},
-				});
+				}) as MessageType[];
 			} else {
 				messages = await prisma.message.findMany({
 					take: MESSAGE_BATCH,
@@ -169,7 +169,7 @@ class MessageController {
 					orderBy: {
 						createdAt: "desc",
 					},
-				});
+				}) as MessageType[];
 			}
 
 			let nextCursor = null;

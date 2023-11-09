@@ -144,8 +144,8 @@ model Message {
   fileUrl      String?    @db.Text
   testId       String?
   test         Test?       @relation(fields: [testId], references: [id])
-  memberId     String
-  member       Member     @relation(fields: [memberId], references: [id])
+  memberId     String?
+  member       Member?     @relation(fields: [memberId], references: [id])
   studyGroupId String
   studyGroup   StudyGroup @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
   deleted      Boolean    @default(false)
