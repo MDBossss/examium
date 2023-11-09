@@ -1,4 +1,4 @@
-import { FilePlus2Icon, ImagePlusIcon, PlusCircleIcon, SendIcon, TrashIcon } from "lucide-react";
+import { FileIcon, FilePlus2Icon, ImagePlusIcon, PlusCircleIcon, SendIcon, TrashIcon } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Textarea } from "../ui/Textarea";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -37,6 +37,7 @@ import { fetchTestsByUserId } from "../../api/tests";
 import { useSession } from "@clerk/clerk-react";
 import { useParams } from "react-router-dom";
 import { createMessage } from "../../api/messages";
+import { getFullFileUrl } from "../../utils/fileUtils";
 
 const schema = z.object({
 	messageContent: z.string().min(1),
@@ -44,7 +45,11 @@ const schema = z.object({
 	testId: z.string().optional(),
 });
 
-const ChatInput = () => {
+interface Props{
+	setIsFileSelected: (value:boolean) => void;
+}
+
+const ChatInput = ({setIsFileSelected}:Props) => {
 	const { id } = useParams();
 	const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 	const [fileType, setFileType] = useState<"image" | "document">("image");
@@ -54,6 +59,9 @@ const ChatInput = () => {
 	const { session } = useSession();
 	const userId = session?.user.id;
 	const { toast } = useToast();
+
+	const isImageUploaded = filePath && fileType === "image";
+	const isDocumentUploaded = filePath && fileType === "document";
 
 	useQuery({
 		queryKey: ["tests", userId],
@@ -83,6 +91,7 @@ const ChatInput = () => {
 				.then(() => {
 					setFilePath(undefined);
 					setValue("fileUrl", undefined);
+					setIsFileSelected(false)
 				})
 				.catch(() => {
 					toast({
@@ -104,6 +113,7 @@ const ChatInput = () => {
 	const handleFileUploaded = (path: string | undefined) => {
 		setValue("fileUrl", path);
 		setFilePath(path);
+		setIsFileSelected(true)
 	};
 
 	const handleSetTest = (testOption: OptionType) => {
@@ -125,7 +135,7 @@ const ChatInput = () => {
 				reset();
 				setSelectedTest(undefined);
 				setFilePath(undefined);
-				
+				setIsFileSelected(false)
 			})
 			.catch(() => {
 				toast({
@@ -164,12 +174,28 @@ const ChatInput = () => {
 				className="relative flex flex-col w-full gap-2 rounded-sm sm:p-2 bg-slate-300 dark:bg-gray-900"
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				{filePath && (
-					<div className="flex w-full gap-1 p-2 text-xs border rounded-sm -top-10">
+				{isDocumentUploaded && (
+					<div className="flex items-center w-full gap-1 p-2 text-xs border rounded-sm -top-10">
+					<div className="relative flex items-center w-20 h-20 rounded-sm aspect-square">
 						<TrashIcon
-							className="w-4 h-4 cursor-pointer hover:text-red-500"
+							className="absolute top-0 right-0 w-6 h-6 p-1 rounded-full cursor-pointer bg-background hover:text-red-500 "
 							onClick={() => handleRemoveFile()}
 						/>
+						<FileIcon className="flex-1 object-cover w-16 h-16"/>
+					</div>
+					{filePath.substring(14)}
+				</div>
+				)}
+
+				{isImageUploaded && (
+					<div className="flex items-center w-full gap-1 p-2 text-xs border rounded-sm -top-10">
+						<div className="relative flex w-20 h-20 rounded-sm aspect-square">
+							<TrashIcon
+								className="absolute top-0 right-0 w-6 h-6 p-1 rounded-full cursor-pointer bg-background hover:text-red-500 "
+								onClick={() => handleRemoveFile()}
+							/>
+							<img src={getFullFileUrl(filePath)} alt="uploaded" className="flex-1 object-cover w-full"/>
+						</div>
 						{filePath.substring(14)}
 					</div>
 				)}
@@ -183,7 +209,7 @@ const ChatInput = () => {
 						{selectedTest.label}
 					</div>
 				)}
-				<div className="flex gap-2">
+				<div className="flex items-center gap-2">
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button
@@ -225,7 +251,7 @@ const ChatInput = () => {
 						</DropdownMenuContent>
 					</DropdownMenu>
 
-					<Textarea className="overflow-y-auto resize-none" {...register("messageContent")}/>
+					<Textarea className="overflow-y-auto resize-none h-[40px] md:h-min " {...register("messageContent")}/>
 
 					<Button
 						className="self-end p-0 bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 aspect-square"

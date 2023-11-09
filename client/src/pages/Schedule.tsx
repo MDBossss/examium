@@ -80,7 +80,7 @@ const Schedule = () => {
 													event?.testOptions.map((test: OptionType) => (
 														<div
 															key={test.value}
-															className="flex items-center justify-between gap-1 p-2 border rounded-sm border-slate-200 dark:border-zinc-900"
+															className={`${theme === "dark" ? "bg-doodle-dark" : "bg-doodle-light"} flex items-center justify-between gap-1 p-2 border rounded-sm border-slate-200 dark:border-zinc-900`}
 														>
 															<p className="font-bold">{test.label}</p>
 															<Button

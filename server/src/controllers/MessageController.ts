@@ -29,18 +29,18 @@ class MessageController {
 					testId: message.testId,
 					studyGroupId: message.studyGroupId!,
 				},
-				include:{
-					member:{
-						include:{
+				include: {
+					member: {
+						include: {
 							user: true,
 						},
 					},
-					test: true
-				}
+					test: true,
+				},
 			});
 
 			const channelKey = `chat:${message.studyGroupId}:messages`;
-			io.emit(channelKey,newMessage as MessageType)
+			io.emit(channelKey, newMessage as MessageType);
 
 			res.status(201).json(newMessage);
 		} catch (error) {
@@ -72,10 +72,10 @@ class MessageController {
 							},
 						},
 						test: {
-							include:{
-								questions : true
-							}
-						}
+							include: {
+								questions: true,
+							},
+						},
 					},
 					orderBy: {
 						createdAt: "desc",
@@ -94,10 +94,10 @@ class MessageController {
 							},
 						},
 						test: {
-							include:{
-								questions : true
-							}
-						}
+							include: {
+								questions: true,
+							},
+						},
 					},
 					orderBy: {
 						createdAt: "desc",
@@ -111,6 +111,72 @@ class MessageController {
 				nextCursor = messages[MESSAGE_BATCH - 1].id;
 			}
 
+			return res.status(200).json({ messages, nextCursor });
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
+	async fetchMessagesWithFiles(req: Request, res: Response) {
+		const MESSAGE_BATCH = 30;
+		try {
+			const { pageParam, studyGroupId } = req.query;
+			let messages: MessageType[] = [];
+
+			if (pageParam) {
+				messages = await prisma.message.findMany({
+					take: MESSAGE_BATCH,
+					skip: 1,
+					cursor: {
+						id: pageParam.toString(),
+					},
+					where: {
+						NOT: {
+							fileUrl: null,
+						},
+						studyGroupId:studyGroupId as string,
+						deleted:false
+					},
+					include: {
+						member: {
+							include: {
+								user: true,
+							},
+						},
+					},
+					orderBy: {
+						createdAt: "desc",
+					},
+				});
+			} else {
+				messages = await prisma.message.findMany({
+					take: MESSAGE_BATCH,
+					where: {
+						NOT: {
+							fileUrl: null,
+						},
+						studyGroupId:studyGroupId as string,
+						deleted:false
+					},
+					include: {
+						member: {
+							include: {
+								user: true,
+							},
+						},
+					},
+					orderBy: {
+						createdAt: "desc",
+					},
+				});
+			}
+
+			let nextCursor = null;
+
+			if (messages.length === MESSAGE_BATCH) {
+				nextCursor = messages[MESSAGE_BATCH - 1].id;
+			}
 
 			return res.status(200).json({ messages, nextCursor });
 		} catch (error) {
@@ -119,43 +185,41 @@ class MessageController {
 		}
 	}
 
-	async deleteMessage(req:Request,res:Response){
-		try{
-
-			const {id} = req.params;
+	async deleteMessage(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
 
 			const prevMessage = await prisma.message.findFirst({
-				where:{id}
-			})
+				where: { id },
+			});
 
 			const newMessage = await prisma.message.update({
-				where:{id},
-				data:{
-					content:"Message deleted",
+				where: { id },
+				data: {
+					content: "Message deleted",
 					deleted: true,
 					fileUrl: "",
-					testId: null
+					testId: null,
 				},
-				include:{
-					member:{
-						include:{
-							user: true
-						}
-					}
-				}
-			})
-			if(prevMessage?.fileUrl){
-				await removeFileFromBucket("questionImages",prevMessage?.fileUrl)
+				include: {
+					member: {
+						include: {
+							user: true,
+						},
+					},
+				},
+			});
+			if (prevMessage?.fileUrl) {
+				await removeFileFromBucket("questionImages", prevMessage?.fileUrl);
 			}
 
-
 			const updateKey = `chat:${newMessage.studyGroupId}:messages:update`;
-			io.emit(updateKey,newMessage as MessageType)
+			io.emit(updateKey, newMessage as MessageType);
 
-			res.status(204).json(newMessage); 
-		}catch(error){
+			res.status(204).json(newMessage);
+		} catch (error) {
 			console.error(error);
-			res.status(500).json({error:"Internal Server Error"});
+			res.status(500).json({ error: "Internal Server Error" });
 		}
 	}
 }

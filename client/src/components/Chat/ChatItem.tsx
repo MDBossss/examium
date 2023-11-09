@@ -95,20 +95,20 @@ const ChatItem = ({ message, isOwner }: Props) => {
 				<div
 					className={` ${
 						isCreator
-							? "justify-end bg-blue-300 dark:bg-blue-600 text-right"
+							? "justify-end bg-blue-300 dark:bg-blue-600"
 							: "justify-start bg-background text-left"
 					} w-fit relative flex flex-col group p-2 rounded-sm h-min shadow-sm  overflow-ellipsis flex-wrap `}
 				>
 					<p className="text-xs text-blue-500 dark:text-blue-300">{`${
 						isCreator ? "You" : message.member?.user.firstName
 					} • ${getTimeAgo(message.updatedAt!)}`}</p>
-					<p
+					<span
 						className={`${
 							message.deleted ? "text-xs italic opacity-80" : ""
-						} break-all overflow-ellipsis`}
+						} wrap-word whitespace-break-spaces overflow-ellipsis`}
 					>
 						{formatLinks(message.content)}
-					</p>
+					</span>
 					{message.testId && (
 						<div className="flex flex-col md:min-w-[200px]">
 							<p className="text-xs text-left text-blue-500 dark:text-blue-300">{`${message.member?.user.firstName} shared a test.`}</p>
@@ -117,9 +117,7 @@ const ChatItem = ({ message, isOwner }: Props) => {
 									theme === "dark" ? "bg-doodle-dark" : "bg-doodle-light"
 								} border flex flex-col lg:flex-row items-center justify-between gap-1 p-2 rounded-sm`}
 							>
-								<ActionTooltip label={message.test?.title!}>
-									<p className="font-bold ">{message?.test?.title}</p>
-								</ActionTooltip>
+								<p className="font-bold ">{message?.test?.title}</p>
 								<Button
 									size={"sm"}
 									className="w-full bg-green-500 hover:bg-green-600 lg:w-max"
@@ -159,9 +157,7 @@ const ChatItem = ({ message, isOwner }: Props) => {
 					)}
 					{canDeleteMessage && (
 						<div
-							className={`${
-								isCreator ? "left-2" : "right-2"
-							} z-10 absolute items-center hidden p-1 bg-white border rounded-sm group-hover:flex gap-x-2 -top-2 dark:bg-gray-800`}
+							className={`z-10 right-2 absolute items-center hidden p-1 bg-white border rounded-sm group-hover:flex gap-x-2 -top-2 dark:bg-gray-800`}
 						>
 							<ActionTooltip label="Delete">
 								<TrashIcon

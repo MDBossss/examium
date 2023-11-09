@@ -75,134 +75,138 @@
 @layer base {
 	* {
 		@apply border-border;
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
 	}
 	body {
 		@apply bg-background text-foreground;
 		font-feature-settings: "rlig" 1, "calt" 1;
+		font-family: "Poppins", sans-serif;
 	}
 
+	/* width */
+	::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	/* Track */
+	::-webkit-scrollbar-track {
+		background: transparent;
+		border-radius: 5px;
+	}
+
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background: #60a5fa;
+	}
+
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+		background: #3b82f6;
+	}
 }
 
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
+@layer utilities {
 
+	.wrap-word {
+		overflow-wrap: break-word;
+		word-wrap: break-word;
 
-body {
-	font-family: "Poppins", sans-serif;
+		-ms-word-break: break-word;
+		word-break: break-word;
 
-}
+		-ms-hyphens: auto;
+		-moz-hyphens: auto;
+		-webkit-hyphens: auto;
+		hyphens: auto;
+	}
 
-.bg-welcome-back{
-	background-image: url("/bg-welcome-back.svg");
-	background-position: right;
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position-y: 10px;
-}
+	.scroll-hidden {
+		-ms-overflow-style: none; /* Internet Explorer 10+ */
+		scrollbar-width: none; /* Firefox */
+	}
 
-.scroll-hidden{
-	-ms-overflow-style: none;  /* Internet Explorer 10+ */
-	scrollbar-width: none;  /* Firefox */
-}
+	.scroll-hidden::-webkit-scrollbar {
+		display: none; /* Safari and Chrome */
+	}
 
-.scroll-hidden::-webkit-scrollbar { 
-	display: none;  /* Safari and Chrome */
-}
+	.mesh-home {
+		position: relative;
+		z-index: 0;
+		background-image: url("/background-pattern-gray.svg");
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-color: rgb(226, 232, 240);
+	}
 
-.mesh-home {
-	position: relative;
-	z-index: 0;
-	background-image: url("/background-pattern-gray.svg");
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-color: rgb(226, 232, 240);
-}
+	.mesh-home::before {
+		content: "";
+		z-index: -1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-image: radial-gradient(at 100% 100%, rgb(99, 102, 241) 0, transparent 51%),
+			radial-gradient(at 10% 100%, rgb(59, 130, 246) 0, transparent 42%),
+			radial-gradient(at 50% 53%, rgb(255, 255, 255) 0, transparent 100%),
+			radial-gradient(at 6% 55%, rgb(255, 255, 255) 0, transparent 100%);
+	}
 
-.mesh-home::before {
-	content: "";
-	z-index: -1;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-image: radial-gradient(at 100% 100%, rgb(99, 102, 241) 0, transparent 51%),
-		radial-gradient(at 10% 100%, rgb(59, 130, 246) 0, transparent 42%),
-		radial-gradient(at 50% 53%, rgb(255, 255, 255) 0, transparent 100%),
-		radial-gradient(at 6% 55%, rgb(255, 255, 255) 0, transparent 100%);
-}
+	.bg-welcome-back {
+		background-image: url("/bg-welcome-back.svg");
+		background-position: right;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position-y: 10px;
+	}
 
-.bg-doodle-light{
-	background-image: url("/bg-school-doodle-light.svg");
-	background-color: #eff6ff; /*blue 50*/
-	background-size: 50%;
-	background-repeat: repeat;
-}
+	.bg-doodle-light {
+		background-image: url("/bg-school-doodle-light.svg");
+		background-color: #eff6ff; /*blue 50*/
+		background-size: 50%;
+		background-repeat: repeat;
+	}
 
-.bg-doodle-dark{
-	background-image: url("/bg-school-doodle-dark.svg");
-	background-color: #030712; /*gray 950*/
-	background-size: 50%;
-	background-repeat: repeat;
-}
+	.bg-doodle-dark {
+		background-image: url("/bg-school-doodle-dark.svg");
+		background-color: #030712; /*gray 950*/
+		background-size: 50%;
+		background-repeat: repeat;
+	}
 
+	.break-anywhere {
+		overflow-wrap: anywhere;
+	}
 
+	.fill-line {
+		width: 0%;
+		height: 4px; /* Height of the line */
+		align-self: flex-start;
+		background-color: transparent; /* Color of the line */
+		transition: width 0s linear;
+	}
 
-.break-anywhere {
-	overflow-wrap: anywhere;
-}
+	.filled {
+		width: 100%;
+		background-color: #64748b;
+		transition: width 3s linear; /* Transition property with the desired duration (5 seconds in this case) and linear timing function */
+	}
 
-.fill-line {
-	width: 0%;
-	height: 4px; /* Height of the line */
-	align-self: flex-start;
-	background-color: transparent; /* Color of the line */
-	transition: width 0s linear;
-}
+	.cm-editor.cm-focused {
+		outline: none;
+	}
 
-.filled {
-	width: 100%;
-	background-color: #64748b;
-	transition: width 3s linear; /* Transition property with the desired duration (5 seconds in this case) and linear timing function */
-}
+	.darkmode-scheduler span {
+		color: #e2e8f0;
+	}
 
-.cm-editor.cm-focused {
-	outline: none;
-}
+	.lightmode-scheduler span {
+		color: #27272a;
+	}
 
-.darkmode-scheduler span {
-	color: #e2e8f0;
-}
-
-.lightmode-scheduler span {
-	color: #27272a;
-}
-
-.pointer-events-all{
-	pointer-events: all;
-}
-
-
-/* width */
-::-webkit-scrollbar {
-	width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-	background: transparent;
-	border-radius: 5px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-	background: #60a5fa;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-	background: #3b82f6;
+	.pointer-events-all {
+		pointer-events: all;
+	}
 }
