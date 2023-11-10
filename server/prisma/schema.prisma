@@ -11,40 +11,49 @@ datasource db {
 }
 
 model User {
-  id                String  @id @default(uuid())
+  id                String       @id @default(uuid())
   firstName         String
   lastName          String
-  email             String  @unique
+  email             String       @unique
   imageUrl          String
-  locationName      String  @default("Berlin")
-  latitude          Float   @default(52.52437)
-  longitude         Float   @default(13.41053)
+  locationName      String       @default("Berlin")
+  latitude          Float        @default(52.52437)
+  longitude         Float        @default(13.41053)
   tests             Test[]
-  collaboratedTests Test[]  @relation("collaborator")
+  collaboratedTests Test[]       @relation("collaborator")
   events            Event[]
+  studyGroups       StudyGroup[]
+  members           Member[]
 }
 
+enum QuestionType {
+  MULTIPLE_CHOICE
+  CODE
+}
+
+
 model Test {
-  id                     String     @id @default(uuid())
+  id                     String       @id @default(uuid())
   title                  String
   description            String
   passCriteria           Int
   showQuestionsOnResults Boolean
   randomizeQuestions     Boolean
   randomizeAnswers       Boolean
-  defaultQuestionType    String
+  defaultQuestionType    QuestionType @default(MULTIPLE_CHOICE)
   createdAt              DateTime
-  updatedAt              DateTime   @updatedAt
+  updatedAt              DateTime     @updatedAt
   questions              Question[]
   authorId               String
-  author                 User       @relation(fields: [authorId], references: [id])
-  collaborators          User[]     @relation("collaborator")
-  events                 Event[]    @relation("eventTests")
+  author                 User         @relation(fields: [authorId], references: [id])
+  collaborators          User[]       @relation("collaborator")
+  events                 Event[]      @relation("eventTests")
+  messages               Message[]
 }
 
 model Question {
   id                     String                  @id @default(uuid())
-  type                   String
+  type                   QuestionType
   question               String                  @db.VarChar(512)
   imageUrl               String?
   createdAt              DateTime                @default(now())
@@ -77,17 +86,72 @@ model Answer {
   question   MultipleChoiceQuestion @relation(fields: [questionId], references: [questionId], onDelete: Cascade)
 }
 
+enum RepeatPattern {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
 model Event {
-  id            String   @id @default(uuid())
-  title         String   @db.VarChar(512)
-  description   String?  @db.Text
-  location      String   @default("Online") @db.VarChar(128)
+  id            String        @id @default(uuid())
+  title         String        @db.VarChar(512)
+  description   String?       @db.Text
+  location      String        @default("Online") @db.VarChar(128)
   start         DateTime
   end           DateTime
   allDay        Boolean
   color         String
-  repeatPattern String
-  selectedTests Test[]   @relation("eventTests")
-  user          User     @relation(fields: [userId], references: [id])
+  repeatPattern RepeatPattern @default(NONE)
+  selectedTests Test[]        @relation("eventTests")
   userId        String
+  user          User          @relation(fields: [userId], references: [id])
+}
+
+model StudyGroup {
+  id          String    @id @default(uuid())
+  name        String
+  description String    @db.Text
+  imageUrl    String    @db.Text
+  isPublic    Boolean
+  ownerId     String
+  owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  members     Member[]
+  messages    Message[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([ownerId])
+}
+
+model Member {
+  id           String     @id @default(uuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studyGroupId String
+  studyGroup   StudyGroup @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  messages     Message[]
+
+  @@index([userId])
+  @@index([studyGroupId])
+}
+
+model Message {
+  id           String     @id @default(uuid())
+  content      String     @db.Text
+  fileUrl      String?    @db.Text
+  testId       String?
+  test         Test?       @relation(fields: [testId], references: [id])
+  memberId     String?
+  member       Member?     @relation(fields: [memberId], references: [id])
+  studyGroupId String
+  studyGroup   StudyGroup @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  deleted      Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([studyGroupId])
+  @@index([memberId])
 }

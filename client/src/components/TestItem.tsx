@@ -43,7 +43,7 @@ const TestItem = ({ test }: Props) => {
 	return (
 		<div className="flex flex-col items-center justify-between w-full gap-5 px-5 py-3 border rounded-sm sm:flex-row border-slate-200 dark:border-gray-800">
 			<div className="flex flex-row items-start w-full gap-3 ">
-				<div className="flex -space-x-5 overflow-hidden">
+				<div className="flex -space-x-5">
 					<Avatar>
 						<AvatarImage
 							src={test.author?.imageUrl}
@@ -72,7 +72,7 @@ const TestItem = ({ test }: Props) => {
 				</div>
 
 				<div className="flex flex-col">
-					<h2 className="font-medium break-words text-zinc-800 dark:text-white">{test.title}</h2>
+					<h2 className="font-medium break-all text-zinc-800 dark:text-white">{test.title}</h2>
 					<p className="text-xs text-slate-400">
 						{test.updatedAt
 							? `Last updated: ${getTimeAgo(test.updatedAt)}`

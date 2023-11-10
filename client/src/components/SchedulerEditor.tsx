@@ -55,7 +55,7 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 		end: scheduler.state.end.value,
 		allDay: event?.allDay,
 		color: (event?.color as string) || "#3b82f6",
-		repeatPattern: event?.repeatPattern || "none",
+		repeatPattern: event?.repeatPattern || "NONE",
 		testOptions: event?.testOptions || [],
 	});
 
@@ -168,7 +168,7 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 			schedulerRef.current?.scheduler.events.filter((e) => {
 				if (
 					event &&
-					(state.repeatPattern !== "none" || e.repeatPattern !== "none") &&
+					(state.repeatPattern !== "NONE" || e.repeatPattern !== "NONE") &&
 					e.event_id === state.event_id
 				) {
 					// Return false to exclude the item from the filtered array
@@ -189,7 +189,7 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 					const event = events[i];
 					if (
 						event &&
-						(state.repeatPattern !== "none" || event.repeatPattern !== "none") &&
+						(state.repeatPattern !== "NONE" || event.repeatPattern !== "NONE") &&
 						event.event_id === state.event_id
 					) {
 						indicesToRemove.push(i);

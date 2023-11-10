@@ -145,7 +145,9 @@ const EventActivity = ({ session }: Props) => {
 						) : null}
 						{isError && <div className="flex justify-center p-5">Error loading tests 😓</div>}
 						{filteredData && !notEmpty(filteredData) && (
-							<div className="flex justify-center p-5 text-center">You have no more events today! 😅</div>
+							<div className="flex justify-center p-5 text-center">
+								You have no more events today! 😅
+							</div>
 						)}
 					</div>
 				</div>

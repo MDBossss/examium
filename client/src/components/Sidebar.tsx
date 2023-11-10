@@ -1,4 +1,4 @@
-import { PlusIcon, FileIcon, UsersIcon, EditIcon, LockIcon, CalendarIcon, LayoutGridIcon } from "lucide-react";
+import { PlusIcon, FileIcon, UsersIcon, EditIcon, LockIcon, CalendarIcon, LayoutGridIcon, MessagesSquareIcon } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProgressDialog from "./ui/Dialogs/ProgressDialog";
@@ -32,6 +32,11 @@ const Navbar = () => {
 			location: `/schedule/${session?.user.id}`,
 			title: "Schedule",
 			icon: <CalendarIcon className="w-6 h-6" />,
+		},
+		{
+			location: `/groups`,
+			title: "Study Groups",
+			icon: <MessagesSquareIcon className="w-6 h-6" />,
 		},
 	];
 

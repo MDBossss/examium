@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
-import { AnswerType, CodeQuestionType, MultipleChoiceQuestionType, QuestionType, QuestionVariantsType, TestType } from "../../../shared/models";
+import { AnswerType, CodeQuestionType, MultipleChoiceQuestionType, QuestionType, TestType } from "../../../shared/models";
 
 class TestController {
 	async getAllTests(req: Request, res: Response) {
@@ -102,7 +102,7 @@ class TestController {
 				questions: test.questions.map((question) => {
 					const type = question.type; // Assuming the question has a 'type' field in the database
 					const data =
-						type === "multiple-choice" ? question.multipleChoiceQuestion : question.codeQuestion;
+						type === "MULTIPLE_CHOICE" ? question.multipleChoiceQuestion : question.codeQuestion;
 					return {
 						...question,
 						type,
@@ -158,7 +158,7 @@ class TestController {
 				showQuestionsOnResults: testWithCollaborators.showQuestionsOnResults,
 				randomizeQuestions: testWithCollaborators.randomizeQuestions,
 				randomizeAnswers: testWithCollaborators.randomizeAnswers,
-				defaultQuestionType: testWithCollaborators.defaultQuestionType as QuestionVariantsType["type"],
+				defaultQuestionType: testWithCollaborators.defaultQuestionType,
 				createdAt: testWithCollaborators.createdAt,
 				updatedAt: testWithCollaborators.updatedAt,
 				authorId: testWithCollaborators.authorId,
@@ -208,7 +208,7 @@ class TestController {
 						connect: { id: authorId! },
 					},
 					questions: {
-						create: questions.map((q) => {
+						create: questions?.map((q) => {
 							if (q.type === "MULTIPLE_CHOICE") {
 								const { id, type, question, imageUrl, createdAt, answers } =
 									q as MultipleChoiceQuestionType;
@@ -312,7 +312,7 @@ class TestController {
 					testId: id,
 					NOT: {
 						id: {
-							in: questions.map((question) => question.id).filter(Boolean),
+							in: questions?.map((question) => question.id).filter(Boolean),
 						},
 					},
 				},
@@ -334,7 +334,7 @@ class TestController {
 						connect: { id: authorId! },
 					},
 					questions: {
-						upsert: questions.map((question) => ({
+						upsert: questions?.map((question) => ({
 							where: { id: question.id },
 							create: {
 								type: question.type,
