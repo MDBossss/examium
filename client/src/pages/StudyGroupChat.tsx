@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { getStudyGroupById, leaveStudyGroup } from "../api/groups";
 import { Skeleton } from "../components/ui/Skeleton";
@@ -39,6 +39,7 @@ import ChatSidebar from "../components/Chat/ChatSidebar";
 import ChatFiles from "../components/Chat/ChatFiles";
 import { Sheet, SheetContent } from "../components/ui/Sheet";
 import useWindowSize from "../hooks/useWindowSize";
+import { useChatSocket } from "../hooks/useChatSocket";
 
 const StudyGroupChat = () => {
 	const { id } = useParams();
@@ -46,11 +47,20 @@ const StudyGroupChat = () => {
 	const navigate = useNavigate();
 	const { toast } = useToast();
 	const { width } = useWindowSize();
-	const [studyGroup, setStudyGroup] = useState<StudyGroupType>();
 	const [isShowFiles, setIsShowFiles] = useState<boolean>(false);
 	const [isFileSelected, setIsFileSelected] = useState<boolean>(false);
 	const [isHeaderExpanded, setIsHeaderExpanded] = useState<boolean>(false);
 	const [isSheetVisible, setIsSheetVisible] = useState<boolean>(false);
+
+	const queryClient = useQueryClient();
+
+	const addKey = `chat:${id}:messages`;
+	const queryKey = `chat:${id}`;
+	const updateKey = `chat:${id}:messages:update`;
+	const memberJoinKey = `chat:${id}:member:join`;
+	const memberLeaveKey = `chat:${id}:member:leave`;
+
+	id && useChatSocket({ id, addKey, queryKey, updateKey, memberJoinKey, memberLeaveKey });
 
 	const isMdScreen = width > 768;
 
@@ -58,7 +68,6 @@ const StudyGroupChat = () => {
 		queryKey: ["groups", id],
 		queryFn: () => getStudyGroupById(id!),
 		refetchOnWindowFocus: false,
-		onSuccess: (data) => setStudyGroup(data),
 	});
 
 	const isOwner = data?.ownerId === session?.user.id;
@@ -115,57 +124,57 @@ const StudyGroupChat = () => {
 		<>
 			<div className="flex flex-col items-center justify-between text-center border-b md:flex-row border-slate-200 dark:border-gray-800 sm:text-left">
 				<div>
-					<h1 className="text-2xl font-bold">{studyGroup?.name}</h1>
+					<h1 className="text-2xl font-bold">{data?.name}</h1>
 					{(isHeaderExpanded || isMdScreen) && (
-						<p className="pt-3 pb-3 text-sm text-slate-400">{studyGroup?.description}</p>
+						<p className="pt-3 pb-3 text-sm text-slate-400">{data?.description}</p>
 					)}
 				</div>
 
 				{(isHeaderExpanded || isMdScreen) && (
 					<div className="flex flex-col items-center w-full gap-2 md:w-fit md:flex-row">
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button variant="outline" className="w-full md:w-fit">
-									<SettingsIcon className="w-6 h-6 text-slate-400 dark:text-gray-600" />
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent className="w-56">
-								<DropdownMenuItem className="flex gap-1" onClick={() => handleCopyInviteLink()}>
-									<CopyIcon className="w-4 h-4" /> Copy invite link
-								</DropdownMenuItem>
+						<AlertDialog>
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button variant="outline" className="w-full md:w-fit">
+										<SettingsIcon className="w-6 h-6 text-slate-400 dark:text-gray-600" />
+									</Button>
+								</DropdownMenuTrigger>
 								{!isOwner && (
-									<AlertDialog>
+									<DropdownMenuContent className="w-56">
+										<DropdownMenuItem className="flex gap-1" onClick={() => handleCopyInviteLink()}>
+											<CopyIcon className="w-4 h-4" /> Copy invite link
+										</DropdownMenuItem>
 										<AlertDialogTrigger asChild>
-											<div className="flex gap-1 text-red-500 dark:text-red-600 relative select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors cursor-pointer focus:bg-slate-200 dark:focus:bg-gray-800 focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-slate-200 dark:hover:bg-gray-800">
+											<DropdownMenuItem className="flex gap-1 text-red-500 dark:text-red-600">
 												<LogOutIcon className="w-4 h-4" /> Leave group
-											</div>
+											</DropdownMenuItem>
 										</AlertDialogTrigger>
-										<AlertDialogContent>
-											<AlertDialogHeader>
-												<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-												<AlertDialogDescription>
-													Are you sure you want to leave this study group?
-												</AlertDialogDescription>
-											</AlertDialogHeader>
-											<AlertDialogFooter>
-												<AlertDialogCancel>Cancel</AlertDialogCancel>
-												<AlertDialogAction
-													className="bg-red-500 hover:bg-red-600"
-													onClick={() => handleLeaveGroup()}
-												>
-													Leave
-												</AlertDialogAction>
-											</AlertDialogFooter>
-										</AlertDialogContent>
-									</AlertDialog>
+									</DropdownMenuContent>
 								)}
-							</DropdownMenuContent>
-						</DropdownMenu>
+							</DropdownMenu>
+							<AlertDialogContent>
+								<AlertDialogHeader>
+									<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+									<AlertDialogDescription>
+										Are you sure you want to leave this study group?
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter>
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogAction
+										className="bg-red-500 hover:bg-red-600"
+										onClick={() => handleLeaveGroup()}
+									>
+										Leave
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
 
-						{studyGroup?.ownerId === session?.user.id && (
+						{data?.ownerId === session?.user.id && (
 							<CreateStudyGroupDialog
-								defaultStudyGroup={studyGroup}
-								onCreated={(studyGroup) => setStudyGroup(studyGroup)}
+								defaultStudyGroup={data}
+								onCreated={(studyGroup) => queryClient.setQueryData(["groups", id], studyGroup)}
 							>
 								<Button className="w-full m-2 md:w-max">Edit group</Button>
 							</CreateStudyGroupDialog>
@@ -198,24 +207,24 @@ const StudyGroupChat = () => {
 						<ChatFiles setIsShowFiles={setIsShowFiles} />
 					) : (
 						<>
-							<ChatMessages isOwner={isOwner} />
+							<ChatMessages isOwner={isOwner} queryKey={queryKey} />
 							<ChatInput setIsFileSelected={setIsFileSelected} />
 						</>
 					)}
 				</div>
 
 				<ChatSidebar
-					studyGroup={studyGroup}
+					studyGroup={data}
 					setIsShowFiles={setIsShowFiles}
 					setIsSheetVisible={setIsSheetVisible}
 					isFileSelected={isFileSelected}
 					isVisible={false}
 				/>
 
-				<Sheet open={isSheetVisible} onOpenChange={setIsSheetVisible}>
+				<Sheet open={isSheetVisible} onOpenChange={setIsSheetVisible} modal={false}>
 					<SheetContent>
 						<ChatSidebar
-							studyGroup={studyGroup}
+							studyGroup={data}
 							setIsSheetVisible={setIsSheetVisible}
 							setIsShowFiles={setIsShowFiles}
 							isFileSelected={isFileSelected}

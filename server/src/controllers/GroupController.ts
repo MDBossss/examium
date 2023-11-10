@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
-import { MessageType, StudyGroupType } from "../../../shared/models";
+import { MemberType, MessageType, StudyGroupType } from "../../../shared/models";
+import { io } from "../utils/socket";
 
 class GroupController {
 	private async getStudyGroupMemberCount(studyGroupId: string) {
@@ -191,6 +192,9 @@ class GroupController {
 					userId: userId?.toString()!,
 					studyGroupId: studyGroupId,
 				},
+				include: {
+					user: true,
+				},
 			});
 
 			await prisma.studyGroup.update({
@@ -205,6 +209,10 @@ class GroupController {
 					},
 				},
 			});
+
+			const memberJoinKey = `chat:${studyGroupId}:member:join`;
+			io.emit(memberJoinKey, newMember as MemberType);
+
 			res.status(201).json({ newMember });
 		} catch (error) {
 			console.error(error);
@@ -244,6 +252,9 @@ class GroupController {
 					id: member?.id,
 				},
 			});
+
+			const memberLeaveKey = `chat:${studyGroupId}:member:leave`;
+			io.emit(memberLeaveKey, member?.id);
 
 			res.status(200).json({ message: "Removed member from group." });
 		} catch (error) {

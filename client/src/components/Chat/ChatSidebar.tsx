@@ -26,6 +26,7 @@ const ChatSidebar = ({ studyGroup, setIsShowFiles, isFileSelected, isVisible,set
 						key={member.id}
 						member={member}
 						isOwner={member.user.id === studyGroup.ownerId}
+						studyGroupId={studyGroup.id}
 					/>
 				))}
 			</div>

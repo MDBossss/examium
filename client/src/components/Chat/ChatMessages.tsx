@@ -7,20 +7,17 @@ import { ServerCrashIcon } from "lucide-react";
 import { ElementRef, Fragment, useRef } from "react";
 import { MessageType } from "../../../../shared/models";
 import ChatItem from "./ChatItem";
-import { useChatSocket } from "../../hooks/useChatSocket";
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 import Spinner from "../ui/Spinner";
 
 interface Props {
 	isOwner: boolean;
+	queryKey: string;
 }
 
-const ChatMessages = ({ isOwner }: Props) => {
+const ChatMessages = ({ isOwner, queryKey }: Props) => {
 	const triggerRef = useRef<ElementRef<"div">>(null);
 	const { id } = useParams();
-	const addKey = `chat:${id}:messages`;
-	const queryKey = `chat:${id}`;
-	const updateKey = `chat:${id}:messages:update`;
 
 	const { isConnected } = useSocket();
 
@@ -32,14 +29,11 @@ const ChatMessages = ({ isOwner }: Props) => {
 		refetchInterval: isConnected ? false : 1000,
 	});
 
-	useChatSocket({ addKey, queryKey, updateKey });
 	useInfiniteScroll({
 		triggerRef,
 		loadMore: fetchNextPage,
 		shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
 	});
-
-	// console.log(data);
 
 	if (status === "loading") {
 		return GenerateMultipleSkeletons({ number: 5, className: "h-5 w-full" });
@@ -55,7 +49,7 @@ const ChatMessages = ({ isOwner }: Props) => {
 	}
 
 	return (
-		<div className="flex flex-col-reverse gap-1 mt-auto overflow-y-scroll scroll-hidden" >
+		<div className="flex flex-col-reverse gap-1 mt-auto overflow-y-scroll scroll-hidden">
 			{data?.pages?.map((group, i) => (
 				<Fragment key={i}>
 					{group.messages.map((message: MessageType) => (
@@ -63,9 +57,13 @@ const ChatMessages = ({ isOwner }: Props) => {
 					))}
 				</Fragment>
 			))}
-			{isFetchingNextPage && <Spinner/>}
+			{isFetchingNextPage && <Spinner />}
 			<div ref={triggerRef} className="flex h-1 mt-1" />
-			{!hasNextPage && <p className="self-center pb-20 text-xs italic">Welcome! This is the start of the study group chat!</p>}
+			{!hasNextPage && (
+				<p className="self-center pb-20 text-xs italic">
+					Welcome! This is the start of the study group chat!
+				</p>
+			)}
 		</div>
 	);
 };
