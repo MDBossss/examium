@@ -12,14 +12,14 @@ export async function getPublicStudyGroups() {
 	}
 }
 
-export async function getStudyGroupById(id: string) {
+export async function getStudyGroupById(id: string,userId:string) {
 	try {
 		const response = await axios.get<StudyGroupType>(
-			`${import.meta.env.VITE_API_BASE_URL}/api/groups/${id}`
+			`${import.meta.env.VITE_API_BASE_URL}/api/groups/${id}?userId=${userId}`
 		);
 		return response.data;
 	} catch (error) {
-		throw new Error("Failed to get study group by id!");
+		throw error;
 	}
 }
 

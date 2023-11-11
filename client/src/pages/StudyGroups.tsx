@@ -90,7 +90,7 @@ const StudyGroups = () => {
 					<div className="flex flex-col gap-1">
 						<h2 className="text-lg font-bold text-left">Join group</h2>
 						<p className="text-xs text-left text-gray-500">
-							Join a group by entering the invite code
+							Join a private group by entering the invite code
 						</p>
 					</div>
 					<div className="relative">

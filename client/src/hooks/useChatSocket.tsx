@@ -2,6 +2,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useSocket } from "../components/SocketProvider";
 import { useEffect } from "react";
 import { MemberType, MessageType, StudyGroupType } from "../../../shared/models";
+import { useSession } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
 	id: string;
@@ -20,7 +22,9 @@ export const useChatSocket = ({
 	memberJoinKey,
 	memberLeaveKey,
 }: Props) => {
+	const navigate = useNavigate();
 	const { socket } = useSocket();
+	const { session } = useSession();
 	const queryClient = useQueryClient();
 
 	useEffect(() => {
@@ -94,12 +98,11 @@ export const useChatSocket = ({
 				// Update the member count
 				newData.memberCount = (newData.memberCount || 0) + 1;
 
-
 				return newData;
 			});
 		});
 
-		socket.on(memberLeaveKey, (memberId: string) => {
+		socket.on(memberLeaveKey, (member: MemberType) => {
 			queryClient.setQueryData(["groups", id], (oldData: StudyGroupType | undefined) => {
 				if (!oldData) {
 					return oldData;
@@ -108,10 +111,14 @@ export const useChatSocket = ({
 				const newData = { ...oldData };
 
 				// Remove the member from the members array
-				newData.members = newData.members?.filter((member) => member.id !== memberId);
+				newData.members = newData.members?.filter((m) => m.id !== member.id);
 
 				// Update the member count
 				newData.memberCount = (newData.memberCount || 0) - 1;
+
+				if (member.userId === session?.user.id) {
+					navigate("/groups");
+				}
 
 				return newData;
 			});

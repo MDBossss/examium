@@ -5,7 +5,6 @@ import { Skeleton } from "../components/ui/Skeleton";
 import { useSession } from "@clerk/clerk-react";
 import CreateStudyGroupDialog from "../components/ui/Dialogs/CreateStudyGroupDialog";
 import { useState } from "react";
-import { StudyGroupType } from "../../../shared/models";
 import { Button } from "../components/ui/Button";
 import {
 	ChevronDownIcon,
@@ -40,6 +39,7 @@ import ChatFiles from "../components/Chat/ChatFiles";
 import { Sheet, SheetContent } from "../components/ui/Sheet";
 import useWindowSize from "../hooks/useWindowSize";
 import { useChatSocket } from "../hooks/useChatSocket";
+import { Axios, AxiosError } from "axios";
 
 const StudyGroupChat = () => {
 	const { id } = useParams();
@@ -64,11 +64,19 @@ const StudyGroupChat = () => {
 
 	const isMdScreen = width > 768;
 
-	const { data, isLoading, isError } = useQuery({
+	const { data, isLoading, isError, error } = useQuery({
 		queryKey: ["groups", id],
-		queryFn: () => getStudyGroupById(id!),
+		queryFn: () => getStudyGroupById(id!,session?.user.id!),
 		refetchOnWindowFocus: false,
+		useErrorBoundary: false,
+		retry:false,
+		onError: (error: AxiosError) => {
+			if(error.response?.status === 403){
+				navigate("/groups")
+			}
+		}
 	});
+
 
 	const isOwner = data?.ownerId === session?.user.id;
 
@@ -112,7 +120,7 @@ const StudyGroupChat = () => {
 		);
 	}
 
-	if (isError) {
+	if (isError && (error as AxiosError).response?.status !== 403) {
 		return (
 			<div className="flex items-center justify-center w-full text-center">
 				😓 Couldn't open study group. <br /> Please try again.

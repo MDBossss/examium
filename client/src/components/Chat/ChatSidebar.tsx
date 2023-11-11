@@ -19,7 +19,7 @@ const ChatSidebar = ({ studyGroup, setIsShowFiles, isFileSelected, isVisible,set
 
 	return (
 		<aside className={`${isVisible ? "h-full flex flex-col border-l-0" : "hidden"} p-1 border-l md:pl-5 md:pt-5 md:flex md:flex-col max-w-[200px]`}>
-			<p className=" text-slate-400">Members</p>
+			<p className=" text-slate-400">Members <span className="text-xs">({studyGroup?.memberCount})</span></p>
 			<div className="flex flex-col flex-1 overflow-y-auto">
 				{studyGroup?.members?.map((member) => (
 					<MemberListItem

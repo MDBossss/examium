@@ -290,10 +290,10 @@ const SchedulerEditor = ({ scheduler, schedulerRef }: Props) => {
 								<SelectContent>
 									<SelectGroup>
 										<SelectLabel>Timeframe</SelectLabel>
-										<SelectItem value={"none"}>None</SelectItem>
-										<SelectItem value={"daily"}>Daily</SelectItem>
-										<SelectItem value={"weekly"}>Weekly</SelectItem>
-										<SelectItem value={"monthly"}>Monthly</SelectItem>
+										<SelectItem value={"NONE"}>None</SelectItem>
+										<SelectItem value={"DAILY"}>Daily</SelectItem>
+										<SelectItem value={"WEEKLY"}>Weekly</SelectItem>
+										<SelectItem value={"MONTHLY"}>Monthly</SelectItem>
 									</SelectGroup>
 								</SelectContent>
 							</Select>

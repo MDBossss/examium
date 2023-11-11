@@ -54,6 +54,19 @@ class GroupController {
 	getStudyGroupById = async (req: Request, res: Response) => {
 		try {
 			const { id } = req.params;
+			const {userId} = req.query;
+
+			const member = await prisma.member.findFirst({
+				where:{
+					userId: userId as string,
+					studyGroupId: id
+				}
+			})
+
+			if(!member){
+				return res.status(403).json({error: "You are not member of this group"})
+			}
+
 			const studyGroup = await prisma.studyGroup.findUnique({
 				where: {
 					id,
@@ -234,6 +247,9 @@ class GroupController {
 					userId: userId as string,
 					studyGroupId: studyGroupId,
 				},
+				include:{
+					user:true
+				}
 			});
 
 			if (!member) {
@@ -254,7 +270,7 @@ class GroupController {
 			});
 
 			const memberLeaveKey = `chat:${studyGroupId}:member:leave`;
-			io.emit(memberLeaveKey, member?.id);
+			io.emit(memberLeaveKey, member as MemberType);
 
 			res.status(200).json({ message: "Removed member from group." });
 		} catch (error) {

@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSidebarStore } from "../store/sidebarStore";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/Tooltip";
+import PomodoroButton from "./PomodoroButton";
 
 interface Props {
 	setTest?: (test: TestType) => void;
@@ -35,15 +36,15 @@ const SearchBar = ({ test, setTest }: Props) => {
 	};
 
 	return (
-		<div className="flex flex-row gap-3 items-center justify-between">
-			<div className="flex gap-2 items-center">
+		<div className="flex flex-row items-center justify-between gap-3">
+			<div className="flex items-center gap-2">
 				{!location.pathname.startsWith("/solve") && (
 					<>
 						{showSidebar ? (
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<PanelLeftCloseIcon
-										className=" w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-sm hidden md:block"
+										className="hidden w-6 h-6 rounded-sm cursor-pointer  text-slate-400 hover:bg-slate-200 dark:hover:bg-gray-800 md:block"
 										onClick={handleToggleSidebar}
 									/>
 								</TooltipTrigger>
@@ -55,7 +56,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<PanelLeftOpenIcon
-										className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-sm hidden md:block"
+										className="hidden w-6 h-6 rounded-sm cursor-pointer text-slate-400 hover:bg-slate-200 dark:hover:bg-gray-800 md:block"
 										onClick={handleToggleSidebar}
 									/>
 								</TooltipTrigger>
@@ -68,7 +69,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<ChevronLeftIcon
-									className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-sm"
+									className="w-6 h-6 rounded-sm cursor-pointer text-slate-400 hover:bg-slate-200 dark:hover:bg-gray-800"
 									onClick={handleNext}
 								/>
 							</TooltipTrigger>
@@ -80,7 +81,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<ChevronRightIcon
-									className="w-6 h-6 text-slate-400 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-sm"
+									className="w-6 h-6 rounded-sm cursor-pointer text-slate-400 hover:bg-slate-200 dark:hover:bg-gray-800"
 									onClick={handlePrevious}
 								/>
 							</TooltipTrigger>
@@ -91,7 +92,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 					</>
 				)}
 
-				<p className="text-sm text-slate-400 hidden sm:block">
+				<p className="hidden text-sm text-slate-400 sm:block">
 					{date.toLocaleDateString(undefined, {
 						weekday: "long",
 						year: "numeric",
@@ -100,10 +101,11 @@ const SearchBar = ({ test, setTest }: Props) => {
 					})}
 				</p>
 			</div>
-			<div className="flex gap-3 items-center">
+			<div className="flex items-center gap-3">
+				<PomodoroButton/>
 				{session && (
 					<p className="hidden md:block">
-						Welcome, <span className=" text-blue-500">{session.user.firstName}</span>
+						Welcome, <span className="text-blue-500 ">{session.user.firstName}</span>
 					</p>
 				)}
 				<LoginButton test={test} setTest={setTest} />
