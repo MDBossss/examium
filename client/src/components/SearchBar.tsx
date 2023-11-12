@@ -44,7 +44,7 @@ const SearchBar = ({ test, setTest }: Props) => {
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<PanelLeftCloseIcon
-										className="hidden w-6 h-6 rounded-sm cursor-pointer  text-slate-400 hover:bg-slate-200 dark:hover:bg-gray-800 md:block"
+										className="hidden w-6 h-6 rounded-sm cursor-pointer text-slate-400 hover:bg-slate-200 dark:hover:bg-gray-800 md:block"
 										onClick={handleToggleSidebar}
 									/>
 								</TooltipTrigger>
@@ -100,9 +100,10 @@ const SearchBar = ({ test, setTest }: Props) => {
 						day: "numeric",
 					})}
 				</p>
+				<PomodoroButton/>
+
 			</div>
 			<div className="flex items-center gap-3">
-				<PomodoroButton/>
 				{session && (
 					<p className="hidden md:block">
 						Welcome, <span className="text-blue-500 ">{session.user.firstName}</span>

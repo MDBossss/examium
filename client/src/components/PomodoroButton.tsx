@@ -10,91 +10,165 @@ import {
 } from "./ui/Dialogs/Dialog";
 import { Button } from "./ui/Button";
 import { PauseIcon, PlayIcon, RotateCcwIcon } from "lucide-react";
+import pomodoroAlert from "/sounds/pomodoroAlert.mp3";
+import useTitle from "../hooks/useTitle";
+import { differenceInSeconds, parseISO } from "date-fns";
+import TimerWorker from "../workers/timerWorker?worker";
 
-const STUDY_DURATION = 0.1 * 60;
-const SMALL_BREAK_DURATION = 0.05 * 60;
-const LONG_BREAK_DURATION = 0.1 * 60; 
+const audio = new Audio(pomodoroAlert);
+
+interface PomodoroState {
+	secondsPassed: number;
+	status: "study" | "break" | "off";
+	lastStatus: "study" | "break" | "off";
+	breakCount: number;
+	isModalOpen: boolean;
+	lastUpdated: string;
+}
+
+const STUDY_DURATION = 25 * 60;
+const SMALL_BREAK_DURATION = 5 * 60;
+const LONG_BREAK_DURATION = 25 * 60;
+
+const DEFAULT_POMODORO_STATE: PomodoroState = {
+	secondsPassed: 0,
+	status: "off",
+	lastStatus: "study",
+	breakCount: 0,
+	isModalOpen: false,
+	lastUpdated: new Date().toISOString(),
+};
 
 const PomodoroButton = () => {
-	const [secondsPassed, setSecondsPassed] = useState(0);
-	const [status, setStatus] = useState<"study" | "break" | "off">("off");
-	const [lastStatus, setLastStatus] = useState<"study" | "break" | "off">("study");
-    const [breakCount,setBreakCount] = useState<number>(0);
-    const [isModalOpen,setIsModalOpen] = useState<boolean>(false);
+	const [pomodoroState, setPomodoroState] = useState<PomodoroState>(() => {
+		const storedState = localStorage.getItem("pomodoroState");
+		// If the stored state is not available or the last update is older than 1 minute,
+		// return the default state, otherwise parse the stored state
+		return storedState &&
+			differenceInSeconds(new Date(), parseISO(JSON.parse(storedState).lastUpdated)) < 60
+			? JSON.parse(storedState)
+			: DEFAULT_POMODORO_STATE;
+	});
 
-	console.log(`Status: ${status} \n Last Status: ${lastStatus} \n Break Count: ${breakCount}`);
+	const worker = new TimerWorker();
 
 	useEffect(() => {
 		let interval: NodeJS.Timer;
 
 		const updateProgress = () => {
-			setSecondsPassed((prevSeconds) => prevSeconds + 1);
+			setPomodoroState((prev) => ({
+				...prev,
+				secondsPassed: prev.secondsPassed + 1,
+				lastUpdated: new Date().toISOString(),
+			}));
 
-			if (secondsPassed === STUDY_DURATION && status === "study") {
-                setIsModalOpen(true)
-				setSecondsPassed(0);
-				setLastStatus(status);
-				setStatus("break");
+			if (pomodoroState.secondsPassed % 10 === 0 && pomodoroState.secondsPassed > 0) {
+				localStorage.setItem("pomodoroState", JSON.stringify(pomodoroState));
+			}
+
+			if (pomodoroState.secondsPassed === STUDY_DURATION && pomodoroState.status === "study") {
+				setPomodoroState((prev) => ({
+					...prev,
+					secondsPassed: 0,
+					status: "break",
+					lastStatus: prev.status,
+					isModalOpen: true,
+				}));
+				audio.play();
 				clearInterval(interval);
 			}
 
-			if (secondsPassed === SMALL_BREAK_DURATION && status === "break" && breakCount < 4) {
-                setIsModalOpen(true)
-				setSecondsPassed(0);
-                setBreakCount((prev) => prev + 1);
-				setLastStatus(status);
-				setStatus("study");
+			if (
+				pomodoroState.secondsPassed === SMALL_BREAK_DURATION &&
+				pomodoroState.status === "break" &&
+				pomodoroState.breakCount < 4
+			) {
+				setPomodoroState((prev) => ({
+					...prev,
+					secondsPassed: 0,
+					status: "study",
+					lastStatus: prev.status,
+					breakCount: prev.breakCount + 1,
+					isModalOpen: true,
+				}));
+				audio.play();
 				clearInterval(interval);
 			}
 
-            if(secondsPassed === LONG_BREAK_DURATION && status === "break"){
-                setIsModalOpen(true)
-                setSecondsPassed(0);
-                setLastStatus(status);
-                setStatus("study");
-                setBreakCount(0);
-                clearInterval(interval);
-            }
-
+			if (pomodoroState.secondsPassed === LONG_BREAK_DURATION && pomodoroState.status === "break") {
+				setPomodoroState((prev) => ({
+					...prev,
+					secondsPassed: 0,
+					status: "study",
+					lastStatus: prev.status,
+					breakCount: 0,
+					isModalOpen: true,
+				}));
+				audio.play();
+				clearInterval(interval);
+			}
 		};
-		if (status !== "off") {
+		if (pomodoroState.status !== "off") {
 			interval = setInterval(updateProgress, 1000);
 		}
 
 		return () => clearInterval(interval);
-	}, [secondsPassed, status]);
+	}, [pomodoroState.secondsPassed, pomodoroState.status]);
 
 	const handleToggleTimer = () => {
-		if (status === "off") {
-			setStatus(lastStatus);
+		if (pomodoroState.status === "off") {
+			setPomodoroState((prev) => {
+				const newState = {
+					...prev,
+					status: prev.lastStatus,
+				} as PomodoroState;
+				localStorage.setItem("pomodoroState", JSON.stringify({ ...newState, isModalOpen: false }));
+				return newState;
+			});
 		} else {
-			setStatus("off");
-			setLastStatus(status);
+			setPomodoroState((prev) => {
+				const newState = {
+					...prev,
+					status: "off",
+					lastStatus: prev.status,
+				} as PomodoroState;
+				localStorage.setItem("pomodoroState", JSON.stringify({ ...newState, isModalOpen: false }));
+				return newState;
+			});
 		}
 	};
 
 	const handleRestartTimer = () => {
-		setLastStatus("study");
-		setStatus("off");
-        setBreakCount(0);
-		setSecondsPassed(0);
+		setPomodoroState((prev) => {
+			const newState = {
+				...prev,
+				secondsPassed: 0,
+				status: "off",
+				lastStatus: "study",
+				breakCount: 0,
+			} as PomodoroState;
+			localStorage.setItem("pomodoroState", JSON.stringify({ ...newState, isModalOpen: false }));
+			return newState;
+		});
 	};
 
 	const getDuration = () => {
-		switch (status) {
+		switch (pomodoroState.status) {
 			case "study":
 				return STUDY_DURATION;
 			case "break":
-				return breakCount < 4 ? SMALL_BREAK_DURATION : LONG_BREAK_DURATION;
+				return pomodoroState.breakCount < 4 ? SMALL_BREAK_DURATION : LONG_BREAK_DURATION;
 			case "off":
-				return lastStatus === "break" && breakCount < 4 ? SMALL_BREAK_DURATION : STUDY_DURATION;
+				return pomodoroState.lastStatus === "break" && pomodoroState.breakCount < 4
+					? SMALL_BREAK_DURATION
+					: STUDY_DURATION;
 		}
 	};
 
 	const getTitle = () => {
-		switch (status) {
+		switch (pomodoroState.status) {
 			case "off":
-				return secondsPassed > 0 ? "CONTINUE POMODORO" : "START POMODORO";
+				return pomodoroState.secondsPassed > 0 ? "CONTINUE POMODORO" : "START POMODORO";
 			case "break":
 				return "BREAK TIME";
 			case "study":
@@ -104,31 +178,51 @@ const PomodoroButton = () => {
 
 	// Calculate the dynamic gradient based on the progress
 	const dynamicGradient = `linear-gradient(to top, black ${
-		(secondsPassed / getDuration()) * 100
-	}%, transparent ${(secondsPassed / getDuration()) * 100}%)`;
+		(pomodoroState.secondsPassed / getDuration()) * 100
+	}%, transparent ${(pomodoroState.secondsPassed / getDuration()) * 100}%)`;
 
 	// Calculate remaining minutes and seconds
-	const remainingMinutes = Math.floor((getDuration() - secondsPassed) / 60)
+	const remainingMinutes = Math.floor((getDuration() - pomodoroState.secondsPassed) / 60)
 		.toString()
 		.padStart(2, "0");
-	const remainingSeconds = ((getDuration() - secondsPassed) % 60).toString().padStart(2, "0");
+	const remainingSeconds = ((getDuration() - pomodoroState.secondsPassed) % 60)
+		.toString()
+		.padStart(2, "0");
 
 	// Format the remaining time as "mm:ss"
 	const formattedRemainingTime = `${remainingMinutes}:${remainingSeconds} remaining`;
 
+	useTitle(
+		pomodoroState.status !== "off" ? `Examium | ${remainingMinutes}:${remainingSeconds}` : "Examium"
+	);
+
 	return (
-		<Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+		<Dialog
+			open={pomodoroState.isModalOpen}
+			onOpenChange={(val) =>
+				setPomodoroState((prev) => ({
+					...prev,
+					isModalOpen: val,
+				}))
+			}
+		>
 			<DialogTrigger>
 				<div className="relative w-8 h-8 cursor-pointer group">
 					<img
 						src="/tomato.svg"
 						className="absolute w-full transition-all grayscale rotate-12 group-hover:scale-110 group-hover:rotate-6"
 					/>
-					<ActionTooltip label={status === "off" ? "Start pomodoro" : formattedRemainingTime}>
+					<ActionTooltip
+						label={pomodoroState.status === "off" ? "Start pomodoro" : formattedRemainingTime}
+					>
 						<img
 							src="/tomato.svg"
 							className="w-full transition-all rotate-12 group-hover:scale-110 group-hover:rotate-6"
-							style={{ maskImage: dynamicGradient, WebkitMaskImage: dynamicGradient }}
+							style={{
+								maskImage: dynamicGradient,
+								WebkitMaskImage: dynamicGradient,
+								transition: "mask-image 0.5s ease",
+							}}
 						/>
 					</ActionTooltip>
 				</div>
@@ -142,7 +236,11 @@ const PomodoroButton = () => {
 				</DialogHeader>
 
 				<div className="flex flex-col items-center gap-5 text-center">
-					<h2 className={`${status === "off" ? "text-gray-500" : "text-red-500"} text-3xl`}>
+					<h2
+						className={`${
+							pomodoroState.status === "off" ? "text-gray-500" : "text-red-500"
+						} text-3xl`}
+					>
 						{getTitle()}
 					</h2>
 
@@ -161,7 +259,7 @@ const PomodoroButton = () => {
 					<div className="flex items-center gap-3 text-5xl ">
 						<p
 							className={`${
-								status === "off" ? "bg-gray-500" : "bg-red-500"
+								pomodoroState.status === "off" ? "bg-gray-500" : "bg-red-500"
 							} min-w-[100px] p-5 rounded-sm`}
 						>
 							{remainingMinutes}
@@ -169,7 +267,7 @@ const PomodoroButton = () => {
 						<p>:</p>
 						<p
 							className={`${
-								status === "off" ? "bg-gray-500" : "bg-red-500"
+								pomodoroState.status === "off" ? "bg-gray-500" : "bg-red-500"
 							} min-w-[100px] p-5 rounded-sm`}
 						>
 							{remainingSeconds}
@@ -177,7 +275,7 @@ const PomodoroButton = () => {
 					</div>
 					<div className="flex w-full gap-1">
 						<Button className="flex flex-1 gap-1" onClick={() => handleToggleTimer()}>
-							{status === "off" ? (
+							{pomodoroState.status === "off" ? (
 								<>
 									<PlayIcon className="w-6 h-6" /> Start timer
 								</>
