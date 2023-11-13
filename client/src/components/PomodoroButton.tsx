@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ActionTooltip } from "./ui/ActionTooltip";
 import {
 	Dialog,
@@ -13,9 +13,11 @@ import { PauseIcon, PlayIcon, RotateCcwIcon } from "lucide-react";
 import pomodoroAlert from "/sounds/pomodoroAlert.mp3";
 import useTitle from "../hooks/useTitle";
 import { differenceInSeconds, parseISO } from "date-fns";
-import TimerWorker from "../workers/timerWorker?worker";
+import PomodoroWorker from "../workers/pomodoroWorker?worker";
 
 const audio = new Audio(pomodoroAlert);
+
+const worker = new PomodoroWorker();
 
 interface PomodoroState {
 	secondsPassed: number;
@@ -50,106 +52,54 @@ const PomodoroButton = () => {
 			: DEFAULT_POMODORO_STATE;
 	});
 
-	const worker = new TimerWorker();
+	worker.onmessage = (event) => {
+		const { type, data }: { type: string; data: PomodoroState } = event.data;
 
-	useEffect(() => {
-		let interval: NodeJS.Timer;
-
-		const updateProgress = () => {
-			setPomodoroState((prev) => ({
-				...prev,
-				secondsPassed: prev.secondsPassed + 1,
-				lastUpdated: new Date().toISOString(),
-			}));
-
-			if (pomodoroState.secondsPassed % 10 === 0 && pomodoroState.secondsPassed > 0) {
-				localStorage.setItem("pomodoroState", JSON.stringify(pomodoroState));
-			}
-
-			if (pomodoroState.secondsPassed === STUDY_DURATION && pomodoroState.status === "study") {
+		switch (type) {
+			case "tick":
 				setPomodoroState((prev) => ({
-					...prev,
-					secondsPassed: 0,
-					status: "break",
-					lastStatus: prev.status,
-					isModalOpen: true,
+					...data,
+					isModalOpen: prev.isModalOpen,
 				}));
-				audio.play();
-				clearInterval(interval);
-			}
-
-			if (
-				pomodoroState.secondsPassed === SMALL_BREAK_DURATION &&
-				pomodoroState.status === "break" &&
-				pomodoroState.breakCount < 4
-			) {
+				break;
+			case "pause":
 				setPomodoroState((prev) => ({
-					...prev,
-					secondsPassed: 0,
-					status: "study",
-					lastStatus: prev.status,
-					breakCount: prev.breakCount + 1,
-					isModalOpen: true,
+					...data,
+					isModalOpen: prev.isModalOpen,
 				}));
-				audio.play();
-				clearInterval(interval);
-			}
-
-			if (pomodoroState.secondsPassed === LONG_BREAK_DURATION && pomodoroState.status === "break") {
+				localStorage.setItem("pomodoroState", JSON.stringify({ ...data, isModalOpen: false }));
+				break;
+			case "restart":
 				setPomodoroState((prev) => ({
-					...prev,
-					secondsPassed: 0,
-					status: "study",
-					lastStatus: prev.status,
-					breakCount: 0,
-					isModalOpen: true,
+					...data,
+					isModalOpen: prev.isModalOpen,
 				}));
+				localStorage.setItem("pomodoroState", JSON.stringify({ ...data, isModalOpen: false }));
+				break;
+
+			case "store":
+				localStorage.setItem(
+					"pomodoroState",
+					JSON.stringify({ ...data, isModalOpen: false, status: "off" })
+				);
+				break;
+			case "done":
+				setPomodoroState(data);
 				audio.play();
-				clearInterval(interval);
-			}
-		};
-		if (pomodoroState.status !== "off") {
-			interval = setInterval(updateProgress, 1000);
+				break;
 		}
-
-		return () => clearInterval(interval);
-	}, [pomodoroState.secondsPassed, pomodoroState.status]);
+	};
 
 	const handleToggleTimer = () => {
 		if (pomodoroState.status === "off") {
-			setPomodoroState((prev) => {
-				const newState = {
-					...prev,
-					status: prev.lastStatus,
-				} as PomodoroState;
-				localStorage.setItem("pomodoroState", JSON.stringify({ ...newState, isModalOpen: false }));
-				return newState;
-			});
+			worker.postMessage({ type: "start", data: pomodoroState });
 		} else {
-			setPomodoroState((prev) => {
-				const newState = {
-					...prev,
-					status: "off",
-					lastStatus: prev.status,
-				} as PomodoroState;
-				localStorage.setItem("pomodoroState", JSON.stringify({ ...newState, isModalOpen: false }));
-				return newState;
-			});
+			worker.postMessage({ type: "pause" });
 		}
 	};
 
 	const handleRestartTimer = () => {
-		setPomodoroState((prev) => {
-			const newState = {
-				...prev,
-				secondsPassed: 0,
-				status: "off",
-				lastStatus: "study",
-				breakCount: 0,
-			} as PomodoroState;
-			localStorage.setItem("pomodoroState", JSON.stringify({ ...newState, isModalOpen: false }));
-			return newState;
-		});
+		worker.postMessage({ type: "restart" });
 	};
 
 	const getDuration = () => {
