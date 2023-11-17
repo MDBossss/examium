@@ -1,10 +1,27 @@
-import { PlusIcon, FileIcon, UsersIcon, EditIcon, LockIcon, CalendarIcon, LayoutGridIcon, MessagesSquareIcon } from "lucide-react";
+import {
+	PlusIcon,
+	FileIcon,
+	EditIcon,
+	LockIcon,
+	CalendarIcon,
+	LayoutGridIcon,
+	MessagesSquareIcon,
+	ChevronDownIcon,
+} from "lucide-react";
 import { Button } from "./ui/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProgressDialog from "./ui/Dialogs/ProgressDialog";
 import useNavigationDialog from "../hooks/useNavigationDialog";
 import Logo from "./ui/Logo";
 import { useSession } from "@clerk/clerk-react";
+import SidebarItem from "./SidebarItem";
+
+interface NavItemType {
+	location: string;
+	title: string;
+	icon: JSX.Element;
+	subItems?: { title: string; location: string }[];
+}
 
 const Navbar = () => {
 	const location = useLocation();
@@ -12,21 +29,21 @@ const Navbar = () => {
 	const { session } = useSession();
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
 
-	const navItems = [
+	const navItems: NavItemType[] = [
 		{
 			location: `/overview/${session?.user.id}`,
 			title: "Overview",
-			icon: <LayoutGridIcon className="w-6 h-6"/>
+			icon: <LayoutGridIcon className="w-6 h-6" />,
 		},
 		{
-			location: `/tests/${session?.user.id}`,
-			title: "My Tests",
+			location: "",
+			title: "Tests",
 			icon: <FileIcon className="w-6 h-6" />,
-		},
-		{
-			location: `/collaborations/${session?.user.id}`,
-			title: "Collaborations",
-			icon: <UsersIcon className="w-6 h-6" />,
+			subItems: [
+				{ title: "My Tests", location: `/tests/${session?.user.id}` },
+				{ title: "Collaborations", location: `/collaborations/${session?.user.id}` },
+				{ title: "Bookmarked", location: `/bookmarked/${session?.user.id}` },
+			],
 		},
 		{
 			location: `/schedule/${session?.user.id}`,
@@ -95,26 +112,7 @@ const Navbar = () => {
 								<h4 className="text-xs font-bold dark:text-gray-500">MANAGEMENT</h4>
 								<ul className="flex flex-col gap-1 py-2 text-md">
 									{navItems.map((item) => (
-										<li key={item.title}>
-											<div
-												className={`${
-													location.pathname.includes(item.location) &&
-													"bg-slate-300 dark:bg-gray-800 "
-												} flex font-medium items-center gap-3 p-2 text-md transition-all rounded-sm cursor-pointer hover:bg-slate-300 dark:hover:bg-gray-800`}
-												onClick={() => handleNavigate(item.location)}
-											>
-												<span
-													className={`${
-														location.pathname.includes(item.location)
-															? "dark:text-slate-300"
-															: "dark:text-gray-500"
-													}`}
-												>
-													{item.icon}
-												</span>
-												{item.title}
-											</div>
-										</li>
+										<SidebarItem key={item.title} item={item} handleNavigate={handleNavigate} />
 									))}
 								</ul>
 							</div>

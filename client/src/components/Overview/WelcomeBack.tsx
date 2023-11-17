@@ -30,7 +30,7 @@ const WelcomeBack = ({ session }: Props) => {
 				</div>
 				<div className="flex items-center gap-1">
 					<p
-						className="text-sm cursor-pointer hover:underline"
+						className={`${randomColor} text-sm cursor-pointer hover:underline`}
 						onClick={() => setRandomColor(getRandomItemFromArray(colors))}
 					>
 						Be creative today!{" "}

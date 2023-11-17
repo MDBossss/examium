@@ -157,7 +157,7 @@ const PomodoroButton = () => {
 			}
 		>
 			<DialogTrigger>
-				<div className="relative w-8 h-8 cursor-pointer group">
+				<div className="relative w-8 h-8 cursor-pointer select-none group">
 					<img
 						src="/tomato.svg"
 						className="absolute w-full transition-all grayscale rotate-12 group-hover:scale-110 group-hover:rotate-6"
