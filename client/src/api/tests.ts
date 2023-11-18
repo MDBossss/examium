@@ -13,7 +13,10 @@ export async function createTest(test: TestType) {
 
 export async function updateTest(test: TestType) {
 	try {
-		const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/tests/${test.id}`, test);
+		const response = await axios.put(
+			`${import.meta.env.VITE_API_BASE_URL}/api/tests/${test.id}`,
+			test
+		);
 		return response.data;
 	} catch (error) {
 		throw new Error("Failed to update test");
@@ -31,7 +34,9 @@ export async function fetchTests() {
 
 export async function fetchTestsByUserId(authorId: string) {
 	try {
-		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/tests/user/${authorId}`);
+		const response = await axios.get(
+			`${import.meta.env.VITE_API_BASE_URL}/api/tests/user/${authorId}`
+		);
 		return response.data as TestType[];
 	} catch (error) {
 		throw new Error("Failed to fetch user tests");
@@ -60,7 +65,9 @@ export async function fetchCollaborationTestsByUserId(userId: string) {
 
 export async function deleteTest(test: TestType) {
 	try {
-		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/tests/${test.id}`);
+		const response = await axios.delete(
+			`${import.meta.env.VITE_API_BASE_URL}/api/tests/${test.id}`
+		);
 		removeAllTestImagesFromBucket(test);
 		return response.data;
 	} catch (error) {
@@ -68,11 +75,11 @@ export async function deleteTest(test: TestType) {
 	}
 }
 
-export async function checkCode(task:string,firstCode: string, secondCode: string) {
+export async function checkCode(task: string, firstCode: string, secondCode: string) {
 	const code = { task, firstCode, secondCode };
 	try {
 		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/code`, code);
-		return response.data as {isCorrect: boolean, description: string | undefined};
+		return response.data as { isCorrect: boolean; description: string | undefined };
 	} catch (error) {
 		throw new Error("Failed to check code.");
 	}

@@ -105,6 +105,121 @@ class UserController {
 			res.status(500).json({ error: "Internal Server Error" });
 		}
 	}
+
+	async getBookmarkedTestsByUserId(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const user = await prisma.user.findUnique({
+				where: {
+					id,
+				},
+				include: {
+					bookmarkedTests: {
+						include: {
+							author: true,
+							collaborators: true,
+						},
+					},
+				},
+			});
+
+			if (!user) {
+				return res.status(404).json({ error: "User not found" });
+			}
+
+			if (!user.bookmarkedTests || user.bookmarkedTests.length === 0) {
+				return res.status(200).json([]);
+			}
+
+			res.status(200).json(user.bookmarkedTests);
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
+	async addBookmarkedTest(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const { testId } = req.query;
+			const user = await prisma.user.findUnique({
+				where: {
+					id,
+				},
+				include: {
+					bookmarkedTests: true,
+				},
+			});
+
+			if (!user) {
+				return res.status(404).json({ error: "User not found" });
+			}
+
+			if (user.bookmarkedTests.some((test) => test.id === testId)) {
+				return res.status(200).json({ message: "Test already bookmarked" });
+			}
+
+			await prisma.user.update({
+				where: {
+					id,
+				},
+				data: {
+					bookmarkedTests: {
+						connect: {
+							id: testId as string,
+						},
+					},
+				},
+			});
+
+			res.status(200).json({ message: "Bookmarked added" });
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
+
+	async removeBookmarkedTest(req: Request, res: Response) {
+		try {
+			const { id } = req.params;
+			const { testId } = req.query;
+
+			const user = await prisma.user.findUnique({
+				where: {
+					id,
+				},
+				include: {
+					bookmarkedTests: true,
+				},
+			});
+
+			if (!user) {
+				return res.status(404).json({ error: "User not found" });
+			}
+
+			if (!user.bookmarkedTests.some((test) => test.id === testId)) {
+				return res.status(200).json({ message: "Test already bookmarked" });
+			}
+
+			await prisma.user.update({
+				where: {
+					id,
+				},
+				data: {
+					bookmarkedTests: {
+						disconnect: {
+							id: testId as string,
+						},
+					},
+				},
+			});
+
+			res.status(200).json({ message: "Bookmarked remove" });
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: "Internal Server Error" });
+		}
+	}
 }
 
 export default UserController;

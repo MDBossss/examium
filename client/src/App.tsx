@@ -14,6 +14,7 @@ import Overview from "./pages/Overview";
 import StudyGroups from "./pages/StudyGroups";
 import ProtectedRoute from "./components/ProtectedRoute";
 import StudyGroupChat from "./pages/StudyGroupChat";
+import Bookmarked from "./pages/Bookmarked";
 
 function App() {
 	const { theme } = useThemeStore();
@@ -85,6 +86,16 @@ function App() {
 					<ProtectedRoute>
 						<Layout>
 							<Collaborations />
+						</Layout>
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/bookmarked/:id"
+				element={
+					<ProtectedRoute>
+						<Layout>
+							<Bookmarked />
 						</Layout>
 					</ProtectedRoute>
 				}

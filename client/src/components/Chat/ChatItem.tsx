@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useThemeStore } from "../../store/themeStore";
 import { getTimeAgo } from "../../utils/dateUtils";
 import { getFileType, getFullFileUrl } from "../../utils/fileUtils";
-import { FileIcon, TrashIcon } from "lucide-react";
+import { BookmarkIcon, FileIcon, TrashIcon } from "lucide-react";
 import { ActionTooltip } from "../ui/ActionTooltip";
 import { deleteMessage } from "../../api/messages";
 import { useToast } from "../../hooks/useToast";
@@ -24,6 +24,7 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "../ui/Dialogs/AlertDialog";
+import { addBookmarkedTest } from "../../api/users";
 
 interface Props {
 	message: MessageType;
@@ -57,6 +58,24 @@ const ChatItem = ({ message, isOwner }: Props) => {
 				});
 			});
 	};
+
+	const handleBookmarkTest = async () => {
+		if(message.testId){
+			await addBookmarkedTest(session?.user.id!,message.testId!)
+			.then(() => {
+				toast({
+					title: "✅ Bookmarked test",
+				});
+			})
+			.catch(() => {
+				toast({
+					title: "😓 Failed to bookmark test",
+					variant: "destructive",
+				});
+			})
+		}
+	}
+
 	return (
 		<>
 			<AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -118,8 +137,9 @@ const ChatItem = ({ message, isOwner }: Props) => {
 								} border flex flex-col lg:flex-row items-center justify-between gap-1 p-2 rounded-sm`}
 							>
 								<p className="font-bold ">{message?.test?.title}</p>
+								<Button size="sm" className="w-full lg:w-max" onClick={() => handleBookmarkTest()}><BookmarkIcon className="w-4 h-4"/></Button>
 								<Button
-									size={"sm"}
+									size="sm"
 									className="w-full bg-green-500 hover:bg-green-600 lg:w-max"
 									onClick={() => navigate(`/solve/${message.testId}`)}
 								>

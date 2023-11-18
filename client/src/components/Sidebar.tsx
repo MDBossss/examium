@@ -6,7 +6,6 @@ import {
 	CalendarIcon,
 	LayoutGridIcon,
 	MessagesSquareIcon,
-	ChevronDownIcon,
 } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useLocation, useNavigate } from "react-router-dom";

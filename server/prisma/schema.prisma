@@ -21,6 +21,7 @@ model User {
   longitude         Float        @default(13.41053)
   tests             Test[]
   collaboratedTests Test[]       @relation("collaborator")
+  bookmarkedTests   Test[]       @relation("bookmarked")
   events            Event[]
   studyGroups       StudyGroup[]
   members           Member[]
@@ -30,7 +31,6 @@ enum QuestionType {
   MULTIPLE_CHOICE
   CODE
 }
-
 
 model Test {
   id                     String       @id @default(uuid())
@@ -47,6 +47,7 @@ model Test {
   authorId               String
   author                 User         @relation(fields: [authorId], references: [id])
   collaborators          User[]       @relation("collaborator")
+  bookmarks              User[]       @relation("bookmarked")
   events                 Event[]      @relation("eventTests")
   messages               Message[]
 }
@@ -143,9 +144,9 @@ model Message {
   content      String     @db.Text
   fileUrl      String?    @db.Text
   testId       String?
-  test         Test?       @relation(fields: [testId], references: [id])
+  test         Test?      @relation(fields: [testId], references: [id])
   memberId     String?
-  member       Member?     @relation(fields: [memberId], references: [id])
+  member       Member?    @relation(fields: [memberId], references: [id])
   studyGroupId String
   studyGroup   StudyGroup @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
   deleted      Boolean    @default(false)
