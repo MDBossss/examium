@@ -16,14 +16,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "../../../hooks/useToast";
 import { Switch } from "../Switch";
-import ImageUpload from "../../FileUpload";
 import { createStudyGroup, deleteStudyGroup, updateStudyGroup } from "../../../api/groups";
 import { v4 as uuidv4 } from "uuid";
 import { useSession } from "@clerk/clerk-react";
 import { StudyGroupType } from "../../../../../shared/models";
 import DeleteGroupDialog from "./DeleteGroupDialog";
 import { useNavigate } from "react-router-dom";
-import { removeFileFromBucket } from "../../../utils/supabaseUtils";
+import { removeFilesFromBucket } from "../../../utils/supabaseUtils";
 import FileUpload from "../../FileUpload";
 
 const schema = z.object({
@@ -124,9 +123,9 @@ const CreateStudyGroupDialog = ({ defaultStudyGroup, onCreated, children }: Prop
 		e.preventDefault();
 		if (defaultStudyGroup) {
 			setDialogOpen(false);
-			await removeFileFromBucket(
+			await removeFilesFromBucket(
 				import.meta.env.VITE_SUPABASE_BUCKET_NAME,
-				defaultStudyGroup.imageUrl
+				[defaultStudyGroup.imageUrl]
 			);
 			await deleteStudyGroup(defaultStudyGroup?.id)
 				.then(() => {

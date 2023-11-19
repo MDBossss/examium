@@ -5,7 +5,6 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Toaster } from "./components/ui/Toaster.tsx";
 import "./index.css";
-import { TooltipProvider } from "./components/ui/Tooltip.tsx";
 import MaterialThemeProvider from "./components/MaterialThemeProvider.tsx";
 import SocketProvider from "./components/SocketProvider.tsx";
 
@@ -29,12 +28,10 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<MaterialThemeProvider>
 			<SocketProvider>
 				<QueryClientProvider client={queryClient}>
-					<TooltipProvider>
-						<Toaster />
-						<BrowserRouter>
-							<App />
-						</BrowserRouter>
-					</TooltipProvider>
+					<Toaster />
+					<BrowserRouter>
+						<App />
+					</BrowserRouter>
 				</QueryClientProvider>
 			</SocketProvider>
 		</MaterialThemeProvider>

@@ -4,7 +4,7 @@ import LoginButton from "./ui/LoginButton";
 import Logo from "./ui/Logo";
 import { useSession } from "@clerk/clerk-react";
 
-const Navbar = () => {
+const HomeNavbar = () => {
 	const {session} = useSession();
 	const navigate = useNavigate();
 
@@ -31,4 +31,4 @@ const Navbar = () => {
 	);
 };
 
-export default Navbar;
+export default HomeNavbar;

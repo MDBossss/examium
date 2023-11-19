@@ -2,7 +2,7 @@ import { useDropzone } from "react-dropzone";
 import { useCallback, useState } from "react";
 import { Button } from "./ui/Button";
 import { FileTextIcon, Trash2Icon } from "lucide-react";
-import { removeFileFromBucket, uploadFileToBucket } from "../utils/supabaseUtils";
+import { removeFilesFromBucket, uploadFileToBucket } from "../utils/supabaseUtils";
 import Spinner from "./ui/Spinner";
 
 interface Props {
@@ -28,7 +28,7 @@ const FileUpload = ({ onSetFilePath, defaultFilePath,fileType }: Props) => {
 	const handleDeleteFile = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		e.preventDefault();
 		if (path) {
-			await removeFileFromBucket(import.meta.env.VITE_SUPABASE_BUCKET_NAME, path);
+			await removeFilesFromBucket(import.meta.env.VITE_SUPABASE_BUCKET_NAME, [path]);
 			setPath(undefined);
 			onSetFilePath(undefined);
 		}

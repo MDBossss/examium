@@ -39,7 +39,7 @@ import ChatFiles from "../components/Chat/ChatFiles";
 import { Sheet, SheetContent } from "../components/ui/Sheet";
 import useWindowSize from "../hooks/useWindowSize";
 import { useChatSocket } from "../hooks/useChatSocket";
-import { Axios, AxiosError } from "axios";
+import { AxiosError } from "axios";
 
 const StudyGroupChat = () => {
 	const { id } = useParams();
@@ -66,17 +66,16 @@ const StudyGroupChat = () => {
 
 	const { data, isLoading, isError, error } = useQuery({
 		queryKey: ["groups", id],
-		queryFn: () => getStudyGroupById(id!,session?.user.id!),
+		queryFn: () => getStudyGroupById(id!, session?.user.id!),
 		refetchOnWindowFocus: false,
 		useErrorBoundary: false,
-		retry:false,
+		retry: false,
 		onError: (error: AxiosError) => {
-			if(error.response?.status === 403){
-				navigate("/groups")
+			if (error.response?.status === 403) {
+				navigate("/groups");
 			}
-		}
+		},
 	});
-
 
 	const isOwner = data?.ownerId === session?.user.id;
 
@@ -147,18 +146,18 @@ const StudyGroupChat = () => {
 										<SettingsIcon className="w-6 h-6 text-slate-400 dark:text-gray-600" />
 									</Button>
 								</DropdownMenuTrigger>
-								{!isOwner && (
-									<DropdownMenuContent className="w-56">
-										<DropdownMenuItem className="flex gap-1" onClick={() => handleCopyInviteLink()}>
-											<CopyIcon className="w-4 h-4" /> Copy invite link
-										</DropdownMenuItem>
+								<DropdownMenuContent className="w-56">
+									<DropdownMenuItem className="flex gap-1" onClick={() => handleCopyInviteLink()}>
+										<CopyIcon className="w-4 h-4" /> Copy invite link
+									</DropdownMenuItem>
+									{!isOwner && (
 										<AlertDialogTrigger asChild>
 											<DropdownMenuItem className="flex gap-1 text-red-500 dark:text-red-600">
 												<LogOutIcon className="w-4 h-4" /> Leave group
 											</DropdownMenuItem>
 										</AlertDialogTrigger>
-									</DropdownMenuContent>
-								)}
+									)}
+								</DropdownMenuContent>
 							</DropdownMenu>
 							<AlertDialogContent>
 								<AlertDialogHeader>

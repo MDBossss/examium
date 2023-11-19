@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
 import { MessageType } from "../../../shared/models";
-import { removeFileFromBucket } from "../utils/supabase";
+import { removeFilesFromBucket } from "../utils/supabase";
 import { io } from "../utils/socket";
 
 class MessageController {
@@ -210,7 +210,7 @@ class MessageController {
 				},
 			});
 			if (prevMessage?.fileUrl) {
-				await removeFileFromBucket("questionImages", prevMessage?.fileUrl);
+				await removeFilesFromBucket("questionImages", [prevMessage?.fileUrl]);
 			}
 
 			const updateKey = `chat:${newMessage.studyGroupId}:messages:update`;

@@ -28,7 +28,7 @@ import {
 	AlertDialogTitle,
 } from "../ui/Dialogs/AlertDialog";
 import FileUpload from "../FileUpload";
-import { removeFileFromBucket } from "../../utils/supabaseUtils";
+import { removeFilesFromBucket } from "../../utils/supabaseUtils";
 import { useToast } from "../../hooks/useToast";
 import { MessageType, OptionType } from "../../../../shared/models";
 import { v4 as uuidv4 } from "uuid";
@@ -87,7 +87,7 @@ const ChatInput = ({setIsFileSelected}:Props) => {
 
 	const handleRemoveFile = async () => {
 		if (filePath) {
-			await removeFileFromBucket("questionImages", filePath)
+			await removeFilesFromBucket("questionImages", [filePath])
 				.then(() => {
 					setFilePath(undefined);
 					setValue("fileUrl", undefined);

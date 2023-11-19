@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import HomeNavbar from "../components/HomeNavbar";
 import { Button } from "../components/ui/Button";
 import Footer from "../components/Footer";
 import { useThemeStore } from "../store/themeStore";
@@ -16,7 +16,7 @@ const Home = () => {
 			className={`w-screen h-screen ${theme === "light" ? "bg-doodle-light" : "bg-doodle-dark"}`}
 		>
 			<div className="flex flex-col h-full gap-48 p-4 mx-auto sm:pt-2 sm:p-10 max-w-7xl">
-				<Navbar />
+				<HomeNavbar />
 				<div className="flex flex-col items-center w-full max-w-lg gap-5 mx-auto text-center">
 					<h1 className="text-5xl font-extrabold text-zinc-800 dark:text-slate-200">
 						Your{" "}

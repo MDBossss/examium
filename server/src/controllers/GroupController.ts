@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
 import { MemberType, MessageType, StudyGroupType } from "../../../shared/models";
 import { io } from "../utils/socket";
+import { removeFilesFromBucket } from "../utils/supabase";
 
 class GroupController {
 	private async getStudyGroupMemberCount(studyGroupId: string) {
@@ -304,12 +305,36 @@ class GroupController {
 	async deleteStudyGroup(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
+
+			const group = await prisma.studyGroup.findUnique({
+				where:{id},
+				include:{
+					messages:{
+						where:{
+							NOT: {
+								fileUrl: null,
+							},
+						}
+					}
+				}
+			})
+
+			if(!group){
+				return res.status(404).json({error: "Group not found"})
+			}
+
+			const allFileUrls: string[] = [group.imageUrl];
+			if(group.messages){
+				group.messages.map((message) => {
+					if(message.fileUrl){
+						allFileUrls.push(message.fileUrl)
+					}
+				})
+				await removeFilesFromBucket("questionImages",allFileUrls);
+			}
+
 			await prisma.studyGroup.delete({
 				where: { id },
-				include: {
-					members: true,
-					messages: true,
-				},
 			});
 			res.status(204).json({ message: "Group deleted successfully" });
 		} catch (error) {

@@ -135,7 +135,6 @@ model Member {
   updatedAt    DateTime   @updatedAt
   messages     Message[]
 
-  @@index([userId])
   @@index([studyGroupId])
 }
 

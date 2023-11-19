@@ -25,7 +25,7 @@ const SidebarItem = ({ item, handleNavigate }: Props) => {
 						onClick={() => setIsDropdownOpen((prev) => !prev)}
 					>
 						<div className="flex gap-3">
-							<span className="text-gray-500">{item.icon}</span>
+							<span className="dark:text-gray-500">{item.icon}</span>
 							<p>{item.title}</p>
 						</div>
 						{isDropdownOpen ? <ChevronUpIcon className="text-gray-500"/> : <ChevronDownIcon className="text-gray-500"/> }

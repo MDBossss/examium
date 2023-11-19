@@ -22,7 +22,7 @@ interface NavItemType {
 	subItems?: { title: string; location: string }[];
 }
 
-const Navbar = () => {
+const Sidebar = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const { session } = useSession();
@@ -141,4 +141,4 @@ const Navbar = () => {
 	);
 };
 
-export default Navbar;
+export default Sidebar;

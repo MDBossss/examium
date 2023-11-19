@@ -5,9 +5,9 @@ const supabaseKey = process.env.VITE_SUPABASE_KEY;
 
 const supabase = createClient(supabaseUrl!, supabaseKey!);
 
-export async function removeFileFromBucket(bucketName: string, path: string) {
+export async function removeFilesFromBucket(bucketName: string, paths: string[]) {
 	try {
-		const { error } = await supabase.storage.from(bucketName).remove([path]);
+		const { error } = await supabase.storage.from(bucketName).remove(paths);
 		if (error) {
 			console.error("Error removing file:", error.message);
 			throw new Error("Error removing file from bucket");
