@@ -41,8 +41,8 @@ export const runAssistantEvaluation = async (
 	await checkStatus();
 
 	const messages = await openai.beta.threads.messages.list(thread.id);
-	// @ts-expect-error
-	console.log(messages.data[0].content[0].text.value);
+	// // @ts-expect-error
+	// console.log(messages.data[0].content[0].text.value);
 	// @ts-expect-error
     const parsedAnswers = parseAnswer(messages.data[0].content[0].text.value)
 	return parsedAnswers;
