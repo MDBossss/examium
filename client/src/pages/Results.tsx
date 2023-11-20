@@ -88,11 +88,11 @@ const Results = () => {
 
 	return (
 		<>
-			{/* {fetchedCodeQuestionsCount < codeQuestionCount && (
-				<div className=" fixed flex flex-col items-center justify-center gap-4  bg-white bg-opacity-50 backdrop-blur-sm  transition-all w-full h-screen z-[100]">
+			 {fetchedCodeQuestionsCount < codeQuestionCount && (
+				<div className="fixed top-0 left-0 flex flex-col items-center justify-center gap-4  bg-white bg-opacity-50 backdrop-blur-sm  transition-all w-full h-screen z-[100]">
 					<span className="text-lg font-bold">Calculating results...</span> <Spinner />
 				</div>
-			)} */}
+			)} 
 			<>
 				<div className="flex flex-col items-center w-full mx-auto max-w-7xl">
 					<div className="flex items-center justify-between w-full py-5">

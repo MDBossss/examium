@@ -75,10 +75,10 @@ export async function deleteTest(test: TestType) {
 	}
 }
 
-export async function checkCode(task: string, firstCode: string, secondCode: string) {
-	const code = { task, firstCode, secondCode };
+export async function evaluateCode(task: string, correctCode: string, userCode: string) {
+	const body = { task, correctCode, userCode };
 	try {
-		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/code`, code);
+		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/code`, body);
 		return response.data as { isCorrect: boolean; description: string | undefined };
 	} catch (error) {
 		throw new Error("Failed to check code.");

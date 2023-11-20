@@ -3,10 +3,11 @@ import { CodeAnswer, CodeQuestionType, QuestionType } from "../../../../shared/m
 import { renderTextWithLineBreaks } from "../../utils/testUtils";
 import CodeMirror from "@uiw/react-codemirror";
 import MDEditor from "@uiw/react-md-editor";
-import { checkCode } from "../../api/tests";
-import { useQuery } from "@tanstack/react-query";
+import { evaluateCode } from "../../api/tests";
 import Spinner from "../ui/Spinner";
 import { useThemeStore } from "../../store/themeStore";
+import { useEffect, useState } from "react";
+import { useToast } from "../../hooks/useToast";
 
 interface Props {
 	question: QuestionType;
@@ -25,16 +26,30 @@ const CodeQuestionResult = ({
 	onLoaded,
 	showQuestion,
 }: Props) => {
-	const { data, isLoading, isError } = useQuery({
-		queryKey: ["code", userCode],
-		queryFn: () =>
-			checkCode(question.question, userCode.userCode, (question as CodeQuestionType).correctCode),
-		onSuccess: (data) => {
-			onSetIsCodeCorrect(data.isCorrect, questionIndex);
-			onLoaded();
-		},
-		refetchOnWindowFocus: false,
-	});
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isError, setIsError] = useState<boolean>(false);
+	const [data, setData] = useState<{ isCorrect: boolean; description: string | undefined }>();
+	const { toast } = useToast();
+
+	useEffect(() => {
+		setIsLoading(true);
+		evaluateCode(question.question, (question as CodeQuestionType).correctCode, userCode.userCode)
+			.then((data) => {
+				setData(data);
+				onSetIsCodeCorrect(data.isCorrect, questionIndex);
+				onLoaded();
+			})
+			.catch(() => {
+				setIsError(true);
+				onSetIsCodeCorrect(true, questionIndex);
+				onLoaded();
+				toast({
+					title: "Something went wrong...",
+					variant: "destructive",
+				});
+			})
+			.finally(() => setIsLoading(false));
+	}, []);
 
 	const { theme } = useThemeStore();
 	theme === "dark"
