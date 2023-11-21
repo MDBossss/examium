@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
-import { AnswerType, CodeQuestionType, MultipleChoiceQuestionType, QuestionType, QuestionVariantsType, TestType } from "../../../shared/models";
+import {
+	AnswerType,
+	CodeQuestionType,
+	MultipleChoiceQuestionType,
+	QuestionType,
+	TestType,
+} from "../../../shared/models";
 
 class TestController {
 	async getAllTests(req: Request, res: Response) {
@@ -102,7 +108,7 @@ class TestController {
 				questions: test.questions.map((question) => {
 					const type = question.type; // Assuming the question has a 'type' field in the database
 					const data =
-						type === "multiple-choice" ? question.multipleChoiceQuestion : question.codeQuestion;
+						type === "MULTIPLE_CHOICE" ? question.multipleChoiceQuestion : question.codeQuestion;
 					return {
 						...question,
 						type,
@@ -116,25 +122,24 @@ class TestController {
 				...testWithQuestions,
 				collaboratorEmails: test.collaborators.map((collaborator) => collaborator.email),
 			};
-			
+
 			// formatting the questions and the tests by the typescript model
 			//because when fetching with prisma, the object structure obviously
 			//is not the same, since im splitting the questions into multiple
 			//tables, so here im creating the objects
 			let formattedQuestions: QuestionType[] = [];
 			testWithCollaborators.questions.map((question) => {
-				if(question.type === "MULTIPLE_CHOICE"){
+				if (question.type === "MULTIPLE_CHOICE") {
 					let tempQuestion: MultipleChoiceQuestionType = {
 						id: question.id,
 						type: question.type,
 						question: question.question,
 						imageUrl: question.imageUrl as string | undefined,
 						createdAt: question.createdAt,
-						answers: question.multipleChoiceQuestion?.answers as AnswerType[]
-					} 
-					formattedQuestions.push(tempQuestion)
-				}
-				else if(question.type === "CODE"){
+						answers: question.multipleChoiceQuestion?.answers as AnswerType[],
+					};
+					formattedQuestions.push(tempQuestion);
+				} else if (question.type === "CODE") {
 					let tempQuestion: CodeQuestionType = {
 						id: question.id,
 						type: question.type,
@@ -143,11 +148,11 @@ class TestController {
 						createdAt: question.createdAt,
 						description: question.codeQuestion?.description as string | undefined,
 						correctCode: question.codeQuestion?.correctCode as string,
-						showCorrectCodeOnResults: question.codeQuestion?.showCorrectCodeOnResults as boolean
-					}
-					formattedQuestions.push(tempQuestion)
+						showCorrectCodeOnResults: question.codeQuestion?.showCorrectCodeOnResults as boolean,
+					};
+					formattedQuestions.push(tempQuestion);
 				}
-			})
+			});
 
 			//formatting test
 			const formattedTest: TestType = {
@@ -158,16 +163,15 @@ class TestController {
 				showQuestionsOnResults: testWithCollaborators.showQuestionsOnResults,
 				randomizeQuestions: testWithCollaborators.randomizeQuestions,
 				randomizeAnswers: testWithCollaborators.randomizeAnswers,
-				defaultQuestionType: testWithCollaborators.defaultQuestionType as QuestionVariantsType["type"],
+				defaultQuestionType: testWithCollaborators.defaultQuestionType,
 				createdAt: testWithCollaborators.createdAt,
 				updatedAt: testWithCollaborators.updatedAt,
 				authorId: testWithCollaborators.authorId,
 				author: testWithCollaborators.author,
 				collaboratorEmails: testWithCollaborators.collaboratorEmails,
 				collaborators: testWithCollaborators.collaborators,
-				questions: formattedQuestions
-			}
-
+				questions: formattedQuestions,
+			};
 
 			res.status(200).json(formattedTest);
 		} catch (error) {
@@ -208,7 +212,7 @@ class TestController {
 						connect: { id: authorId! },
 					},
 					questions: {
-						create: questions.map((q) => {
+						create: questions?.map((q) => {
 							if (q.type === "MULTIPLE_CHOICE") {
 								const { id, type, question, imageUrl, createdAt, answers } =
 									q as MultipleChoiceQuestionType;
@@ -234,8 +238,16 @@ class TestController {
 									},
 								};
 							} else if (q.type === "CODE") {
-								const { id, type, question, imageUrl, createdAt, description, correctCode, showCorrectCodeOnResults } =
-									q as CodeQuestionType;
+								const {
+									id,
+									type,
+									question,
+									imageUrl,
+									createdAt,
+									description,
+									correctCode,
+									showCorrectCodeOnResults,
+								} = q as CodeQuestionType;
 
 								return {
 									id,
@@ -247,7 +259,7 @@ class TestController {
 										create: {
 											correctCode,
 											description,
-											showCorrectCodeOnResults
+											showCorrectCodeOnResults,
 										},
 									},
 								};
@@ -312,12 +324,11 @@ class TestController {
 					testId: id,
 					NOT: {
 						id: {
-							in: questions.map((question) => question.id).filter(Boolean),
+							in: questions?.map((question) => question.id).filter(Boolean),
 						},
 					},
 				},
 			});
-
 
 			const updatedTest = await prisma.test.update({
 				where: { id },
@@ -334,79 +345,100 @@ class TestController {
 						connect: { id: authorId! },
 					},
 					questions: {
-						upsert: questions.map((question) => ({
+						upsert: questions?.map((question) => ({
 							where: { id: question.id },
 							create: {
 								type: question.type,
 								question: question.question,
 								imageUrl: question.imageUrl,
-								multipleChoiceQuestion: question.type === 'MULTIPLE_CHOICE' ? {
-									create: {
-									answers: {
-										create: (question as MultipleChoiceQuestionType).answers.map((answer) => ({
-										answer: answer.answer,
-										isCorrect: answer.isCorrect,
-										})),
-									},
-									},
-								} : undefined,
-								codeQuestion: question.type === 'CODE' ? {
-									create: {
-									correctCode: (question as CodeQuestionType).correctCode,
-									description: (question as CodeQuestionType).description,
-									showCorrectCodeOnResults: (question as CodeQuestionType).showCorrectCodeOnResults
-									},
-								} : undefined,
+								multipleChoiceQuestion:
+									question.type === "MULTIPLE_CHOICE"
+										? {
+												create: {
+													answers: {
+														create: (question as MultipleChoiceQuestionType).answers.map(
+															(answer) => ({
+																answer: answer.answer,
+																isCorrect: answer.isCorrect,
+															})
+														),
+													},
+												},
+										  }
+										: undefined,
+								codeQuestion:
+									question.type === "CODE"
+										? {
+												create: {
+													correctCode: (question as CodeQuestionType).correctCode,
+													description: (question as CodeQuestionType).description,
+													showCorrectCodeOnResults: (question as CodeQuestionType)
+														.showCorrectCodeOnResults,
+												},
+										  }
+										: undefined,
 							},
 							update: {
 								type: question.type,
 								question: question.question,
 								imageUrl: question.imageUrl,
 								createdAt: question.createdAt,
-								multipleChoiceQuestion: question.type === "MULTIPLE_CHOICE" ? {
-									upsert:{
-										create:{
-											answers:{
-												create: (question as MultipleChoiceQuestionType).answers.map((answer) => ({
-													answer:answer.answer,
-													isCorrect: answer.isCorrect,
-													createdAt: answer.createdAt
-												}))
-											}
-										},
-										update:{
-											answers:{
-												upsert: (question as MultipleChoiceQuestionType).answers.map((answer) => ({
-													where: {id: answer.id},
-													create:{
-														answer:answer.answer,
-														isCorrect: answer.isCorrect,
-														createdAt: answer.createdAt,
+								multipleChoiceQuestion:
+									question.type === "MULTIPLE_CHOICE"
+										? {
+												upsert: {
+													create: {
+														answers: {
+															create: (question as MultipleChoiceQuestionType).answers.map(
+																(answer) => ({
+																	answer: answer.answer,
+																	isCorrect: answer.isCorrect,
+																	createdAt: answer.createdAt,
+																})
+															),
+														},
 													},
-													update:{
-														answer:answer.answer,
-														isCorrect: answer.isCorrect,
-														createdAt: answer.createdAt
-													}
-												}))
-											}
-										}
-									}
-								} : undefined,
-								codeQuestion: question.type === "CODE" ? {
-									upsert:{
-										create:{
-											correctCode: (question as CodeQuestionType).correctCode,
-											description: (question as CodeQuestionType).description,
-											showCorrectCodeOnResults: (question as CodeQuestionType).showCorrectCodeOnResults
-										},
-										update:{
-											correctCode: (question as CodeQuestionType).correctCode,
-											description: (question as CodeQuestionType).description,
-											showCorrectCodeOnResults: (question as CodeQuestionType).showCorrectCodeOnResults
-										}
-									}
-								}: undefined
+													update: {
+														answers: {
+															upsert: (question as MultipleChoiceQuestionType).answers.map(
+																(answer) => ({
+																	where: { id: answer.id },
+																	create: {
+																		answer: answer.answer,
+																		isCorrect: answer.isCorrect,
+																		createdAt: answer.createdAt,
+																	},
+																	update: {
+																		answer: answer.answer,
+																		isCorrect: answer.isCorrect,
+																		createdAt: answer.createdAt,
+																	},
+																})
+															),
+														},
+													},
+												},
+										  }
+										: undefined,
+								codeQuestion:
+									question.type === "CODE"
+										? {
+												upsert: {
+													create: {
+														correctCode: (question as CodeQuestionType).correctCode,
+														description: (question as CodeQuestionType).description,
+														showCorrectCodeOnResults: (question as CodeQuestionType)
+															.showCorrectCodeOnResults,
+													},
+													update: {
+														correctCode: (question as CodeQuestionType).correctCode,
+														description: (question as CodeQuestionType).description,
+														showCorrectCodeOnResults: (question as CodeQuestionType)
+															.showCorrectCodeOnResults,
+													},
+												},
+										  }
+										: undefined,
 							},
 						})),
 					},
@@ -420,7 +452,7 @@ class TestController {
 					questions: {
 						include: {
 							multipleChoiceQuestion: true,
-							codeQuestion: true
+							codeQuestion: true,
 						},
 					},
 					collaborators: true,
@@ -443,12 +475,12 @@ class TestController {
 					author: true,
 					questions: {
 						include: {
-							multipleChoiceQuestion :{
-								include :{
-									answers: true
-								}
+							multipleChoiceQuestion: {
+								include: {
+									answers: true,
+								},
 							},
-							codeQuestion: true
+							codeQuestion: true,
 						},
 					},
 					collaborators: true,
@@ -461,6 +493,5 @@ class TestController {
 		}
 	}
 }
-
 
 export default TestController;

@@ -21,6 +21,7 @@ import { Label } from "../ui/Label";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import { z } from "zod";
+import { Skeleton } from "../ui/Skeleton";
 
 const cityNameSchema = z
 	.string()
@@ -106,8 +107,8 @@ const Forecast = ({ session }: Props) => {
 
 	if (!weatherData) {
 		return (
-			<div className="p-5 border rounded-sm">
-				<Spinner />
+			<div className="flex flex-1 p-5 border rounded-sm">
+				<Skeleton className="w-full h-full"/>
 			</div>
 		);
 	}
@@ -191,6 +192,10 @@ const Forecast = ({ session }: Props) => {
 			<div className="flex justify-between gap-2 p-2 mt-auto">
 				{weatherData.daily.weathercode.map((_, i) => (
 					<div key={i} className="flex flex-col items-center justify-center gap-1">
+						<p className="text-xs text-gray-500">
+							{weatherData.daily.temperature_2m_max[i]}
+							{weatherData.daily_units.temperature_2m_max}
+						</p>
 						{getWeatherIcon(weatherData.daily.weathercode[i], "h-10 w-10")}
 						<p>{format(new Date(weatherData.daily.time[i]), "EEE")}</p>
 					</div>

@@ -14,11 +14,13 @@ import {
 } from "./Dropdown";
 import { Button } from "./Button";
 import {
+	BookmarkIcon,
 	CalendarIcon,
 	FileIcon,
 	LaptopIcon,
 	LayoutGridIcon,
 	LogOutIcon,
+	MessagesSquareIcon,
 	MoonIcon,
 	PaletteIcon,
 	PlusIcon,
@@ -53,7 +55,7 @@ const LoginButton = ({ test }: Props) => {
 	const [userChecked, setUserChecked] = useState<boolean>(false);
 	const [showProfileDialog, setShowProfileDialog] = useState<boolean>(false);
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
-	const {clearTheme,setTheme} = useThemeStore();
+	const { clearTheme, setTheme } = useThemeStore();
 
 	useEffect(() => {
 		const checkUser = async () => {
@@ -126,39 +128,59 @@ const LoginButton = ({ test }: Props) => {
 						</Avatar>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent className="">
-						
 						<DropdownMenuLabel>My Account</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem className="flex gap-1" onClick={() => handleToggleProfile(true)}>
-							<UserIcon className="w-4 h-4" /> Profile
+							<UserIcon className="w-4 h-4" /> <span>Profile</span>
 						</DropdownMenuItem>
 						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate("/create")}>
-							<PlusIcon className="w-4 h-4" /> New test
-						</DropdownMenuItem>
-						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate(`/overview/${session.user.id}`)}>
-							<LayoutGridIcon className="w-4 h-4" /> Overview
+							<PlusIcon className="w-4 h-4" /> <span>New test</span>
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							className="flex gap-1"
-							onClick={() => handleNavigate(`/tests/${session.user.id}`)}
+							onClick={() => handleNavigate(`/overview/${session.user.id}`)}
 						>
-							<FileIcon className="w-4 h-4" /> My tests
+							<LayoutGridIcon className="w-4 h-4" /> <span>Overview</span>
 						</DropdownMenuItem>
-						<DropdownMenuItem
-							className="flex gap-1"
-							onClick={() => handleNavigate(`/collaborations/${session.user.id}`)}
-						>
-							<UsersIcon className="w-4 h-4" /> Collaborations
-						</DropdownMenuItem>
+						<DropdownMenuSub>
+							<DropdownMenuSubTrigger className="flex gap-1">
+								<FileIcon className="w-4 h-4" /> <span>Tests</span>
+							</DropdownMenuSubTrigger>
+							<DropdownMenuPortal>
+								<DropdownMenuSubContent>
+									<DropdownMenuItem
+										className="flex gap-1"
+										onClick={() => handleNavigate(`/tests/${session.user.id}`)}
+									>
+										<FileIcon className="w-4 h-4" /> <span>My tests</span>
+									</DropdownMenuItem>
+									<DropdownMenuItem
+										className="flex gap-1"
+										onClick={() => handleNavigate(`/collaborations/${session.user.id}`)}
+									>
+										<UsersIcon className="w-4 h-4" /> <span>Collaborations</span>
+									</DropdownMenuItem>
+									<DropdownMenuItem
+										className="flex gap-1"
+										onClick={() => handleNavigate(`/bookmarked/${session.user.id}`)}
+									>
+										<BookmarkIcon className="w-4 h-4" /> <span>Bookmarked</span>
+									</DropdownMenuItem>
+								</DropdownMenuSubContent>
+							</DropdownMenuPortal>
+						</DropdownMenuSub>
 						<DropdownMenuItem
 							className="flex gap-1"
 							onClick={() => handleNavigate(`/schedule/${session.user.id}`)}
 						>
-							<CalendarIcon className="w-4 h-4" /> Schedule
+							<CalendarIcon className="w-4 h-4" /> <span>Schedule</span>
+						</DropdownMenuItem>
+						<DropdownMenuItem className="flex gap-1" onClick={() => handleNavigate(`/groups`)}>
+							<MessagesSquareIcon className="w-4 h-4" /> <span>Groups</span>
 						</DropdownMenuItem>
 						<DropdownMenuSub>
 							<DropdownMenuSubTrigger className="flex gap-1">
-								<PaletteIcon  className="w-4 h-4" />
+								<PaletteIcon className="w-4 h-4" />
 								<span>Theme</span>
 							</DropdownMenuSubTrigger>
 							<DropdownMenuPortal>
@@ -167,7 +189,7 @@ const LoginButton = ({ test }: Props) => {
 										<SunIcon className="w-4 h-4" />
 										<span>Light</span>
 									</DropdownMenuItem>
-									<DropdownMenuItem className="flex gap-1"  onClick={() => setTheme("dark")}>
+									<DropdownMenuItem className="flex gap-1" onClick={() => setTheme("dark")}>
 										<MoonIcon className="w-4 h-4" />
 										<span>Dark</span>
 									</DropdownMenuItem>
@@ -180,7 +202,7 @@ const LoginButton = ({ test }: Props) => {
 							</DropdownMenuPortal>
 						</DropdownMenuSub>
 						<DropdownMenuItem className="flex gap-1" onClick={handleLogout}>
-							<LogOutIcon className="w-4 h-4" /> Logout
+							<LogOutIcon className="w-4 h-4" /> <span>Logout</span>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

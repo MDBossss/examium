@@ -7,6 +7,7 @@ import { randomizeTest, renderTextWithLineBreaks } from "../utils/testUtils";
 import { notEmpty } from "../utils/genericUtils";
 import MultipleChoiceQuestionSolve from "../components/MultipleChoiceQuestion/MultipleChoiceQuestionSolve";
 import CodeQuestionSolve from "../components/CodeQuestion/CodeQuestionSolve";
+import { Skeleton } from "../components/ui/Skeleton";
 
 const Preview = () => {
 	const { id } = useParams();
@@ -17,7 +18,7 @@ const Preview = () => {
 	const [questionNumber, setQuestionNumber] = useState<number>(0);
 	const [questionDone, setQuestionDone] = useState<boolean[]>([]);
 	const [disableNavigation, setDisableNavigation] = useState<boolean>(false);
-
+	const [isImageLoaded,setIsImageLoaded] = useState<boolean>(false);
 
 	const [userAnswers, setUserAnswers] = useState<(boolean[] | CodeAnswer)[]>([]);
 
@@ -128,11 +129,14 @@ const Preview = () => {
 			<div className="flex flex-col items-center w-full max-w-5xl gap-5 mx-auto bg-slate-200 dark:bg-gray-800 p-7">
 				<h2 className="font-medium text-blue-500 dark:text-blue-600 text-md">{test?.title}</h2>
 				{test?.questions[questionNumber].imageUrl && (
-					<div className="w-full">
+					<div className="relative w-full">
+						{!isImageLoaded && <Skeleton className="w-full aspect-video"/>}
 						<img
 							src={`${import.meta.env.VITE_SUPABASE_BUCKET_LINK}${
 								test?.questions[questionNumber].imageUrl
 							}`}
+							alt="question"
+							onLoad={() => setIsImageLoaded(true)}
 							className="w-full"
 						/>
 					</div>

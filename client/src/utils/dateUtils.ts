@@ -10,6 +10,7 @@ import {
 	setHours,
 	setMinutes,
 } from "date-fns";
+import { EventType } from "../../../shared/models";
 
 /**
  * Function which returns the "ago" string based on the passed date and current time.
@@ -21,6 +22,10 @@ export function getTimeAgo(timestamp: Date) {
 	const previousDate = new Date(timestamp);
 	const timeDifference = currentDate.getTime() - previousDate.getTime();
 	const seconds = Math.floor(timeDifference / 1000);
+
+	if(seconds < 30){
+		return `Now`;
+	}
 
 	if (seconds < 60) {
 		return `${seconds} seconds ago`;
@@ -42,17 +47,6 @@ export function getTimeAgo(timestamp: Date) {
 	return `${days} days ago`;
 }
 
-interface EditorInput {
-	event_id: string | number;
-	title: string;
-	description: string;
-	start: Date | string;
-	end: Date | string;
-	allDay: boolean | undefined;
-	color: string;
-	repeatPattern: "none" | "daily" | "weekly" | "monthly";
-}
-
 /**
  * Function that uses regex expression to validate a time
  * @param inputTime time in a HH:mm value
@@ -67,17 +61,17 @@ export const isValidTime = (inputTime: string) => {
  * @param event One event from which repeating events will be generated based on the repeat pattern
  * @returns Array of events based on the repeating pattern of a single passed event
  */
-export function generateRepeatingEvents(event: EditorInput): ProcessedEvent[] {
+export function generateRepeatingEvents(event: EventType): ProcessedEvent[] {
 	const { start, end, repeatPattern } = event;
-	const occurrences: EditorInput[] = [];
+	const occurrences: EventType[] = [];
 	let currentDate = new Date(start);
 
 	switch (repeatPattern) {
-		case "none":
+		case "NONE":
 			occurrences.push(event);
 			return occurrences as ProcessedEvent[];
 
-		case "daily":
+		case "DAILY":
 			//Skips occurrences already passed
 			while (getWeek(currentDate, { weekStartsOn: 1 }) < getWeek(new Date(), { weekStartsOn: 1 })) {
 				currentDate = addDays(currentDate, 1);
@@ -95,7 +89,7 @@ export function generateRepeatingEvents(event: EditorInput): ProcessedEvent[] {
 			}
 			return occurrences as ProcessedEvent[];
 
-		case "weekly":
+		case "WEEKLY":
 			//Skips occurrences already passed
 			while (getMonth(currentDate) < getMonth(new Date())) {
 				currentDate = addWeeks(currentDate, 1);
@@ -113,7 +107,7 @@ export function generateRepeatingEvents(event: EditorInput): ProcessedEvent[] {
 			}
 			return occurrences as ProcessedEvent[];
 
-		case "monthly":
+		case "MONTHLY":
 			//Skips occurrences already passed
 			while (getYear(currentDate) < getYear(new Date())) {
 				currentDate = addMonths(currentDate, 1);

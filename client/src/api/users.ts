@@ -1,9 +1,9 @@
 import axios from "axios";
-import { LocationType, UserType } from "../../../shared/models";
+import { LocationType, TestType, UserType } from "../../../shared/models";
 
 export async function fetchUsers() {
 	try {
-		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users`);
+		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/users`);
 		return response.data as UserType;
 	} catch (error) {
 		throw new Error("Failed to fetch new users");
@@ -12,7 +12,7 @@ export async function fetchUsers() {
 
 export async function fetchUserById(userId: string) {
 	try {
-		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/${userId}`);
+		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/users/${userId}`);
 		if (response.status === 200) {
 			// User exists, return the data
 			return response.data as UserType;
@@ -30,7 +30,9 @@ export async function fetchUserById(userId: string) {
 
 export async function fetchUserByEmail(email: string) {
 	try {
-		const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/email/${email}`);
+		const response = await axios.get(
+			`${import.meta.env.VITE_API_BASE_URL}/api/users/email/${email}`
+		);
 		if (response.status === 200) {
 			// User exists, return the data
 			return response.data as UserType;
@@ -48,7 +50,7 @@ export async function fetchUserByEmail(email: string) {
 
 export async function createUser(user: UserType) {
 	try {
-		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users`, user);
+		const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/users`, user);
 		return response.data;
 	} catch (error) {
 		throw new Error("Failed to create user");
@@ -57,27 +59,66 @@ export async function createUser(user: UserType) {
 
 export async function updateUser(user: UserType) {
 	try {
-		const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/${user.id}`, user);
+		const response = await axios.put(
+			`${import.meta.env.VITE_API_BASE_URL}/api/users/${user.id}`,
+			user
+		);
 		return response.data;
 	} catch (error) {
 		throw new Error("Failed to update user");
 	}
 }
 
-export async function updateUserLocation(userId:string,location:LocationType){
-	try{
-		const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/location/${userId}`, location);
+export async function updateUserLocation(userId: string, location: LocationType) {
+	try {
+		const response = await axios.put(
+			`${import.meta.env.VITE_API_BASE_URL}/api/users/location/${userId}`,
+			location
+		);
 		return response.data;
-	}catch(error){
+	} catch (error) {
 		throw new Error("Failed to update user location");
 	}
 }
 
 export async function deleteUser(userId: string) {
 	try {
-		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/users/${userId}`);
+		const response = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/users/${userId}`);
 		return response.data;
 	} catch (error) {
 		throw new Error("Failed to delete user");
+	}
+}
+
+export async function fetchBookmarkedTestsByUserId(userId: string) {
+	try {
+		const response = await axios.get(
+			`${import.meta.env.VITE_API_BASE_URL}/api/users/bookmarked/${userId}`
+		);
+		return response.data as TestType[];
+	} catch (error) {
+		throw new Error("Failed to fetch user bookmarked tests");
+	}
+}
+
+export async function addBookmarkedTest(userId: string, testId: string) {
+	try {
+		const response = await axios.put(
+			`${import.meta.env.VITE_API_BASE_URL}/api/users/bookmarked/${userId}?testId=${testId}`
+		);
+		return response.data;
+	} catch (error) {
+		throw new Error("Failed to add bookmarked test");
+	}
+}
+
+export async function deleteBookmarkedTest(userId: string, testId: string) {
+	try {
+		const response = await axios.delete(
+			`${import.meta.env.VITE_API_BASE_URL}/api/users/bookmarked/${userId}?testId=${testId}`
+		);
+		return response.data;
+	} catch (error) {
+		throw new Error("Failed ot remove bookmarked test");
 	}
 }

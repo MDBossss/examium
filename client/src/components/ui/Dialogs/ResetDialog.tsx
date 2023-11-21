@@ -25,7 +25,7 @@ const ResetDialog = ({onTrigger,hasParamId}:Props) => {
 				<AlertDialogHeader>
 					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 					<AlertDialogDescription>
-						This action cannot be undone. This will delete the test and all progress will be lost.
+						This action cannot be undone. This will {hasParamId ? "delete" : "reset"} the test and all progress will be lost.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>

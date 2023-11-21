@@ -5,8 +5,8 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { Toaster } from "./components/ui/Toaster.tsx";
 import "./index.css";
-import { TooltipProvider } from "./components/ui/Tooltip.tsx";
 import MaterialThemeProvider from "./components/MaterialThemeProvider.tsx";
+import SocketProvider from "./components/SocketProvider.tsx";
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
 	throw new Error("Missing Publishable Key");
@@ -23,18 +23,17 @@ const appearance = {
 	},
 };
 
-
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<ClerkProvider publishableKey={clerkPubKey} appearance={appearance}>
 		<MaterialThemeProvider>
-			<QueryClientProvider client={queryClient}>
-				<TooltipProvider>
+			<SocketProvider>
+				<QueryClientProvider client={queryClient}>
 					<Toaster />
 					<BrowserRouter>
 						<App />
 					</BrowserRouter>
-				</TooltipProvider>
-			</QueryClientProvider>
+				</QueryClientProvider>
+			</SocketProvider>
 		</MaterialThemeProvider>
 	</ClerkProvider>
 );

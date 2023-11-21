@@ -9,7 +9,6 @@ import {
 import { UsersIcon } from "lucide-react";
 import { Button } from "../Button";
 import { TestType } from "../../../../../shared/models";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip";
 import { Input } from "../Input";
 import CollaboratorsTable from "../../CollaboratorsTable";
 import { useState } from "react";
@@ -17,6 +16,7 @@ import { z } from "zod";
 import { useToast } from "../../../hooks/useToast";
 import { fetchUserByEmail } from "../../../api/users";
 import { ActiveSessionResource } from "@clerk/types";
+import { ActionTooltip } from "../ActionTooltip";
 
 interface Props {
 	test: TestType;
@@ -108,18 +108,14 @@ const CollaborationsDialog = ({ test, setTest, session }: Props) => {
 
 	return (
 		<Dialog>
-			<Tooltip>
+			<ActionTooltip label="Collaborators">
 				<DialogTrigger asChild>
-					<TooltipTrigger asChild>
-						<Button className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
-							<UsersIcon className="w-5 h-5" />
-						</Button>
-					</TooltipTrigger>
+					<Button className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
+						<UsersIcon className="w-5 h-5" />
+					</Button>
 				</DialogTrigger>
-				<TooltipContent>
-					<p>Collaborators</p>
-				</TooltipContent>
-			</Tooltip>
+			</ActionTooltip>
+
 			<DialogContent className="sm:max-w-[425px] max-h-[90%] overflow-auto">
 				<DialogHeader>
 					<DialogTitle>Collaborators</DialogTitle>

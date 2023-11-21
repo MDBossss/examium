@@ -1,4 +1,4 @@
-import { TestType } from "../../../../../shared/models";
+import { QuestionVariantsType, TestType } from "../../../../../shared/models";
 import { Button } from "../Button";
 import {
 	Dialog,
@@ -7,7 +7,6 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "./Dialog";
 import { Input } from "../Input";
 import { Switch } from "../Switch";
@@ -17,8 +16,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import { Percent, SettingsIcon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip";
-import { Combobox } from "../Combobox";
+import { ActionTooltip } from "../ActionTooltip";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "../Select";
 
 const schema = z.object({
 	title: z.string().max(50, { message: "Title must be at most 50 characters" }),
@@ -26,7 +34,7 @@ const schema = z.object({
 	randomizeQuestions: z.boolean(),
 	randomizeAnswers: z.boolean(),
 	showQuestionsOnResults: z.boolean(),
-	defaultQuestionType: z.enum(["MULTIPLE_CHOICE","CODE"]),
+	defaultQuestionType: z.enum(["MULTIPLE_CHOICE", "CODE"]),
 	passCriteria: z
 		.number()
 		.positive({ message: "Pass criteria must be positive" })
@@ -55,7 +63,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 			randomizeAnswers: test.randomizeAnswers,
 			showQuestionsOnResults: test.showQuestionsOnResults,
 			passCriteria: test.passCriteria,
-			defaultQuestionType: test.defaultQuestionType
+			defaultQuestionType: test.defaultQuestionType,
 		},
 	});
 	const { toast } = useToast();
@@ -69,7 +77,7 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 			randomizeAnswers: data.randomizeAnswers,
 			showQuestionsOnResults: data.showQuestionsOnResults,
 			passCriteria: data.passCriteria,
-			defaultQuestionType: data.defaultQuestionType
+			defaultQuestionType: data.defaultQuestionType,
 		}));
 		setDialogOpen(false);
 		toast({
@@ -93,22 +101,18 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-			<Tooltip>
+			<ActionTooltip label="Settings">
 				<DialogTrigger asChild>
-					<TooltipTrigger asChild>
-						<Button
-							variant="outline"
-							className="inline-flex items-center justify-center flex-1 h-10 px-4 py-2 text-sm font-medium transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background"
-							onClick={() => setDialogOpen(true)}
-						>
-							<SettingsIcon className="w-6 h-6 text-slate-400 dark:text-gray-600" />
-						</Button>
-					</TooltipTrigger>
+					<Button
+						variant="outline"
+						className="inline-flex items-center justify-center flex-1 h-10 px-4 py-2 text-sm font-medium transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background"
+						onClick={() => setDialogOpen(true)}
+					>
+						<SettingsIcon className="w-6 h-6 text-slate-400 dark:text-gray-600" />
+					</Button>
 				</DialogTrigger>
-				<TooltipContent>
-					<p>Settings</p>
-				</TooltipContent>
-			</Tooltip>
+			</ActionTooltip>
+
 			<DialogContent className="sm:max-w-[425px] max-h-[90%] overflow-auto">
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<DialogHeader>
@@ -157,14 +161,27 @@ const SettingsDialog = ({ test, setTest }: Props) => {
 							/>
 						</div>
 						<div className="grid items-center grid-cols-6 gap-4">
-							<label htmlFor="questionType" className="col-span-2 text-sm text-right">
+							<label className="col-span-2 text-sm text-right">
 								Question Type
 							</label>
-							<Combobox
-								className="col-span-4 ml-auto text-right"
+
+							<Select
+								onValueChange={(value: QuestionVariantsType) =>
+									setValue("defaultQuestionType", value)
+								}
 								defaultValue={test.defaultQuestionType}
-								onChange={(value) => setValue("defaultQuestionType",value)}
-							/>
+							>
+								<SelectTrigger className="col-span-4 ml-auto text-right">
+									<SelectValue placeholder="Select..."></SelectValue>
+								</SelectTrigger>
+								<SelectContent>
+									<SelectGroup>
+										<SelectLabel>Type</SelectLabel>
+										<SelectItem value="MULTIPLE_CHOICE">Multiple choice</SelectItem>
+										<SelectItem value={"CODE"}>Code</SelectItem>
+									</SelectGroup>
+								</SelectContent>
+							</Select>
 						</div>
 						<div className="grid items-center grid-cols-4 gap-4">
 							<label htmlFor="questions-visible" className="col-span-3 text-sm text-left">
