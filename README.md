@@ -62,6 +62,9 @@ Create a `.env` file inside the server directory and define the following variab
 ```
 DATABASE_URL=mysql://USER:PASSWORD@HOST:PORT/DATABASE
 OPENAI_API_KEY=your_openai_api_key
+OPENAI_ASSISTANT_ID=your_openai_assistant_id
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_KEY=your_supabase_key
 PORT=3000
 ```
 
@@ -70,7 +73,8 @@ Create a `.env` file inside the client directory and define the following variab
 ```
 VITE_SUPABASE_URL=supabase_url
 VITE_SUPABASE_KEY=supabase_key
-VITE_SUPABASE_BUCKET_LINK=https://[your_supabase_url]/storage/v1/object/public/[bucket_name]/
+VITE_SUPABASE_BUCKET_NAME=supabase_bucket_name
+VITE_SUPABASE_BUCKET_LINK=${VITE_SUPABASE_URL}/storage/v1/object/public/${VITE_SUPABASE_BUCKET_NAME}/
 VITE_CLERK_PUBLISHABLE_KEY=clerk_publishable_key
 VITE_API_BASE_URL=http://localhost:3000
 ```
