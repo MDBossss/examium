@@ -2,21 +2,21 @@
 FROM node:20.5.1-slim
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy the package.json and yarn.lock files
-COPY package.json yarn.lock ./
+# Copy package.json and package-lock.json (if present)
+COPY package*.json ./
 
-# Install Yarn globally (optional but recommended for consistency)
-RUN npm install -g yarn --force
-
-# Install project dependencies
-RUN yarn install
+# Install app dependencies
+RUN npm install
 
 # Copy rest of the client code
 COPY . .
 
+# Build the TypeScript files
+RUN npm run build
+
 # Expose the Docker port
 EXPOSE 3000
 
-CMD ["yarn","dev"]
+CMD ["npm","start"]
