@@ -1,7 +1,6 @@
 import { Scheduler } from "@aldabil/react-scheduler";
 import { SchedulerRef } from "@aldabil/react-scheduler/types";
 import { useRef } from "react";
-import { useThemeStore } from "../store/themeStore";
 import SchedulerEditor from "../components/SchedulerEditor";
 import { OptionType } from "../../../shared/models";
 import { Button } from "../components/ui/Button";
@@ -10,9 +9,10 @@ import { useQuery } from "@tanstack/react-query";
 import { deleteEvent, fetchUserEvents } from "../api/events";
 import { useToast } from "../hooks/useToast";
 import { MapPinIcon, PaperclipIcon, TextIcon } from "lucide-react";
+import { useTheme } from "../components/ThemeProvider";
 
 const Schedule = () => {
-	const { theme } = useThemeStore();
+	const { theme } = useTheme();
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { toast } = useToast();

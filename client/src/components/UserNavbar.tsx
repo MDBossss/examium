@@ -8,9 +8,9 @@ import {
 	PanelLeftOpenIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useSidebarStore } from "../store/sidebarStore";
 import PomodoroButton from "./PomodoroButton";
 import { ActionTooltip } from "./ui/ActionTooltip";
+import { useSidebar } from "./SidebarProvider";
 
 interface Props {
 	setTest?: (test: TestType) => void;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 const UserNavbar = ({ test, setTest }: Props) => {
-	const { showSidebar, toggleSidebar } = useSidebarStore();
+	const { showSidebar, toggleSidebar } = useSidebar();
 	const { session } = useSession();
 	const navigate = useNavigate();
 	const date = new Date();

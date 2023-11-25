@@ -1,7 +1,7 @@
 import { CodeAnswer, CodeQuestionType, TestType } from "../../../../shared/models";
 import MDEditor from "@uiw/react-md-editor";
 import CodeMirror from "@uiw/react-codemirror";
-import { useThemeStore } from "../../store/themeStore";
+import { useTheme } from "../ThemeProvider";
 
 interface Props {
 	test: TestType;
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const CodeQuestionSolve = ({ test, questionNumber, userCode, handleCodeChange }: Props) => {
-	const { theme } = useThemeStore();
+	const { theme } = useTheme();
 	
 	return (
 		<div className="flex flex-col w-full gap-2">

@@ -16,8 +16,8 @@ import { useToast } from "../hooks/useToast";
 import CodeQuestionResult from "../components/CodeQuestion/CodeQuestionResult";
 import { useQuestionCount } from "../hooks/useQuestionCount";
 import Spinner from "../components/ui/Spinner";
-import { useThemeStore } from "../store/themeStore";
 import { useSession } from "@clerk/clerk-react";
+import { useTheme } from "../components/ThemeProvider";
 
 const Results = () => {
 	const location = useLocation();
@@ -26,7 +26,7 @@ const Results = () => {
 	const test: TestType = location.state?.test;
 	const hasParamId: boolean = location.state?.hasParamId;
 
-	const { theme } = useThemeStore();
+	const { theme } = useTheme();
 	theme === "dark"
 		? document.documentElement.setAttribute("data-color-mode", "dark")
 		: document.documentElement.setAttribute("data-color-mode", "light");

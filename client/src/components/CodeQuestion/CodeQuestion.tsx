@@ -1,8 +1,8 @@
 import CodeMirror from "@uiw/react-codemirror";
 import MDEditor from "@uiw/react-md-editor";
 import { CodeQuestionType, QuestionType } from "../../../../shared/models";
-import { useThemeStore } from "../../store/themeStore";
 import { Checkbox } from "../ui/Checkbox";
+import { useTheme } from "../ThemeProvider";
 
 interface Props {
 	question: QuestionType;
@@ -17,7 +17,7 @@ const CodeQuestion = ({
 	onMarkdownChange,
 	onToggleShowCorrectCodeOnResults,
 }: Props) => {
-	const { theme } = useThemeStore();
+	const { theme } = useTheme();
 
 	//there iis no built it state to handle the dark/light mode in the actual component
 	theme === "dark"

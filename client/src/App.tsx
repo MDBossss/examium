@@ -8,16 +8,16 @@ import Results from "./pages/Results";
 import MyTests from "./pages/MyTests";
 import Collaborations from "./pages/Collaborations";
 import { useEffect } from "react";
-import { useThemeStore } from "./store/themeStore";
 import Schedule from "./pages/Schedule";
 import Overview from "./pages/Overview";
 import StudyGroups from "./pages/StudyGroups";
 import ProtectedRoute from "./components/ProtectedRoute";
 import StudyGroupChat from "./pages/StudyGroupChat";
 import Bookmarked from "./pages/Bookmarked";
+import { useTheme } from "./components/ThemeProvider";
 
 function App() {
-	const { theme } = useThemeStore();
+	const { theme } = useTheme();
 
 	useEffect(() => {
 		// On page load or when changing themes, add inline in `head` to avoid FOUC

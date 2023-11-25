@@ -5,9 +5,9 @@ import CodeMirror from "@uiw/react-codemirror";
 import MDEditor from "@uiw/react-md-editor";
 import { evaluateCode } from "../../api/tests";
 import Spinner from "../ui/Spinner";
-import { useThemeStore } from "../../store/themeStore";
 import { useEffect, useState } from "react";
 import { useToast } from "../../hooks/useToast";
+import { useTheme } from "../ThemeProvider";
 
 interface Props {
 	question: QuestionType;
@@ -51,7 +51,7 @@ const CodeQuestionResult = ({
 			.finally(() => setIsLoading(false));
 	}, []);
 
-	const { theme } = useThemeStore();
+	const { theme } = useTheme();
 	theme === "dark"
 		? document.documentElement.setAttribute("data-color-mode", "dark")
 		: document.documentElement.setAttribute("data-color-mode", "light");

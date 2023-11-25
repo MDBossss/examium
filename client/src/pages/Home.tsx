@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom";
 import HomeNavbar from "../components/HomeNavbar";
 import { Button } from "../components/ui/Button";
 import Footer from "../components/Footer";
-import { useThemeStore } from "../store/themeStore";
 import { useSession } from "@clerk/clerk-react";
+import { useTheme } from "../components/ThemeProvider";
 
 const Home = () => {
 	const {session} = useSession();
 	const navigate = useNavigate();
-	const { theme } = useThemeStore();
+	const { theme } = useTheme();
 	
 
 	return (
