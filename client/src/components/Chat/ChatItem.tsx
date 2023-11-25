@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
 import Spinner from "../ui/Spinner";
 import { Button } from "../ui/Button";
 import { useNavigate } from "react-router-dom";
-import { useThemeStore } from "../../store/themeStore";
 import { getTimeAgo } from "../../utils/dateUtils";
 import { getFileType, getFullFileUrl } from "../../utils/fileUtils";
 import { BookmarkIcon, FileIcon, TrashIcon } from "lucide-react";
@@ -25,6 +24,7 @@ import {
 	AlertDialogTitle,
 } from "../ui/Dialogs/AlertDialog";
 import { addBookmarkedTest } from "../../api/users";
+import { useTheme } from "../ThemeProvider";
 
 interface Props {
 	message: MessageType;
@@ -37,7 +37,7 @@ const ChatItem = ({ message, isOwner }: Props) => {
 
 	const { session } = useSession();
 	const navigate = useNavigate();
-	const { theme } = useThemeStore();
+	const { theme } = useTheme();
 	const { toast } = useToast();
 
 	const isCreator = message.member?.userId === session?.user.id;

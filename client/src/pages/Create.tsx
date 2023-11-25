@@ -17,8 +17,8 @@ import useGenerateData from "../hooks/useGenerateData";
 import { validateTest } from "../utils/testUtils";
 import { createTest, deleteTest, fetchTestById, updateTest } from "../api/tests";
 import CollaborationsDialog from "../components/ui/Dialogs/CollaborationsDialog";
-import { useThemeStore } from "../store/themeStore";
 import { removeAllTestImagesFromBucket } from "../utils/supabaseUtils";
+import { useTheme } from "../components/ThemeProvider";
 
 const titleSchema = z.string().max(50, { message: "Title must be at most 50 characters" });
 
@@ -32,7 +32,7 @@ const Create = () => {
 	const { toast } = useToast();
 	const { session } = useSession();
 
-	const { theme } = useThemeStore();
+	const { theme } = useTheme();
 
 	theme === "dark"
 		? document.documentElement.setAttribute("data-color-mode", "dark")

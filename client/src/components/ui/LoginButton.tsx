@@ -38,7 +38,7 @@ import useGenerateData from "../../hooks/useGenerateData";
 import { createUser, fetchUserById } from "../../api/users";
 import Spinner from "./Spinner";
 import ProfileDialog from "./Dialogs/ProfileDialog";
-import { useThemeStore } from "../../store/themeStore";
+import { useTheme } from "../ThemeProvider";
 
 interface Props {
 	setTest?: (test: TestType) => void;
@@ -55,7 +55,7 @@ const LoginButton = ({ test }: Props) => {
 	const [userChecked, setUserChecked] = useState<boolean>(false);
 	const [showProfileDialog, setShowProfileDialog] = useState<boolean>(false);
 	const { showDialog, setShowDialog, handleNavigate, handleContinue } = useNavigationDialog();
-	const { clearTheme, setTheme } = useThemeStore();
+	const { clearTheme, setTheme } = useTheme();
 
 	useEffect(() => {
 		const checkUser = async () => {

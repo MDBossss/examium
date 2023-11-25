@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import Sidebar from "../components/Sidebar";
-import { useSidebarStore } from "../store/sidebarStore";
 import UserNavbar from "../components/UserNavbar";
 import { useLocation } from "react-router-dom";
+import { useSidebar } from "../components/SidebarProvider";
 
 const sidebarBlacklist: string[] = ["/solve","/results"];
 
@@ -13,7 +13,7 @@ interface Props {
 
 const Layout = ({ children,className }: Props) => {
 	const location = useLocation();
-	const { showSidebar } = useSidebarStore();
+	const { showSidebar } = useSidebar();
 
 	const isPathInBlacklist = sidebarBlacklist.some((path) => location.pathname.includes(path));
 	

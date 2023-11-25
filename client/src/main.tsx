@@ -7,6 +7,8 @@ import { Toaster } from "./components/ui/Toaster.tsx";
 import "./index.css";
 import MaterialThemeProvider from "./components/MaterialThemeProvider.tsx";
 import SocketProvider from "./components/SocketProvider.tsx";
+import { ThemeProvider } from "./components/ThemeProvider.tsx";
+import { SidebarProvider } from "./components/SidebarProvider.tsx";
 
 if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
 	throw new Error("Missing Publishable Key");
@@ -24,16 +26,20 @@ const appearance = {
 };
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<ClerkProvider publishableKey={clerkPubKey} appearance={appearance}>
-		<MaterialThemeProvider>
-			<SocketProvider>
-				<QueryClientProvider client={queryClient}>
-					<Toaster />
-					<BrowserRouter>
-						<App />
-					</BrowserRouter>
-				</QueryClientProvider>
-			</SocketProvider>
-		</MaterialThemeProvider>
-	</ClerkProvider>
+	<ThemeProvider>
+		<SidebarProvider>
+			<ClerkProvider publishableKey={clerkPubKey} appearance={appearance}>
+				<MaterialThemeProvider>
+					<SocketProvider>
+						<QueryClientProvider client={queryClient}>
+							<Toaster />
+							<BrowserRouter>
+								<App />
+							</BrowserRouter>
+						</QueryClientProvider>
+					</SocketProvider>
+				</MaterialThemeProvider>
+			</ClerkProvider>
+		</SidebarProvider>
+	</ThemeProvider>
 );
