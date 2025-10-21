@@ -20,6 +20,7 @@
 
 ---
 
+Updated video showcase on [Youtube](https://www.youtube.com/watch?v=jRkcBGPGVs8)
 
 https://github.com/MDBossss/examium/assets/27899680/a8caa2ec-2077-4f82-8582-1d31007de48a
 
