@@ -26,9 +26,15 @@ https://github.com/MDBossss/examium/assets/27899680/a8caa2ec-2077-4f82-8582-1d31
 
 
 
-![Screen Shot](images/showcase-create.png)
-![Screen Shot](images/showcase-collaborate.png)
-![Screen Shot](images/showcase-results.png)
+![Screen Shot](images/1.png)
+![Screen Shot](images/2.png)
+![Screen Shot](images/3.png)
+![Screen Shot](images/4.png)
+![Screen Shot](images/5.png)
+![Screen Shot](images/6.png)
+![Screen Shot](images/7.png)
+![Screen Shot](images/8.png)
+![Screen Shot](images/9.png)
 
 This is a work in progress project I started as a way to introduce myself to Prisma and using it with a Express.js backend. Currently the essential features are implemented, CRUD of the tests with the db, collaborating with other users, user auth... 
 
